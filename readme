@@ -1,0 +1,38 @@
+# Playwright E2E - AutomationExercise
+
+This repository contains practice automation tests for the demo store [AutomationExercise](https://automationexercise.com).
+
+## Purpose
+
+- A learning project for Playwright E2E and API testing.
+- Demonstrates code organization patterns (Page Object).
+- Covers edge cases and different UI scenarios.
+- Allows integration with AI ( Codex) for test generation.
+
+## Project Structure
+
+/api # API-level tests
+/e2e # full E2E scenarios using Playwright
+/utils # helper functions, fixtures, data generators
+playwright.config.ts # Playwright configuration
+package.json # dependencies and scripts
+
+
+## How to Run
+
+Install dependencies:
+
+
+npm install
+
+
+Run all tests:
+
+
+npx playwright test
+
+
+Run interactive UI mode:
+
+npx playwright test --ui
+
