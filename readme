@@ -11,11 +11,13 @@ This repository contains practice automation tests for the demo store [Automatio
 
 ## Project Structure
 
-/api # API-level tests
-/e2e # full E2E scenarios using Playwright
-/utils # helper functions, fixtures, data generators
-playwright.config.ts # Playwright configuration
-package.json # dependencies and scripts
+- /api # API-level tests
+- /e2e # full E2E scenarios using Playwright
+- /utils # helper functions, fixtures, data generators
+- playwright.config.ts # Playwright configuration
+- package.json # dependencies and scripts
+- Automation Test Cases Plan.md # test cases lists with priority
+- qa_questions.md # questions to developers and notes
 
 
 ## How to Run
