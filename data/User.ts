@@ -25,8 +25,9 @@ export class User {
 
   static generateRandom(): User {
     const u = new User();
+    const timestamp = new Date().toISOString().replace(/[:.-]/g, ''); 
     u.name = `user${Math.floor(Math.random() * 10000)}`;
-    u.email = `test${Math.floor(Math.random() * 10000)}@example.com`;
+    u.email = `qa_${timestamp}_${Math.floor(Math.random() * 1000)}@example.com`; 
     u.password = 'Test1234';
     u.title = Math.random() > 0.5 ? 'Mr.' : 'Mrs.';
     u.dayOfBirth = `${Math.floor(Math.random() * 28) + 1}`;
@@ -46,11 +47,9 @@ export class User {
     return u;
   }
   toApiForm() {
-    const timestamp = new Date().toISOString().replace(/[:.-]/g, '');
-    const email = `qa_${timestamp}_${Math.floor(Math.random() * 1000)}@example.com`;
     return {
       name: this.name,
-      email: email,
+      email: this.email,
       password: this.password,
       title: this.title.replace('.', ''), // API не любить крапку в "Mr."
       birth_date: this.dayOfBirth,
