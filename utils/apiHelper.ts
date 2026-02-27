@@ -1,5 +1,5 @@
 import { getApiContext } from './apiContext';
-import { User } from '../data/user';
+import { User } from '../data/User';
 
 
 export async function createUser(user: User) {
