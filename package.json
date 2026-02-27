@@ -2,7 +2,12 @@
   "name": "pw-e2e-automationexercise",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test:smoke": "npx playwright test --grep @smoke",
+    "test:full": "npx playwright test",
+    "test:api": "npx playwright test --project=api",
+    "test:report": "npx playwright show-report"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
