@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { User } from '../data/User';
 
 export class LoginPage {
@@ -9,6 +9,7 @@ export class LoginPage {
   readonly signupNameInput: Locator;
   readonly signupEmailInput: Locator;
   readonly signupButton: Locator;
+  readonly consentButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -18,12 +19,17 @@ export class LoginPage {
     this.signupNameInput = page.locator('input[data-qa="signup-name"]');
     this.signupEmailInput = page.locator('input[data-qa="signup-email"]');
     this.signupButton = page.locator('button[data-qa="signup-button"]');
+    this.consentButton = page.getByRole('button', { name: 'Consent' });
 
 
   }
 
   async goto() {
     await this.page.goto('/login');
+    if (await this.consentButton.isVisible()) {
+      await this.consentButton.click();
+      await this.consentButton.waitFor({ state: 'hidden' });
+    } 
   }
 
   async login(user: User) {
@@ -37,6 +43,7 @@ export class LoginPage {
   }
 
   async signUp(user: User) {
+    
     await this.signupNameInput.waitFor({ state: 'visible', timeout: 10000 });
     await this.signupEmailInput.waitFor({ state: 'visible', timeout: 10000 });
     await this.signupButton.waitFor({ state: 'visible', timeout: 10000 });
@@ -44,5 +51,11 @@ export class LoginPage {
     await this.signupNameInput.fill(user.name);
     await this.signupEmailInput.fill(user.email);
     await this.signupButton.click();
+    }
+
+    async verifyLoginSuccess(user: User) {
+      const loggedInMarker = this.page.locator('.navbar-nav li:has-text("Logged in as")');
+      await expect(loggedInMarker).toBeVisible();
+      await expect(loggedInMarker).toContainText(user.name);
     }
  }

@@ -1,29 +1,37 @@
-import { getApiContext } from './apiContext';
+import { APIRequestContext, expect, test } from '@playwright/test';
 import { User } from '../data/User';
 
+export const apiHelper = {
+ 
+  async createUser(request: APIRequestContext, user: User) {
+    return await test.step(`API: Create user ${user.email}`, async () => {
+      const response = await request.post('/api/createAccount', {
+        form: user.toApiForm(),
+      });
+      
+      const body = await response.json();
+      
+      expect(response.status()).toBe(200);
+      expect(body.responseCode, `Creation failed for ${user.email}: ${body.message}`).toBe(201);
+      return body;
+    });
+  },
 
-export async function createUser(user: User) {
-  const apiContext = await getApiContext();
-  const response = await apiContext.post('/api/createAccount', { data: {
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      title: user.title,
-      birth_date: user.dayOfBirth,
-      birth_month: user.monthOfBirth,
-      birth_year: user.yearOfBirth,
-      firstname: user.firstName,
-      lastname: user.lastName,
-      company: user.company,
-      address1: user.address,
-      address2: '',
-      country: user.country,
-      state: user.state,
-      city: user.city,
-      zipcode: user.zipcode,
-      mobile_number: user.mobileNumber,
-    } });
-  if (response.status() !== 201) throw new Error(await response.text());
-  return await response.json();
-}
-
+  
+  async deleteUser(request: APIRequestContext, user: User) {
+    return await test.step(`API: Delete user ${user.email}`, async () => {
+      const response = await request.delete('/api/deleteAccount', {
+        form: {
+          email: user.email,
+          password: user.password
+        }
+      });
+      
+      const body = await response.json();
+      
+      expect(response.status()).toBe(200);
+      expect(body.responseCode, `Deletion failed for ${user.email}: ${body.message}`).toBe(200);
+      return body;
+    });
+  }
+};

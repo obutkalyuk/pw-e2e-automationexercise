@@ -1,62 +1,59 @@
 import { test, expect } from '@playwright/test';
+import { apiHelper } from '../../utils/apiHelper';
+import { disposeApiContext } from '../../utils/apiContext';
 import { User } from '../../data/User';
 import { LoginPage } from '../../pages/loginPage';
+import { SignupPage } from '../../pages/signupPage';
+import { log } from 'node:console';
+
+
 
 const BASE_URL = process.env.BASE_URL;
 
 
-test('test', async ({ page }) => {
-  const USER = User.generateRandom();
-  await page.goto(BASE_URL!);
-  await page.getByRole('button', { name: 'Consent' }).click();
-  await page.getByRole('link', { name: ' Signup / Login' }).click();
-  await page.getByRole('textbox', { name: 'Name' }).click();
-  await page.getByRole('textbox', { name: 'Name' }).fill(USER.name);
-  await page.locator('form').filter({ hasText: 'Signup' }).getByPlaceholder('Email Address').click();
-  await page.locator('form').filter({ hasText: 'Signup' }).getByPlaceholder('Email Address').fill(USER.email);
-  await page.getByRole('button', { name: 'Signup' }).click();
-  await page.getByRole('radio', { name: 'Mr.' }).check();
-  await page.getByRole('textbox', { name: 'Name *', exact: true }).click();
-  await page.getByRole('textbox', { name: 'Password *' }).click();
-  await page.getByRole('textbox', { name: 'Password *' }).fill(USER.password);
-  await console.log(USER.email, USER.password);
-  await page.locator('#days').selectOption(USER.dayOfBirth);
-  await page.locator('#months').selectOption(USER.monthOfBirth);
-  await page.locator('#years').selectOption(USER.yearOfBirth);
-  await page.getByRole('checkbox', { name: 'Sign up for our newsletter!' }).check();
-  await page.getByRole('checkbox', { name: 'Receive special offers from' }).check();
-  await page.getByRole('textbox', { name: 'First name *' }).click();
-  await page.getByRole('textbox', { name: 'First name *' }).click();
-  await page.getByRole('textbox', { name: 'First name *' }).fill(USER.firstName);
-  await page.getByRole('textbox', { name: 'First name *' }).press('Tab');
-  await page.getByRole('textbox', { name: 'Last name *' }).fill(USER.lastName);
-  await page.getByRole('textbox', { name: 'Company', exact: true }).click();
-  await page.getByRole('textbox', { name: 'Company', exact: true }).fill(USER.company);
-  await page.getByRole('textbox', { name: 'Address * (Street address, P.' }).click();
-  await page.getByRole('textbox', { name: 'Address * (Street address, P.' }).click();
-  await page.getByRole('textbox', { name: 'Address * (Street address, P.' }).fill('2 Wartnaby Road AILEY HR3 6NZ');
-  await page.getByLabel('Country *').selectOption('United States');
-  await page.locator('div').filter({ hasText: 'Enter Account Information' }).nth(1).click();
-  await page.getByLabel('Country *').selectOption('New Zealand');
-  await page.getByRole('textbox', { name: 'State *' }).click();
-  await page.getByRole('textbox', { name: 'State *' }).fill(USER.state);
-  await page.getByRole('textbox', { name: 'City * Zipcode *' }).click();
-  await page.getByRole('textbox', { name: 'City * Zipcode *' }).fill(USER.city);
-  await page.locator('#zipcode').click();
-  await page.locator('#zipcode').fill(USER.zipcode);
-  await page.getByRole('textbox', { name: 'Mobile Number *' }).click();
-  await page.getByRole('textbox', { name: 'Mobile Number *' }).fill('(026) 4252-415');
-  await page.getByRole('button', { name: 'Create Account' }).click();
-  await page.getByRole('link', { name: 'Continue' }).click();
-  await page.getByText(`Logged in as ${USER.name}`).click();
-  await page.getByRole('link', { name: ' Delete Account' }).click();
-  await page.getByRole('link', { name: 'Continue' }).click();
-});
 
-test('Test Case 1: Register User', async ({ page }) => {
+test('E2E-1: Register User', async ({ page }, testInfo) => {
   const loginPage = new LoginPage(page);
+  const signUpPage = new SignupPage(page);
   const USER = User.generateRandom();
-  await page.goto(BASE_URL!);
-  await test.step(``, async () => {
+  testInfo.annotations.push({
+      type: 'Test Data',
+      description: `Name: ${USER.name} | Email: ${USER.email} | Password: ${USER.password}`
+    });
+
+  await loginPage.goto();
+  await test.step(`Sign up new user`, async () => {
     await loginPage.signUp(USER);
-  });})
+    await signUpPage.fillForm(USER);
+    await signUpPage.verifyAccountCreation();
+    await loginPage.verifyLoginSuccess(USER);
+  });
+})
+
+test.describe('Login tests', () => {
+  let testUser: User;
+
+  test.beforeEach(async ({ request }, testInfo) => {
+    testUser = User.generateRandom();
+    await apiHelper.createUser(request, testUser);
+    testInfo.annotations.push({
+      type: 'Test Data',
+      description: `Name: ${testUser.name} | Email: ${testUser.email} | Password: ${testUser.password}`
+    });
+  });
+
+  test(`E2E-2: Login User with correct email and password (Hybrid) @smoke`, async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login(testUser);
+
+    await test.step(`Verify user ${testUser.name} is logged in`, async () => {
+      await loginPage.verifyLoginSuccess(testUser);
+    });
+  });
+
+test.afterEach(async ({ request }) => {
+    await apiHelper.deleteUser(request, testUser);
+    await disposeApiContext();
+  });
+}); 
