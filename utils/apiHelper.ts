@@ -17,7 +17,11 @@ export const apiHelper = {
     });
   },
 
-  
+  /**
+ * BUG ALERT: AutomationExercise API always returns HTTP 200 even for failed DELETE requests.
+ * We must check the 'responseCode' inside the JSON body instead of response.ok().
+ * See GitHub Issue #1 (https://github.com/obutkalyuk/pw-e2e-automationexercise/issues/1) for details.
+ */
   async deleteUser(request: APIRequestContext, user: User) {
     return await test.step(`API: Delete user ${user.email}`, async () => {
       const response = await request.delete('/api/deleteAccount', {
