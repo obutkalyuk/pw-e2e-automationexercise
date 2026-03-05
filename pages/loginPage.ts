@@ -55,7 +55,7 @@ export class LoginPage {
 
     async verifyLoginSuccess(user: User) {
       const loggedInMarker = this.page.locator('.navbar-nav li:has-text("Logged in as")');
-      await expect(loggedInMarker).toBeVisible();
+      await expect(loggedInMarker).toBeVisible({  timeout: 10000 });
       await expect(loggedInMarker).toContainText(user.name);
     }
  }

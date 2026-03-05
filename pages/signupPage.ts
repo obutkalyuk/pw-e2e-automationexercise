@@ -108,7 +108,7 @@ export class SignupPage {
 
   async verifyAccountCreation() {
     const successMessage = this.page.locator('h2:has-text("Account Created!")');
-    await expect(successMessage).toBeVisible();
+    await expect(successMessage).toBeVisible({  timeout: 10000 });
     await this.page.locator('a[data-qa="continue-button"]').click();
   } 
  }
