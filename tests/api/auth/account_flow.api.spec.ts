@@ -14,7 +14,7 @@ test.describe('API Account Management Flow', () => {
     });
   });
 
-  test('[API-1] POST /createAccount - Create user account @smoke ', async ({ request }) => {
+  test('[API-1] POST /createAccount - Create user account @smoke @critical', async ({ request }) => {
     await test.step(`USER CREATION: ${testUser.email}`, async () => {
       const response = await request.post('/api/createAccount', { 
         form: testUser.toApiForm(),
@@ -46,7 +46,41 @@ test.describe('API Account Management Flow', () => {
    });
   });
 
-  test('[API-2] DELETE /deleteAccount - Delete user account @smoke ', async ({ request }) => {
+  test('[API-3] POST /verifyLogin - Verify login with valid details @critical ', async ({ request }) => {
+    await test.step(`VERIFY LOGIN: ${testUser.email}`, async () => {
+
+      const response = await request.post('/api/verifyLogin', {
+        form: {
+          email: testUser.email,
+          password: testUser.password
+        }
+      });
+      const body = await response.json();
+
+      expect(response.status()).toBe(200);
+      expect(body.responseCode, `Response code mismatch for ${testUser.email} Server message: ${body.message}`).toBe(200);
+      expect(body.message, 'Server confirmation message').toBe('User exists!');
+   });
+  });
+
+/* API returns HTTP 200 for 404/400 errors. Testing business logic codes instead of HTTP statuses to maintain CI stability */
+  test('[API-7] POST /verifyLogin - Login with invalid details @medium ', async ({ request }) => {
+    await test.step(`VERIFY LOGIN: ${testUser.email}`, async () => {
+
+      const response = await request.post('/api/verifyLogin', {
+        form: {
+          email: testUser.email,
+          password: 'WrongPassword123!'}
+      });
+      const body = await response.json();
+
+      expect(response.status(), 'BUG: Server should return 404 for invalid login, but returns 200').toBe(200); 
+      expect(body.responseCode, 'Business logic code for User Not Found').toBe(404);
+      expect(body.message).toBe('User not found!');
+   });
+  });
+
+  test('[API-2] DELETE /deleteAccount - Delete user account @smoke @critical', async ({ request }) => {
     await test.step(`USER DELETE: ${testUser.email}`, async () => {
       const response = await request.delete('/api/deleteAccount', {
       form: {

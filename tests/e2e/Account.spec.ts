@@ -12,7 +12,7 @@ const BASE_URL = process.env.BASE_URL;
 
 
 
-test('E2E-1: Register User', async ({ page }, testInfo) => {
+test('E2E-1: Register User @critical' , async ({ page }, testInfo) => {
   const loginPage = new LoginPage(page);
   const signUpPage = new SignupPage(page);
   const USER = User.generateRandom();
@@ -42,7 +42,7 @@ test.describe('Login tests', () => {
     });
   });
 
-  test(`E2E-2: Login User with correct email and password (Hybrid) @smoke`, async ({ page }) => {
+  test(`E2E-2: Login User with correct email and password (Hybrid) @smoke @critical`, async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.login(testUser);

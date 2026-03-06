@@ -5,26 +5,26 @@
 
 | **#** | **API Endpoint** | **Method** | **Description**                 | **Priority** | **Notes**                 | **File Name** |
 | ----- | ---------------- | ---------- | ------------------------------- | ------------ | ------------------------- | --------------|
-| 1     | `/createAccount` | POST       | Create user account             | **Critical** | Base for all hybrid tests |tests\api\auth\account_flow.spec.ts|
-| 2     | `/deleteAccount` | DELETE     | Delete user account             | **Critical** | Cleanup                   |tests\api\auth\account_flow.spec.ts|
-| 3     | `/verifyLogin`   | POST       | Verify login with valid details | **Critical** | authorization check       ||
+| API-1 | `/createAccount` | POST       | Create user account             | **Critical** | Base for all hybrid tests |tests\api\auth\account_flow.spec.ts|
+| API-2 | `/deleteAccount` | DELETE     | Delete user account             | **Critical** | Cleanup                   |tests\api\auth\account_flow.spec.ts|
+| API-3 | `/verifyLogin`   | POST       | Verify login with valid details | **Critical** | authorization check       |tests\api\auth\account_flow.spec.ts|
 ### High Priority (Regression API)
 
 | **#** | **API Endpoint**        | **Method** | **Description**         | **Priority** | **Notes**               | **File Name** |
 | ----- | ----------------------- | ---------- | ----------------------- | ------------ | ----------------------- |---------------|
 | 4     | `/productsList`         | GET        | Get all products list   | **High**     | check  JSON products    ||
 | 5     | `/searchProduct`        | POST       | Search for a product    | **High**     | search logic validation ||
-| 6     | `/getUserDetailByEmail` | GET        | Get user account detail | **High**     |                         |tests\api\auth\account_flow.spec.ts|
+| API-6 | `/getUserDetailByEmail` | GET        | Get user account detail | **High**     |                         |tests\api\auth\account_flow.spec.ts|
 
 ### Medium/Low Priority (Extended Validation)
 
 _Negative cases and additional methods_
 
-| **#** | **API Endpoint** | **Method** | **Description**             | **Priority** | **Notes**                     |
-| ----- | ---------------- | ---------- | --------------------------- | ------------ | ----------------------------- |
-| 7     | `/verifyLogin`   | POST       | Login with invalid details  | **Medium**   | Negative: error codes check   |
-| 8     | `/brandsList`    | GET        | Get all brands list         | **Medium**   | brand list verification       |
-| 9     | `/updateAccount` | PUT        | Update user account details | **Medium**   | update profile  verification  |
+| **#** | **API Endpoint** | **Method** | **Description**             | **Priority** | **Notes**                     |**File Name**|
+| ----- | ---------------- | ---------- | --------------------------- | ------------ | ----------------------------- |-------------|
+| API-7 | `/verifyLogin`   | POST       | Login with invalid details  | **Medium**   | Negative: error codes check   |tests\api\auth\account_flow.spec.ts|
+| 8     | `/brandsList`    | GET        | Get all brands list         | **Medium**   | brand list verification       ||
+| 9     | `/updateAccount` | PUT        | Update user account details | **Medium**   | update profile  verification  ||
 
 ## E2E and  Hybrid tests
 ### Critical Priority

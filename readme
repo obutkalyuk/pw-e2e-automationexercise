@@ -6,8 +6,20 @@ This repository contains practice automation tests for the demo store [Automatio
 
 - A learning project for Playwright E2E and API testing.
 - Demonstrates code organization patterns (Page Object).
-- Covers edge cases and different UI scenarios.
-- Allows integration with AI ( Codex) for test generation.
+- Covers edge cases, infrastructure challenges, and UI/API inconsistencies.
+
+## CI/CD Integration
+
+The project is integrated with **GitHub Actions** for automated test execution:
+- **Smoke Tests**: Triggered on every `push` to the `main` branch to ensure core functionality is intact.
+- **Full Regression**: Can be triggered manually via `workflow_dispatch` or on a schedule.
+- **Artifacts**: Playwright reports are generated and stored for failed runs to facilitate debugging.
+
+## 🐞 Bug Tracking & QA Documentation
+
+- **[Issues List](https://github.com/obutkalyuk/pw-e2e-automationexercise/issues)**:  bug reports 
+- **[QA Questionnaire](./qa_questions.md)**:  questions for the development team and risk assessments.
+
 
 ## Project Structure
 
