@@ -36,3 +36,18 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+    - name: Send Custom Mail
+      if: always()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.MAIL_USERNAME }}
+        password: ${{ secrets.MAIL_PASSWORD }}
+        subject: "QA Report: ${{ github.workflow }} - ${{ job.status }}"
+        to: olga.butkalyuk@gmail.com
+        from: Playwright Automation
+        html_body: |
+          <h3>Test Results Summary</h3>
+          <p>Status: ${{ job.status }}</p>
+          <p>Check GitHub Artifacts for full HTML report.</p>

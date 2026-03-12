@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 
 export class User {
   name!: string;
@@ -19,31 +20,33 @@ export class User {
   zipcode!: string;
   mobileNumber!: string;
 
-  constructor() {
-    
-  }
+  constructor() {}
 
   static generateRandom(): User {
+    const gender = faker.helpers.arrayElement(['Mr.', 'Mrs.']);
+    const country = faker.helpers.arrayElement(['India','United States', 'Canada', 'Australia', 'Israel','New Zealand', 'Singapore']);
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
     const u = new User();
     const timestamp = new Date().toISOString().replace(/[:.-]/g, ''); 
     u.name = `user${Math.floor(Math.random() * 10000)}`;
     u.email = `qa_${timestamp}_${Math.floor(Math.random() * 1000)}@example.com`; 
     u.password = 'Test1234';
-    u.title = Math.random() > 0.5 ? 'Mr.' : 'Mrs.';
-    u.dayOfBirth = `${Math.floor(Math.random() * 28) + 1}`;
-    u.monthOfBirth = `${Math.floor(Math.random() * 12) + 1}`;
-    u.yearOfBirth = `${1980 + Math.floor(Math.random() * 20)}`;
+    u.title = gender;
+    u.dayOfBirth = faker.number.int({ min: 1, max: 28 }).toString();
+    u.monthOfBirth = faker.number.int({ min: 1, max: 12 }).toString();
+    u.yearOfBirth = faker.number.int({ min: 1980, max: 2000 }).toString();
     u.newsletter = Math.random() > 0.5;
     u.offers = Math.random() > 0.5;
-    u.firstName = 'John';
-    u.lastName = 'Doe';
+    u.firstName = firstName;
+    u.lastName = lastName;
     u.company = 'ACME';
-    u.address = '123 Main St';
-    u.country = 'United States';
-    u.state = 'California';
-    u.city = 'Los Angeles';
-    u.zipcode = '90001';
-    u.mobileNumber = '555-1234';
+    u.country = country;
+    u.address = faker.location.streetAddress();
+    u.state = faker.location.state();
+    u.city = faker.location.city();
+    u.zipcode = faker.location.zipCode();
+    u.mobileNumber = faker.phone.number('##########');
     return u;
   }
   toApiForm() {
@@ -51,7 +54,7 @@ export class User {
       name: this.name,
       email: this.email,
       password: this.password,
-      title: this.title.replace('.', ''), // API не любить крапку в "Mr."
+      title: this.title.replace('.', ''), 
       birth_date: this.dayOfBirth,
       birth_month: this.monthOfBirth,
       birth_year: this.yearOfBirth,
