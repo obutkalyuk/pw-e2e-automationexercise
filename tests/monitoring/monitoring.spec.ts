@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 test.skip(({ browserName }) => browserName !== 'chromium', 'CDP metrics only work in Chromium');
-test('Network Performance Insight with Throttling', async ({ page }) => {
+test('Network Performance Insight with Throttling', async ({ page }, testInfo) => {
   const url = process.env.BASE_URL;
 
   // 1. Створюємо сесію прямого доступу до протоколу Chrome (CDP)
@@ -38,7 +38,10 @@ test('Network Performance Insight with Throttling', async ({ page }) => {
       total: entry.duration,
     };
   });
-
+    testInfo.annotations.push({
+      type: 'Test Data',
+      description: `Network Throttling: Slow 3G | Metrics: ${JSON.stringify(metrics)}`
+    });
   console.log(`--- Performance Metrics (UNDER THROTTLING) ---`);
   console.table(metrics);
 });

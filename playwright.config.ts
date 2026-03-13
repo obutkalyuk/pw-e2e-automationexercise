@@ -32,7 +32,8 @@ export default defineConfig({
     baseURL: process.env.BASE_URL,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     // trace: 'on-first-retry',
-    trace: 'retain-on-failure',
+    // trace: 'retain-on-failure',
+    trace: 'on',
     headless: !!process.env.CI,
     //screenshot: 'only-on-failure',
     //video: 'retain-on-failure',
@@ -50,6 +51,16 @@ export default defineConfig({
       name: 'monitoring',
       testMatch: /.*monitoring\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] }, // Chrome only
+    },
+    {
+      name: 'stable-e2e',
+      testMatch: /.*Account_create.spec.ts/, 
+      grep: /@stable/,
+      metadata: { slow: true },
+      fullyParallel: false,
+      use: { ...devices['Desktop Chrome'],
+        launchOptions: {slowMo: 200 },
+      } 
     },
     {
       name: 'chromium',

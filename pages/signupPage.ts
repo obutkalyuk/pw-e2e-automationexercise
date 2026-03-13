@@ -103,10 +103,11 @@ export class SignupPage {
     await this.cityInput.fill(user.city);
     await this.zipcodeInput.fill(user.zipcode);
     await this.mobileNumberInput.fill(user.mobileNumber);
-    await this.createAccountButton.click();
+    await this.createAccountButton.click(); 
   }   
 
   async verifyAccountCreation() {
+    await expect(this.page).toHaveURL(/.*account_created/, { timeout: 10000 });
     const successMessage = this.page.locator('h2:has-text("Account Created!")');
     await expect(successMessage).toBeVisible({  timeout: 10000 });
     await this.page.locator('a[data-qa="continue-button"]').click();

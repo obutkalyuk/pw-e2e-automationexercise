@@ -12,10 +12,8 @@ const BASE_URL = process.env.BASE_URL;
 
 
 
-test('E2E-14: Register User @critical' , async ({ page }, testInfo) => {
+test.skip('E2E-14: Place Order: Register while Checkout @critical' , async ({ page }, testInfo) => {
   
 })
 
-test.describe('Login tests', () => {
-  
-}); 
+

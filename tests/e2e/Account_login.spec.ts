@@ -1,34 +1,9 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { apiHelper } from '../../utils/apiHelper';
 import { disposeApiContext } from '../../utils/apiContext';
 import { User } from '../../data/User';
 import { LoginPage } from '../../pages/loginPage';
-import { SignupPage } from '../../pages/signupPage';
-import { log } from 'node:console';
 
-
-
-const BASE_URL = process.env.BASE_URL;
-
-
-
-test('E2E-1: Register User @critical' , async ({ page }, testInfo) => {
-  const loginPage = new LoginPage(page);
-  const signUpPage = new SignupPage(page);
-  const USER = User.generateRandom();
-  testInfo.annotations.push({
-      type: 'Test Data',
-      description: `Name: ${USER.name} | Email: ${USER.email} | Password: ${USER.password}`
-    });
-
-  await loginPage.goto();
-  await test.step(`Sign up new user`, async () => {
-    await loginPage.signUp(USER);
-    await signUpPage.fillForm(USER);
-    await signUpPage.verifyAccountCreation();
-    await loginPage.verifyLoginSuccess(USER);
-  });
-})
 
 test.describe('Login tests', () => {
   let testUser: User;
