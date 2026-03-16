@@ -46,7 +46,7 @@ export class User {
     u.state = faker.location.state();
     u.city = faker.location.city();
     u.zipcode = faker.location.zipCode();
-    u.mobileNumber = faker.phone.number('##########');
+    u.mobileNumber = faker.phone.number({style:"national"});
     return u;
   }
   toApiForm() {
