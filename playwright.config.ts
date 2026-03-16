@@ -52,16 +52,16 @@ export default defineConfig({
       testMatch: /.*monitoring\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] }, // Chrome only
     },
-    {
-      name: 'stable-e2e',
-      testMatch: /.*Account_create.spec.ts/, 
-      grep: /@stable/,
-      metadata: { slow: true },
-      fullyParallel: false,
-      use: { ...devices['Desktop Chrome'],
-        launchOptions: {slowMo: 200 },
-      } 
-    },
+    // {
+    //   name: 'stable-e2e',
+    //   testMatch: /.*Account_create.spec.ts/, 
+    //   grep: /@stable/,
+    //   metadata: { slow: true },
+    //   fullyParallel: false,
+    //   use: { ...devices['Desktop Chrome'],
+    //     launchOptions: {slowMo: 200 },
+    //   } 
+    // },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
