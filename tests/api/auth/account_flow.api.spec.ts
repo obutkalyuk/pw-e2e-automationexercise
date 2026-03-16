@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { User } from '../../../data/User';
+import { User } from '../../../data/user';
 
 test.describe.configure({ mode: 'serial' });
 test.describe('API Account Management Flow', () => {

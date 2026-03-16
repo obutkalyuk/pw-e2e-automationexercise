@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
 import { apiHelper } from '../../utils/apiHelper';
 import { disposeApiContext } from '../../utils/apiContext';
-import { User } from '../../data/User';
+import { User } from '../../data/user';
 import { LoginPage } from '../../pages/loginPage';
 
 

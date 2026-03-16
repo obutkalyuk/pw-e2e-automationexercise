@@ -1,35 +1,30 @@
 import { Page, Locator, expect } from '@playwright/test';
-import { User } from '../data/User';
+import { User } from '../data/user';
+import { BasePage } from './basePage';
 
-export class LoginPage {
-  readonly page: Page;
+export class LoginPage extends BasePage {
   readonly loginEmailInput: Locator;
   readonly loginPasswordInput: Locator;
   readonly loginButton: Locator;
   readonly signupNameInput: Locator;
   readonly signupEmailInput: Locator;
   readonly signupButton: Locator;
-  readonly consentButton: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.loginEmailInput = page.locator('input[data-qa="login-email"]');
     this.loginPasswordInput = page.locator('input[data-qa="login-password"]');
     this.loginButton = page.locator('button[data-qa="login-button"]');
     this.signupNameInput = page.locator('input[data-qa="signup-name"]');
     this.signupEmailInput = page.locator('input[data-qa="signup-email"]');
     this.signupButton = page.locator('button[data-qa="signup-button"]');
-    this.consentButton = page.getByRole('button', { name: 'Consent' });
 
 
   }
-
+  
   async goto() {
     await this.page.goto('/login');
-    if (await this.consentButton.isVisible()) {
-      await this.consentButton.click();
-      await this.consentButton.waitFor({ state: 'hidden' });
-    } 
+    await this.closeConsentIfPresent();
   }
 
   async login(user: User) {

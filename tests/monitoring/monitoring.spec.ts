@@ -1,4 +1,5 @@
 import { test } from '@playwright/test';
+
 test.skip(({ browserName }) => browserName !== 'chromium', 'CDP metrics only work in Chromium');
 test('Network Performance Insight with Throttling', async ({ page }, testInfo) => {
   const url = process.env.BASE_URL;

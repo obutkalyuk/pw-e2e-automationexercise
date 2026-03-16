@@ -1,5 +1,5 @@
 import { APIRequestContext, expect, test } from '@playwright/test';
-import { User } from '../data/User';
+import { User } from '../data/user';
 
 export const apiHelper = {
  
