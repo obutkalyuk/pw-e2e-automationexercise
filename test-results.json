@@ -172,7 +172,7 @@
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Email: qa_20260313T170528500Z_427@example.com | Password: Test1234"
+                      "description": "Email: qa_20260313T181817922Z_854@example.com | Password: Test1234"
                     }
                   ],
                   "expectedStatus": "passed",
@@ -183,26 +183,26 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2688,
+                      "duration": 1777,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Run context: [API-1] POST /createAccount - Create user account @smoke @critical | User: qa_20260313T170528500Z_427@example.com\n"
+                          "text": "Run context: [API-1] POST /createAccount - Create user account @smoke @critical | User: qa_20260313T181817922Z_854@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
                       "steps": [
                         {
-                          "title": "USER CREATION: qa_20260313T170528500Z_427@example.com",
-                          "duration": 1254
+                          "title": "USER CREATION: qa_20260313T181817922Z_854@example.com",
+                          "duration": 1134
                         }
                       ],
-                      "startTime": "2026-03-13T17:05:28.521Z",
+                      "startTime": "2026-03-13T18:18:17.943Z",
                       "annotations": [
                         {
                           "type": "Test Data",
-                          "description": "Email: qa_20260313T170528500Z_427@example.com | Password: Test1234"
+                          "description": "Email: qa_20260313T181817922Z_854@example.com | Password: Test1234"
                         }
                       ],
                       "attachments": [
@@ -234,7 +234,7 @@
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Email: qa_20260313T170528500Z_427@example.com | Password: Test1234"
+                      "description": "Email: qa_20260313T181817922Z_854@example.com | Password: Test1234"
                     }
                   ],
                   "expectedStatus": "passed",
@@ -245,26 +245,26 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 445,
+                      "duration": 272,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Run context: [API-6] GET /getUserDetailByEmail - Get user account detail @high  | User: qa_20260313T170528500Z_427@example.com\n"
+                          "text": "Run context: [API-6] GET /getUserDetailByEmail - Get user account detail @high  | User: qa_20260313T181817922Z_854@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
                       "steps": [
                         {
-                          "title": "GET USER DETAILS: qa_20260313T170528500Z_427@example.com",
-                          "duration": 389
+                          "title": "GET USER DETAILS: qa_20260313T181817922Z_854@example.com",
+                          "duration": 245
                         }
                       ],
-                      "startTime": "2026-03-13T17:05:31.423Z",
+                      "startTime": "2026-03-13T18:18:19.998Z",
                       "annotations": [
                         {
                           "type": "Test Data",
-                          "description": "Email: qa_20260313T170528500Z_427@example.com | Password: Test1234"
+                          "description": "Email: qa_20260313T181817922Z_854@example.com | Password: Test1234"
                         }
                       ],
                       "attachments": [
@@ -296,7 +296,7 @@
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Email: qa_20260313T170528500Z_427@example.com | Password: Test1234"
+                      "description": "Email: qa_20260313T181817922Z_854@example.com | Password: Test1234"
                     }
                   ],
                   "expectedStatus": "passed",
@@ -307,26 +307,26 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 370,
+                      "duration": 254,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Run context: [API-3] POST /verifyLogin - Verify login with valid details @critical  | User: qa_20260313T170528500Z_427@example.com\n"
+                          "text": "Run context: [API-3] POST /verifyLogin - Verify login with valid details @critical  | User: qa_20260313T181817922Z_854@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
                       "steps": [
                         {
-                          "title": "VERIFY LOGIN: qa_20260313T170528500Z_427@example.com",
-                          "duration": 327
+                          "title": "VERIFY LOGIN: qa_20260313T181817922Z_854@example.com",
+                          "duration": 230
                         }
                       ],
-                      "startTime": "2026-03-13T17:05:31.968Z",
+                      "startTime": "2026-03-13T18:18:20.331Z",
                       "annotations": [
                         {
                           "type": "Test Data",
-                          "description": "Email: qa_20260313T170528500Z_427@example.com | Password: Test1234"
+                          "description": "Email: qa_20260313T181817922Z_854@example.com | Password: Test1234"
                         }
                       ],
                       "attachments": [
@@ -358,7 +358,7 @@
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Email: qa_20260313T170528500Z_427@example.com | Password: Test1234"
+                      "description": "Email: qa_20260313T181817922Z_854@example.com | Password: Test1234"
                     }
                   ],
                   "expectedStatus": "passed",
@@ -369,26 +369,26 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 419,
+                      "duration": 353,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Run context: [API-7] POST /verifyLogin - Login with invalid details @medium  | User: qa_20260313T170528500Z_427@example.com\n"
+                          "text": "Run context: [API-7] POST /verifyLogin - Login with invalid details @medium  | User: qa_20260313T181817922Z_854@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
                       "steps": [
                         {
-                          "title": "VERIFY LOGIN: qa_20260313T170528500Z_427@example.com",
-                          "duration": 399
+                          "title": "VERIFY LOGIN: qa_20260313T181817922Z_854@example.com",
+                          "duration": 315
                         }
                       ],
-                      "startTime": "2026-03-13T17:05:32.422Z",
+                      "startTime": "2026-03-13T18:18:20.645Z",
                       "annotations": [
                         {
                           "type": "Test Data",
-                          "description": "Email: qa_20260313T170528500Z_427@example.com | Password: Test1234"
+                          "description": "Email: qa_20260313T181817922Z_854@example.com | Password: Test1234"
                         }
                       ],
                       "attachments": [
@@ -421,7 +421,7 @@
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Email: qa_20260313T170528500Z_427@example.com | Password: Test1234"
+                      "description": "Email: qa_20260313T181817922Z_854@example.com | Password: Test1234"
                     }
                   ],
                   "expectedStatus": "passed",
@@ -432,26 +432,26 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 337,
+                      "duration": 401,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Run context: [API-2] DELETE /deleteAccount - Delete user account @smoke @critical | User: qa_20260313T170528500Z_427@example.com\n"
+                          "text": "Run context: [API-2] DELETE /deleteAccount - Delete user account @smoke @critical | User: qa_20260313T181817922Z_854@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
                       "steps": [
                         {
-                          "title": "USER DELETE: qa_20260313T170528500Z_427@example.com",
-                          "duration": 306
+                          "title": "USER DELETE: qa_20260313T181817922Z_854@example.com",
+                          "duration": 383
                         }
                       ],
-                      "startTime": "2026-03-13T17:05:32.883Z",
+                      "startTime": "2026-03-13T18:18:21.048Z",
                       "annotations": [
                         {
                           "type": "Test Data",
-                          "description": "Email: qa_20260313T170528500Z_427@example.com | Password: Test1234"
+                          "description": "Email: qa_20260313T181817922Z_854@example.com | Password: Test1234"
                         }
                       ],
                       "attachments": [
@@ -491,7 +491,7 @@
               "annotations": [
                 {
                   "type": "Test Data",
-                  "description": "Network Throttling: Slow 3G | Metrics: {\"dns\":58.900000005960464,\"tcp\":78.09999999403954,\"ssl\":77.69999998807907,\"ttfb\":791.5999999940395,\"total\":0}"
+                  "description": "Network Throttling: Slow 3G | Metrics: {\"dns\":41.30000001192093,\"tcp\":80.90000000596046,\"ssl\":80.40000000596046,\"ttfb\":728.6999999880791,\"total\":0}"
                 }
               ],
               "expectedStatus": "passed",
@@ -502,29 +502,29 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 12848,
+                  "duration": 13284,
                   "errors": [],
                   "stdout": [
                     {
                       "text": "--- Performance Metrics (UNDER THROTTLING) ---\n"
                     },
                     {
-                      "text": "┌─────────┬────────────────────┐\n│ (index) │ Values             │\n├─────────┼────────────────────┤\n│ dns     │ \u001b[33m58.900000005960464\u001b[39m │\n│ tcp     │ \u001b[33m78.09999999403954\u001b[39m  │\n│ ssl     │ \u001b[33m77.69999998807907\u001b[39m  │\n│ ttfb    │ \u001b[33m791.5999999940395\u001b[39m  │\n│ total   │ \u001b[33m0\u001b[39m                  │\n└─────────┴────────────────────┘\n"
+                      "text": "┌─────────┬───────────────────┐\n│ (index) │ Values            │\n├─────────┼───────────────────┤\n│ dns     │ \u001b[33m41.30000001192093\u001b[39m │\n│ tcp     │ \u001b[33m80.90000000596046\u001b[39m │\n│ ssl     │ \u001b[33m80.40000000596046\u001b[39m │\n│ ttfb    │ \u001b[33m728.6999999880791\u001b[39m │\n│ total   │ \u001b[33m0\u001b[39m                 │\n└─────────┴───────────────────┘\n"
                     },
                     {
                       "text": "Resource: https://pagead2.googlesyndication.com/getconfig/ab...\n"
                     },
                     {
-                      "text": "  TTFB: 308.72ms\n"
+                      "text": "  TTFB: 307.05ms\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-03-13T17:05:28.199Z",
+                  "startTime": "2026-03-13T18:18:17.325Z",
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Network Throttling: Slow 3G | Metrics: {\"dns\":58.900000005960464,\"tcp\":78.09999999403954,\"ssl\":77.69999998807907,\"ttfb\":791.5999999940395,\"total\":0}"
+                      "description": "Network Throttling: Slow 3G | Metrics: {\"dns\":41.30000001192093,\"tcp\":80.90000000596046,\"ssl\":80.40000000596046,\"ttfb\":728.6999999880791,\"total\":0}"
                     }
                   ],
                   "attachments": [
@@ -572,15 +572,15 @@
               "projectName": "firefox",
               "results": [
                 {
-                  "workerIndex": 9,
-                  "parallelIndex": 1,
+                  "workerIndex": 8,
+                  "parallelIndex": 3,
                   "status": "skipped",
-                  "duration": 2,
+                  "duration": 1,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-03-13T17:06:31.590Z",
+                  "startTime": "2026-03-13T18:19:17.094Z",
                   "annotations": [
                     {
                       "type": "skip",
@@ -632,15 +632,15 @@
               "projectName": "webkit",
               "results": [
                 {
-                  "workerIndex": 13,
+                  "workerIndex": 11,
                   "parallelIndex": 2,
                   "status": "skipped",
-                  "duration": 1,
+                  "duration": 0,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-03-13T17:06:53.779Z",
+                  "startTime": "2026-03-13T18:19:19.985Z",
                   "annotations": [
                     {
                       "type": "skip",
@@ -690,7 +690,7 @@
               "annotations": [
                 {
                   "type": "Test Data",
-                  "description": "Name: user2652 | Email: qa_20260313T170531034Z_936@example.com | Password: Test1234"
+                  "description": "Name: user4725 | Email: qa_20260313T181819590Z_445@example.com | Password: Test1234"
                 }
               ],
               "expectedStatus": "passed",
@@ -700,26 +700,23 @@
                 {
                   "workerIndex": 2,
                   "parallelIndex": 2,
-                  "status": "failed",
-                  "duration": 33553,
+                  "status": "timedOut",
+                  "duration": 33401,
                   "error": {
-                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    13 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    13 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3",
-                    "location": {
-                      "file": "C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts",
-                      "column": 29,
-                      "line": 110
-                    },
-                    "snippet": "\u001b[90m   at \u001b[39m..\\pages\\signupPage.ts:110\n\n\u001b[0m \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m   \u001b[36masync\u001b[39m verifyAccountCreation() {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 110 |\u001b[39m     \u001b[36mawait\u001b[39m expect(\u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*account_created/\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 111 |\u001b[39m     \u001b[36mconst\u001b[39m successMessage \u001b[33m=\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'h2:has-text(\"Account Created!\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 112 |\u001b[39m     \u001b[36mawait\u001b[39m expect(successMessage)\u001b[33m.\u001b[39mtoBeVisible({  timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 113 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'a[data-qa=\"continue-button\"]'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[0m"
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                   },
                   "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
                     {
                       "location": {
                         "file": "C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts",
                         "column": 29,
                         "line": 110
                       },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    13 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n\n\u001b[90m   at \u001b[39m..\\pages\\signupPage.ts:110\n\n\u001b[0m \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m   \u001b[36masync\u001b[39m verifyAccountCreation() {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 110 |\u001b[39m     \u001b[36mawait\u001b[39m expect(\u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*account_created/\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 111 |\u001b[39m     \u001b[36mconst\u001b[39m successMessage \u001b[33m=\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'h2:has-text(\"Account Created!\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 112 |\u001b[39m     \u001b[36mawait\u001b[39m expect(successMessage)\u001b[33m.\u001b[39mtoBeVisible({  timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 113 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'a[data-qa=\"continue-button\"]'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\u001b[22m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\u001b[22m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3\u001b[22m"
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    12 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n\n\u001b[90m   at \u001b[39m..\\pages\\signupPage.ts:110\n\n\u001b[0m \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m   \u001b[36masync\u001b[39m verifyAccountCreation() {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 110 |\u001b[39m     \u001b[36mawait\u001b[39m expect(\u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*account_created/\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 111 |\u001b[39m     \u001b[36mconst\u001b[39m successMessage \u001b[33m=\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'h2:has-text(\"Account Created!\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 112 |\u001b[39m     \u001b[36mawait\u001b[39m expect(successMessage)\u001b[33m.\u001b[39mtoBeVisible({  timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 113 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'a[data-qa=\"continue-button\"]'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\u001b[22m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\u001b[22m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3\u001b[22m"
                     }
                   ],
                   "stdout": [],
@@ -728,10 +725,10 @@
                   "steps": [
                     {
                       "title": "Sign up new user",
-                      "duration": 23633,
+                      "duration": 27247,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    13 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    13 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    12 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    12 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3",
                         "location": {
                           "file": "C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts",
                           "column": 29,
@@ -741,11 +738,11 @@
                       }
                     }
                   ],
-                  "startTime": "2026-03-13T17:05:28.611Z",
+                  "startTime": "2026-03-13T18:18:17.896Z",
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Name: user2652 | Email: qa_20260313T170531034Z_936@example.com | Password: Test1234"
+                      "description": "Name: user4725 | Email: qa_20260313T181819590Z_445@example.com | Password: Test1234"
                     }
                   ],
                   "attachments": [
@@ -769,12 +766,7 @@
                       "contentType": "application/zip",
                       "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\e2e-Account_create-E2E-1-Register-User-critical-stable-stable-e2e\\trace.zip"
                     }
-                  ],
-                  "errorLocation": {
-                    "file": "C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts",
-                    "column": 29,
-                    "line": 110
-                  }
+                  ]
                 }
               ],
               "status": "unexpected"
@@ -798,7 +790,7 @@
               "annotations": [
                 {
                   "type": "Test Data",
-                  "description": "Name: user320 | Email: qa_20260313T170530302Z_344@example.com | Password: Test1234"
+                  "description": "Name: user5238 | Email: qa_20260313T181819876Z_445@example.com | Password: Test1234"
                 }
               ],
               "expectedStatus": "passed",
@@ -809,10 +801,10 @@
                   "workerIndex": 3,
                   "parallelIndex": 3,
                   "status": "failed",
-                  "duration": 28405,
+                  "duration": 27069,
                   "error": {
-                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    13 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    13 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3",
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3",
                     "location": {
                       "file": "C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts",
                       "column": 29,
@@ -827,7 +819,7 @@
                         "column": 29,
                         "line": 110
                       },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    13 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n\n\u001b[90m   at \u001b[39m..\\pages\\signupPage.ts:110\n\n\u001b[0m \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m   \u001b[36masync\u001b[39m verifyAccountCreation() {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 110 |\u001b[39m     \u001b[36mawait\u001b[39m expect(\u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*account_created/\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 111 |\u001b[39m     \u001b[36mconst\u001b[39m successMessage \u001b[33m=\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'h2:has-text(\"Account Created!\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 112 |\u001b[39m     \u001b[36mawait\u001b[39m expect(successMessage)\u001b[33m.\u001b[39mtoBeVisible({  timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 113 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'a[data-qa=\"continue-button\"]'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\u001b[22m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\u001b[22m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3\u001b[22m"
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n\n\u001b[90m   at \u001b[39m..\\pages\\signupPage.ts:110\n\n\u001b[0m \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m   \u001b[36masync\u001b[39m verifyAccountCreation() {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 110 |\u001b[39m     \u001b[36mawait\u001b[39m expect(\u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*account_created/\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 111 |\u001b[39m     \u001b[36mconst\u001b[39m successMessage \u001b[33m=\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'h2:has-text(\"Account Created!\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 112 |\u001b[39m     \u001b[36mawait\u001b[39m expect(successMessage)\u001b[33m.\u001b[39mtoBeVisible({  timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 113 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mlocator(\u001b[32m'a[data-qa=\"continue-button\"]'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\u001b[22m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\u001b[22m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3\u001b[22m"
                     }
                   ],
                   "stdout": [],
@@ -836,10 +828,10 @@
                   "steps": [
                     {
                       "title": "Sign up new user",
-                      "duration": 19842,
+                      "duration": 19031,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    13 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    13 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/.*account_created/\u001b[39m\nReceived string:  \u001b[31m\"https://automationexercise.com/signup\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 10000ms\u001b[22m\n\u001b[2m    14 × unexpected value \"https://automationexercise.com/signup\"\u001b[22m\n\n    at SignupPage.verifyAccountCreation (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:110:29)\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:20:22\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3",
                         "location": {
                           "file": "C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts",
                           "column": 29,
@@ -849,11 +841,11 @@
                       }
                     }
                   ],
-                  "startTime": "2026-03-13T17:05:28.448Z",
+                  "startTime": "2026-03-13T18:18:17.849Z",
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Name: user320 | Email: qa_20260313T170530302Z_344@example.com | Password: Test1234"
+                      "description": "Name: user5238 | Email: qa_20260313T181819876Z_445@example.com | Password: Test1234"
                     }
                   ],
                   "attachments": [
@@ -895,7 +887,7 @@
         },
         {
           "title": "E2E-1: Register User @critical @stable",
-          "ok": false,
+          "ok": true,
           "tags": [
             "critical",
             "stable"
@@ -906,7 +898,7 @@
               "annotations": [
                 {
                   "type": "Test Data",
-                  "description": "Name: user7610 | Email: qa_20260313T170604295Z_991@example.com | Password: Test1234"
+                  "description": "Name: user4908 | Email: qa_20260313T181852352Z_704@example.com | Password: Test1234"
                 }
               ],
               "expectedStatus": "passed",
@@ -916,66 +908,35 @@
                 {
                   "workerIndex": 6,
                   "parallelIndex": 0,
-                  "status": "timedOut",
-                  "duration": 35858,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts",
-                        "column": 36,
-                        "line": 106
-                      },
-                      "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[data-qa=\"create-account\"]')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"submit\" class=\"btn btn-default\" data-qa=\"create-account\">Create Account</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n\n\u001b[90m   at \u001b[39m..\\pages\\signupPage.ts:106\n\n\u001b[0m \u001b[90m 104 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mzipcodeInput\u001b[33m.\u001b[39mfill(user\u001b[33m.\u001b[39mzipcode)\u001b[33m;\u001b[39m\n \u001b[90m 105 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mmobileNumberInput\u001b[33m.\u001b[39mfill(user\u001b[33m.\u001b[39mmobileNumber)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mcreateAccountButton\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m \n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 107 |\u001b[39m   }   \n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m   \u001b[36masync\u001b[39m verifyAccountCreation() {\u001b[0m\n\u001b[2m    at SignupPage.fillForm (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:106:36)\u001b[22m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:19:5\u001b[22m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3\u001b[22m"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 21599,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
                   "steps": [
                     {
                       "title": "Sign up new user",
-                      "duration": 27732,
-                      "error": {
-                        "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[data-qa=\"create-account\"]')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"submit\" class=\"btn btn-default\" data-qa=\"create-account\">Create Account</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n",
-                        "stack": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[data-qa=\"create-account\"]')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"submit\" class=\"btn btn-default\" data-qa=\"create-account\">Create Account</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n    at SignupPage.fillForm (C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts:106:36)\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:19:5\n    at C:\\study\\pw-e2e-automationexercise\\tests\\e2e\\Account_create.spec.ts:17:3",
-                        "location": {
-                          "file": "C:\\study\\pw-e2e-automationexercise\\pages\\signupPage.ts",
-                          "column": 36,
-                          "line": 106
-                        },
-                        "snippet": "\u001b[90m   at \u001b[39m..\\pages\\signupPage.ts:106\n\n\u001b[0m \u001b[90m 104 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mzipcodeInput\u001b[33m.\u001b[39mfill(user\u001b[33m.\u001b[39mzipcode)\u001b[33m;\u001b[39m\n \u001b[90m 105 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mmobileNumberInput\u001b[33m.\u001b[39mfill(user\u001b[33m.\u001b[39mmobileNumber)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mcreateAccountButton\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m \n \u001b[90m     |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 107 |\u001b[39m   }   \n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m   \u001b[36masync\u001b[39m verifyAccountCreation() {\u001b[0m"
-                      }
+                      "duration": 11809
                     }
                   ],
-                  "startTime": "2026-03-13T17:05:58.161Z",
+                  "startTime": "2026-03-13T18:18:47.495Z",
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Name: user7610 | Email: qa_20260313T170604295Z_991@example.com | Password: Test1234"
+                      "description": "Name: user4908 | Email: qa_20260313T181852352Z_704@example.com | Password: Test1234"
                     }
                   ],
                   "attachments": [
                     {
                       "name": "screenshot",
                       "contentType": "image/png",
-                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\e2e-Account_create-E2E-1-Register-User-critical-stable-firefox\\test-failed-1.png"
+                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\e2e-Account_create-E2E-1-Register-User-critical-stable-firefox\\test-finished-1.png"
                     },
                     {
                       "name": "video",
                       "contentType": "video/webm",
                       "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\e2e-Account_create-E2E-1-Register-User-critical-stable-firefox\\video.webm"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\e2e-Account_create-E2E-1-Register-User-critical-stable-firefox\\error-context.md"
                     },
                     {
                       "name": "trace",
@@ -985,7 +946,7 @@
                   ]
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "a91471f1e5a08d73cdca-5022fcc48dee268e73dc",
@@ -995,7 +956,7 @@
         },
         {
           "title": "E2E-1: Register User @critical @stable",
-          "ok": false,
+          "ok": true,
           "tags": [
             "critical",
             "stable"
@@ -1006,7 +967,7 @@
               "annotations": [
                 {
                   "type": "Test Data",
-                  "description": "Name: user2880 | Email: qa_20260313T170637228Z_177@example.com | Password: Test1234"
+                  "description": "Name: user248 | Email: qa_20260313T181920246Z_20@example.com | Password: Test1234"
                 }
               ],
               "expectedStatus": "passed",
@@ -1014,50 +975,37 @@
               "projectName": "webkit",
               "results": [
                 {
-                  "workerIndex": 11,
+                  "workerIndex": 9,
                   "parallelIndex": 3,
-                  "status": "timedOut",
-                  "duration": 31938,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 31755,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
                   "steps": [
                     {
                       "title": "Sign up new user",
-                      "duration": 22974
+                      "duration": 17379
                     }
                   ],
-                  "startTime": "2026-03-13T17:06:35.907Z",
+                  "startTime": "2026-03-13T18:19:19.521Z",
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Name: user2880 | Email: qa_20260313T170637228Z_177@example.com | Password: Test1234"
+                      "description": "Name: user248 | Email: qa_20260313T181920246Z_20@example.com | Password: Test1234"
                     }
                   ],
                   "attachments": [
                     {
                       "name": "screenshot",
                       "contentType": "image/png",
-                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\e2e-Account_create-E2E-1-Register-User-critical-stable-webkit\\test-failed-1.png"
+                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\e2e-Account_create-E2E-1-Register-User-critical-stable-webkit\\test-finished-1.png"
                     },
                     {
                       "name": "video",
                       "contentType": "video/webm",
                       "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\e2e-Account_create-E2E-1-Register-User-critical-stable-webkit\\video.webm"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\e2e-Account_create-E2E-1-Register-User-critical-stable-webkit\\error-context.md"
                     },
                     {
                       "name": "trace",
@@ -1067,7 +1015,7 @@
                   ]
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "a91471f1e5a08d73cdca-b9a6b0b5cc1d73c6e826",
@@ -1103,7 +1051,7 @@
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Name: user4361 | Email: qa_20260313T170537417Z_612@example.com | Password: Test1234"
+                      "description": "Name: user9312 | Email: qa_20260313T181826532Z_43@example.com | Password: Test1234"
                     }
                   ],
                   "expectedStatus": "passed",
@@ -1114,22 +1062,22 @@
                       "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 11390,
+                      "duration": 10260,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
                       "steps": [
                         {
-                          "title": "Verify user user4361 is logged in",
-                          "duration": 916
+                          "title": "Verify user user9312 is logged in",
+                          "duration": 1007
                         }
                       ],
-                      "startTime": "2026-03-13T17:05:37.312Z",
+                      "startTime": "2026-03-13T18:18:26.309Z",
                       "annotations": [
                         {
                           "type": "Test Data",
-                          "description": "Name: user4361 | Email: qa_20260313T170537417Z_612@example.com | Password: Test1234"
+                          "description": "Name: user9312 | Email: qa_20260313T181826532Z_43@example.com | Password: Test1234"
                         }
                       ],
                       "attachments": [
@@ -1172,7 +1120,7 @@
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Name: user9815 | Email: qa_20260313T170610561Z_302@example.com | Password: Test1234"
+                      "description": "Name: user6479 | Email: qa_20260313T181912928Z_130@example.com | Password: Test1234"
                     }
                   ],
                   "expectedStatus": "passed",
@@ -1180,25 +1128,25 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 3,
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 14249,
+                      "duration": 24719,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
                       "steps": [
                         {
-                          "title": "Verify user user9815 is logged in",
-                          "duration": 756
+                          "title": "Verify user user6479 is logged in",
+                          "duration": 1005
                         }
                       ],
-                      "startTime": "2026-03-13T17:06:10.483Z",
+                      "startTime": "2026-03-13T18:19:12.895Z",
                       "annotations": [
                         {
                           "type": "Test Data",
-                          "description": "Name: user9815 | Email: qa_20260313T170610561Z_302@example.com | Password: Test1234"
+                          "description": "Name: user6479 | Email: qa_20260313T181912928Z_130@example.com | Password: Test1234"
                         }
                       ],
                       "attachments": [
@@ -1241,7 +1189,7 @@
                   "annotations": [
                     {
                       "type": "Test Data",
-                      "description": "Name: user4547 | Email: qa_20260313T170635896Z_517@example.com | Password: Test1234"
+                      "description": "Name: user3394 | Email: qa_20260313T181919614Z_248@example.com | Password: Test1234"
                     }
                   ],
                   "expectedStatus": "passed",
@@ -1252,22 +1200,22 @@
                       "workerIndex": 10,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 22106,
+                      "duration": 23797,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
                       "steps": [
                         {
-                          "title": "Verify user user4547 is logged in",
-                          "duration": 2935
+                          "title": "Verify user user3394 is logged in",
+                          "duration": 487
                         }
                       ],
-                      "startTime": "2026-03-13T17:06:35.788Z",
+                      "startTime": "2026-03-13T18:19:19.551Z",
                       "annotations": [
                         {
                           "type": "Test Data",
-                          "description": "Name: user4547 | Email: qa_20260313T170635896Z_517@example.com | Password: Test1234"
+                          "description": "Name: user3394 | Email: qa_20260313T181919614Z_248@example.com | Password: Test1234"
                         }
                       ],
                       "attachments": [
@@ -1339,7 +1287,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-03-13T17:05:42.697Z",
+                  "startTime": "2026-03-13T18:18:33.129Z",
                   "annotations": [
                     {
                       "type": "skip",
@@ -1393,7 +1341,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-03-13T17:06:07.434Z",
+                  "startTime": "2026-03-13T18:19:14.109Z",
                   "annotations": [
                     {
                       "type": "skip",
@@ -1447,7 +1395,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-03-13T17:06:45.237Z",
+                  "startTime": "2026-03-13T18:19:17.613Z",
                   "annotations": [
                     {
                       "type": "skip",
@@ -1503,7 +1451,7 @@
                   "workerIndex": 5,
                   "parallelIndex": 1,
                   "status": "timedOut",
-                  "duration": 32156,
+                  "duration": 31345,
                   "error": {
                     "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
                     "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
@@ -1518,13 +1466,13 @@
                         "column": 15,
                         "line": 38
                       },
-                      "message": "Error: 1 users failed to register due to race condition.\n\n\u001b[0m \u001b[90m 36 |\u001b[39m     \u001b[36mconst\u001b[39m failed \u001b[33m=\u001b[39m results\u001b[33m.\u001b[39mfilter(r \u001b[33m=>\u001b[39m r\u001b[33m.\u001b[39mstatus \u001b[33m===\u001b[39m \u001b[32m'rejected'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 37 |\u001b[39m     \u001b[36mif\u001b[39m (failed\u001b[33m.\u001b[39mlength \u001b[33m>\u001b[39m \u001b[35m0\u001b[39m) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m         \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`${failed.length} users failed to register due to race condition.`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m     }\n \u001b[90m 40 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 41 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\monitoring\\Account_create_concurrency.spec.ts:38:15\u001b[22m"
+                      "message": "Error: 5 users failed to register due to race condition.\n\n\u001b[0m \u001b[90m 36 |\u001b[39m     \u001b[36mconst\u001b[39m failed \u001b[33m=\u001b[39m results\u001b[33m.\u001b[39mfilter(r \u001b[33m=>\u001b[39m r\u001b[33m.\u001b[39mstatus \u001b[33m===\u001b[39m \u001b[32m'rejected'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 37 |\u001b[39m     \u001b[36mif\u001b[39m (failed\u001b[33m.\u001b[39mlength \u001b[33m>\u001b[39m \u001b[35m0\u001b[39m) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m         \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`${failed.length} users failed to register due to race condition.`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m     }\n \u001b[90m 40 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 41 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\study\\pw-e2e-automationexercise\\tests\\monitoring\\Account_create_concurrency.spec.ts:38:15\u001b[22m"
                     }
                   ],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-03-13T17:05:49.630Z",
+                  "startTime": "2026-03-13T18:18:38.373Z",
                   "annotations": [
                     {
                       "type": "fail",
@@ -1540,7 +1488,27 @@
                     {
                       "name": "screenshot",
                       "contentType": "image/png",
+                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\monitoring-Account_create_-3b2e0-rap-Catching-the-200-OK-bug-chromium\\test-failed-4.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\monitoring-Account_create_-3b2e0-rap-Catching-the-200-OK-bug-chromium\\test-failed-3.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
                       "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\monitoring-Account_create_-3b2e0-rap-Catching-the-200-OK-bug-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\monitoring-Account_create_-3b2e0-rap-Catching-the-200-OK-bug-chromium\\test-failed-5.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\monitoring-Account_create_-3b2e0-rap-Catching-the-200-OK-bug-chromium\\test-failed-2.png"
                     },
                     {
                       "name": "error-context",
@@ -1565,61 +1533,48 @@
         },
         {
           "title": "Concurrency Trap: Catching the 200 OK bug",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
               "timeout": 30000,
               "annotations": [
                 {
-                  "type": "fail",
-                  "description": "BUG-###: Race condition returns 200 OK",
+                  "type": "skip",
+                  "description": "This bug is Chromium-specific",
                   "location": {
                     "file": "C:\\study\\pw-e2e-automationexercise\\tests\\monitoring\\Account_create_concurrency.spec.ts",
-                    "line": 8,
-                    "column": 8
+                    "line": 6,
+                    "column": 6
                   }
                 }
               ],
-              "expectedStatus": "failed",
+              "expectedStatus": "skipped",
               "projectId": "firefox",
               "projectName": "firefox",
               "results": [
                 {
-                  "workerIndex": 8,
+                  "workerIndex": 7,
                   "parallelIndex": 2,
-                  "status": "timedOut",
-                  "duration": 30221,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                    }
-                  ],
+                  "status": "skipped",
+                  "duration": 2,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-03-13T17:06:11.202Z",
+                  "startTime": "2026-03-13T18:19:17.438Z",
                   "annotations": [
                     {
-                      "type": "fail",
-                      "description": "BUG-###: Race condition returns 200 OK",
+                      "type": "skip",
+                      "description": "This bug is Chromium-specific",
                       "location": {
                         "file": "C:\\study\\pw-e2e-automationexercise\\tests\\monitoring\\Account_create_concurrency.spec.ts",
-                        "line": 8,
-                        "column": 8
+                        "line": 6,
+                        "column": 6
                       }
                     }
                   ],
                   "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\monitoring-Account_create_-3b2e0-rap-Catching-the-200-OK-bug-firefox\\test-failed-1.png"
-                    },
                     {
                       "name": "trace",
                       "contentType": "application/zip",
@@ -1628,7 +1583,7 @@
                   ]
                 }
               ],
-              "status": "unexpected"
+              "status": "skipped"
             }
           ],
           "id": "840bcb851dcc69e60a6e-61bebe81ea8b5c4647d2",
@@ -1638,53 +1593,48 @@
         },
         {
           "title": "Concurrency Trap: Catching the 200 OK bug",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
               "timeout": 30000,
               "annotations": [
                 {
-                  "type": "fail",
-                  "description": "BUG-###: Race condition returns 200 OK",
+                  "type": "skip",
+                  "description": "This bug is Chromium-specific",
                   "location": {
                     "file": "C:\\study\\pw-e2e-automationexercise\\tests\\monitoring\\Account_create_concurrency.spec.ts",
-                    "line": 8,
-                    "column": 8
+                    "line": 6,
+                    "column": 6
                   }
                 }
               ],
-              "expectedStatus": "failed",
+              "expectedStatus": "skipped",
               "projectId": "webkit",
               "projectName": "webkit",
               "results": [
                 {
-                  "workerIndex": 12,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 23371,
+                  "workerIndex": 11,
+                  "parallelIndex": 2,
+                  "status": "skipped",
+                  "duration": 1,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-03-13T17:06:49.371Z",
+                  "startTime": "2026-03-13T18:19:19.840Z",
                   "annotations": [
                     {
-                      "type": "fail",
-                      "description": "BUG-###: Race condition returns 200 OK",
+                      "type": "skip",
+                      "description": "This bug is Chromium-specific",
                       "location": {
                         "file": "C:\\study\\pw-e2e-automationexercise\\tests\\monitoring\\Account_create_concurrency.spec.ts",
-                        "line": 8,
-                        "column": 8
+                        "line": 6,
+                        "column": 6
                       }
                     }
                   ],
                   "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "C:\\study\\pw-e2e-automationexercise\\test-results\\monitoring-Account_create_-3b2e0-rap-Catching-the-200-OK-bug-webkit\\test-failed-1.png"
-                    },
                     {
                       "name": "trace",
                       "contentType": "application/zip",
@@ -1693,7 +1643,7 @@
                   ]
                 }
               ],
-              "status": "unexpected"
+              "status": "skipped"
             }
           ],
           "id": "840bcb851dcc69e60a6e-ad39a883155999841a7f",
@@ -1706,11 +1656,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-13T17:05:25.302Z",
-    "duration": 108089.232,
-    "expected": 9,
-    "skipped": 5,
-    "unexpected": 7,
+    "startTime": "2026-03-13T18:18:14.252Z",
+    "duration": 99571.802,
+    "expected": 11,
+    "skipped": 7,
+    "unexpected": 3,
     "flaky": 0
   }
 }

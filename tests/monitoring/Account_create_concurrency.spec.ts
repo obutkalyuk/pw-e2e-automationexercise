@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import { User } from '../../data/User';
 import { LoginPage } from '../../pages/loginPage';
 import { SignupPage } from '../../pages/signupPage';
-
-
+  
+test.skip(({ browserName }) => browserName !== 'chromium',  'This bug is Chromium-specific');
 test('Concurrency Trap: Catching the 200 OK bug', async ({ browser }) => {
   test.fail(true, 'BUG-###: Race condition returns 200 OK');
     // create 5 users at the same time
