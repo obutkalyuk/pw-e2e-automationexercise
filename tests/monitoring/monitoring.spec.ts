@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
 
 test.skip(({ browserName }) => browserName !== 'chromium', 'CDP metrics only work in Chromium');
-test('Network Performance Insight with Throttling', async ({ page }, testInfo) => {
+test('M-1 Network Performance Insight with Throttling', async ({ page }, testInfo) => {
   const url = process.env.BASE_URL;
 
   // 1. Створюємо сесію прямого доступу до протоколу Chrome (CDP)

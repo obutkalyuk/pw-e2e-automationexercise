@@ -3,9 +3,6 @@ import { BasePage } from './basePage';
 
 export class ProductsPage extends BasePage {
   
-  
-  
-
   constructor(page: Page) {
     super(page);
   }

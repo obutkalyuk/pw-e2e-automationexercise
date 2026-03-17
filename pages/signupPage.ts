@@ -104,6 +104,8 @@ export class SignupPage {
     await this.zipcodeInput.fill(user.zipcode);
     await this.mobileNumberInput.fill(user.mobileNumber);
     await this.createAccountButton.click(); 
+    await expect(this.createAccountButton).toBeHidden();  
+
   }   
 
   async verifyAccountCreation() {

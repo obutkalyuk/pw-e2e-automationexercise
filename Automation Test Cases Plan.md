@@ -77,7 +77,7 @@ _Negative cases and additional methods_
 
 ### Performance & Monitoring (Chromium Only)
 
-| **#** | **Scope** | **Method** | **Description** | **Priority** | **Notes** | **File Name** |
-| ----- | --------------- | ---------- | --------------------------------------- | ------------ | ----------------------------- | ----|
-| M-1   | `Performance`   | CDP        | Network Throttling (Slow 3G emulation)  | **Medium** | Metrics: TTFB, DNS, Total     ||
-| M-2   | `Monitoring`    | Listeners  | Resource TTFB tracking (XHR/Fetch)      | **Low** | Identification of slow assets ||
+|**Status**| **#** | **Scope** | **Method** | **Description** | **Priority** | **Notes** | **File Name** |
+| --- | ----- | --------------- | ---------- | --------------------------------------- | ------------ | ----------------------------- | ----|
+|✅| M-1   | Performance & Monitoring   | Playwright + CDP        | Network Throttling & Resource TTFB| **Medium** | Metrics: TTFB, DNS, Total     |tests/monitoring/performance.spec.ts|
+|✅| C-1   | Concurrency    |  API / Stress | Parallel User Registration (5 threads)      | **Low** | Identification of slow assets |tests/api/auth/concurrency.spec.ts|

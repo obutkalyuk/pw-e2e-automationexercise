@@ -30,6 +30,13 @@ jobs:
     - name: Run Full Test Suite
       if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
       run: npm run test:full
+    - name: Publish Test Report to Summary
+      uses: mikepenz/action-junit-report@v4
+      if: always()
+      with:
+        report_paths: 'results.xml'
+        detailed_summary: true
+        include_passed: true
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
@@ -49,5 +56,7 @@ jobs:
         from: Playwright Automation
         html_body: |
           <h3>Test Results Summary</h3>
-          <p>Status: ${{ job.status }}</p>
-          <p>Check GitHub Artifacts for full HTML report.</p>
+          <p><b>Workflow:</b> ${{ github.workflow }}</p>
+          <p><b>Status:</b> ${{ job.status == 'success' && '✅ PASSED' || '❌ FAILED' }}</p>
+          <p><b>Run Details:</b> <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to see detailed summary and errors</a></p>
+          <p><i>Check GitHub Artifacts for full HTML report with screenshots.</i></p>
