@@ -7,15 +7,15 @@ test('M-1 Network Performance Insight with Throttling', async ({ page }, testInf
   // 1. Створюємо сесію прямого доступу до протоколу Chrome (CDP)
   const session = await page.context().newCDPSession(page);
   
-  // Вмикаємо емуляцію мережі (Slow 3G style)
+  // Switch on the network emulation (Slow 3G style)
   await session.send('Network.emulateNetworkConditions', {
     offline: false,
     downloadThroughput: 1.6 * 1024 * 1024 / 8, // ~1.6 Mbps
     uploadThroughput: 750 * 1024 / 8,        // ~750 Kbps
-    latency: 150,                            // 150ms затримки додається до кожного етапу!
+    latency: 150,                            // 150ms add to very step
   });
 
-  // 2. Датчики на API
+  // 2. listeners on API
   page.on('requestfinished', request => {
     const timing = request.timing();
     if (['fetch', 'xhr'].includes(request.resourceType())) {
@@ -25,10 +25,9 @@ test('M-1 Network Performance Insight with Throttling', async ({ page }, testInf
     }
   });
 
-  // 3. Йдемо на сайт
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-  // 4. Збираємо фінальні метрики
+  // 4. Get final metrics from the Navigation Timing API
   const metrics = await page.evaluate(() => {
     const [entry] = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
     return {

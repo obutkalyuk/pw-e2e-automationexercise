@@ -35,10 +35,18 @@ export class BasePage {
         }
     }
 
-    async goToLogin() { await this.loginLink.click(); }
-    async goToProducts() { await this.productsLink.click(); }
-    async goToCart() { await this.cartLink.click(); }
-    async deleteAccount() {await this.deleteAccountLink.click();}
+    async goToLogin() {
+        await this.loginLink.click(); 
+        await this.closeConsentIfPresent();
+    }
+    async goToProducts() { await this.productsLink.click();
+        await this.closeConsentIfPresent();
+     }
+    async goToCart() { await this.cartLink.click(); 
+        await this.closeConsentIfPresent();
+    }
+    async deleteAccount() {await this.deleteAccountLink.click();   
+    }
 
     async verifyLoggedInAs(userName: string) {
         await expect(this.loggedInUserMarker).toBeVisible();
