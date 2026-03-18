@@ -90,7 +90,7 @@ test('E2E-16: Place Order: Login and Payment @critical' , async ({ page }) => {
 
     const products = ["2", "4", "6"];
     test.step(`Login with existing user`, async () => {
-        await loginPage.goto();
+        await loginPage.goToLogin();
         await loginPage.login(testUser);
         await loginPage.verifyLoginSuccess(testUser);
     });
