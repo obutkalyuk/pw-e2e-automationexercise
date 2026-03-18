@@ -46,6 +46,7 @@ export class CartPage  extends BasePage {
     await this.page.locator('div#checkoutModal a[href="/login"]').click();
     await this.page.waitForURL('**/login');
   }
+  
 
   async deleteProduct(id: string) {
       await this.page.locator(`a.cart_quantity_delete[data-product-id="${id}"]`).click();

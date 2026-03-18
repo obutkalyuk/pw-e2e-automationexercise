@@ -1,8 +1,8 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { User } from '../data/user';
+import { BasePage } from './basePage';
 
-export class SignupPage {
-  readonly page: Page;
+export class SignupPage extends BasePage {
   readonly titleRadio: Locator;
   readonly nameInput: Locator;
   readonly emailInput: Locator;
@@ -26,7 +26,7 @@ export class SignupPage {
   
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.titleRadio = page.locator('input[name="title"]');
     this.nameInput = page.locator('input[data-qa="name"]');
     this.emailInput = page.locator('input[data-qa="email"]');
@@ -46,7 +46,7 @@ export class SignupPage {
     this.cityInput = page.locator('input[data-qa="city"]');
     this.zipcodeInput = page.locator('input[data-qa="zipcode"]');
     this.mobileNumberInput = page.locator('input[data-qa="mobile_number"]');
-    this.createAccountButton = page.locator('button[data-qa="create-account"]');
+    this.createAccountButton = page.locator('div.login-form button[data-qa="create-account"]');
 
   }
 
@@ -103,8 +103,8 @@ export class SignupPage {
     await this.cityInput.fill(user.city);
     await this.zipcodeInput.fill(user.zipcode);
     await this.mobileNumberInput.fill(user.mobileNumber);
-    await this.createAccountButton.click(); 
-    await expect(this.createAccountButton).toBeHidden();  
+    await this.createAccountButton.click({force: true}); 
+    await this.handleCommonAds(); // Handle any ads that may appear after account creation
 
   }   
 

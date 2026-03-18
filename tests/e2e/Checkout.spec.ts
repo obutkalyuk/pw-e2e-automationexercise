@@ -3,6 +3,7 @@ import { apiHelper } from '../../utils/apiHelper';
 import { disposeApiContext } from '../../utils/apiContext';
 import { User } from '../../data/user';
 import { LoginPage } from '../../pages/loginPage';
+import { SignupPage } from '../../pages/signupPage';
 import { ProductsPage } from '../../pages/productsPage';
 import { CartPage } from '../../pages/cartPage';
 import { CheckoutPage } from '../../pages/checkoutPage';
@@ -10,8 +11,36 @@ import { PaymentPage } from '../../pages/paymentPage';
 import { TEST_CARD } from '../../data/payment';
 
 
-test.skip('E2E-14: Place Order: Register while Checkout @critical' , async ({ page }, testInfo) => {
+test('E2E-14: Place Order: Register while Checkout @critical' , async ({ page }, testInfo) => {
+    const signUpPage = new SignupPage(page);
+    const loginPage = new LoginPage(page);
+    const productPage = new ProductsPage(page);
+    const cartPage = new CartPage(page);
+
+    const products = ["1", "2", "3"];
+    const USER = User.generateRandom();
+    testInfo.annotations.push({
+        type: 'Test Data',
+        description: `Name: ${USER.name} | Email: ${USER.email} | Password: ${USER.password}`
+      });
   
+    await test.step(`Add products to cart and proceed to checkout`, async () => {
+        await page.goto('/products');
+        await productPage.handleCommonAds(); // Handle any ads that may appear on the products page
+        await productPage.addMultipleProducts(products); 
+        await productPage.goToCart();
+        await cartPage.proceedToCheckout();
+        await cartPage.loginFromModal();
+    });
+    await test.step(`Sign up new user`, async () => {
+        await loginPage.signUp(USER);
+        await signUpPage.fillForm(USER);
+        await signUpPage.verifyAccountCreation();
+    });
+    await test.step(`Verify products are still in cart after registration`, async () => {
+        await cartPage.goToCart(); 
+        await cartPage.verifyProductInCart(products);
+    });
 })
 
 test.describe('Place Order tests', () => {
@@ -28,28 +57,31 @@ test.describe('Place Order tests', () => {
 
 
 
-test('E2E-15: Place Order: Register before Checkout @critical', async ({ page, request }, testinfo) => {
+test('E2E-15: Place Order: Login while Checkout @critical', async ({ page}) => {
     const productPage = new ProductsPage(page);
     const cartPage = new CartPage(page);
     const loginPage = new LoginPage(page);
 
     const products = ["1", "3", "5"];
 
-    await page.goto('/products');
-    await productPage.addMultipleProducts(products); 
-    
-    await productPage.goToCart();
-   
-    await cartPage.proceedToCheckout();
-    await cartPage.loginFromModal();
-
-    await loginPage.login(testUser);
-    await loginPage.goToCart(); 
-
-    await cartPage.verifyProductInCart(products);
+    await test.step(`Add products to cart and proceed to checkout`, async () => {
+        await page.goto('/products');
+        await productPage.addMultipleProducts(products); 
+        await productPage.goToCart();
+        await cartPage.proceedToCheckout();
+        await cartPage.loginFromModal();
+    });
+    await test.step(`Login with existing user`, async () => {
+        await loginPage.login(testUser);
+        await loginPage.verifyLoginSuccess(testUser);
+    });
+    await test.step(`Verify products are still in cart after login`, async () => {  
+        await loginPage.goToCart(); 
+        await cartPage.verifyProductInCart(products);
+    });
 });
 
-test('E2E-16: Place Order: Login before Checkout @critical' , async ({ page }, testInfo) => {
+test('E2E-16: Place Order: Login and Payment @critical' , async ({ page }) => {
     const loginPage = new LoginPage(page);
     const productPage = new ProductsPage(page);
     const cartPage = new CartPage(page);
@@ -57,21 +89,25 @@ test('E2E-16: Place Order: Login before Checkout @critical' , async ({ page }, t
     const paymentPage = new PaymentPage(page);
 
     const products = ["2", "4", "6"];
-
-    await loginPage.goto();
-    await loginPage.login(testUser);
-    await loginPage.goToProducts();
-    await productPage.addMultipleProducts(products); 
-    await productPage.goToCart();
-
-    await cartPage.verifyProductInCart(products);
-    await cartPage.proceedToCheckout();
-    await checkoutPage.verifyProductInCheckout(products);
-    await checkoutPage.placeOrder();
-    await paymentPage.fillPaymentDetails(TEST_CARD);
-    await paymentPage.clickPayAndConfirm(); 
-    await paymentPage.verifyPaymentSuccess();
-
+    test.step(`Login with existing user`, async () => {
+        await loginPage.goto();
+        await loginPage.login(testUser);
+        await loginPage.verifyLoginSuccess(testUser);
+    });
+    await test.step(`Add products to cart, proceed to checkout and place order`, async () => {
+        await loginPage.goToProducts();
+        await productPage.addMultipleProducts(products); 
+        await productPage.goToCart();
+        await cartPage.verifyProductInCart(products);
+        await cartPage.proceedToCheckout();
+        await checkoutPage.verifyProductInCheckout(products);
+    });
+    await test.step(`Fill payment details and confirm order`, async () => {
+        await checkoutPage.placeOrder();
+        await paymentPage.fillPaymentDetails(TEST_CARD);
+        await paymentPage.clickPayAndConfirm(); 
+        await paymentPage.verifyPaymentSuccess();
+    });
 })
 
 test.afterEach(async ({ request }) => {

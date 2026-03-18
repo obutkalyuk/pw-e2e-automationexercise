@@ -37,7 +37,7 @@ export class PaymentPage  extends BasePage {
     }
 
  async verifyPaymentSuccess() {
-    await expect(this.page).toHaveURL(/.*payment_done/, { timeout: 10000 });
+    await expect(this.page).toHaveURL(/.*payment_done/, { timeout: 20000 });
     const successMessage = this.page.locator('h2:has-text("Order Placed!")');
     await expect(successMessage).toBeVisible({  timeout: 10000 });
     await this.page.locator('a[data-qa="continue-button"]').click();

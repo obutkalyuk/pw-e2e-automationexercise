@@ -33,9 +33,9 @@ _Negative cases and additional methods_
 | --- | --- | :----------------------------------------- | -------------- | --------------- | ------------------------------------------------------------- | --------- | 
 |✅| E2E-1   | Register User                              | User / Account | E2E             | Full sign up + delete account, can optimize via API for setup |  tests\e2e\Account_create.spec.ts         |
 |✅| E2E-2   | Login User with correct email and password | User / Account | E2E             | Include delete account after login                            | tests\e2e\Account_login.spec.ts         |
-|| 14  | Place Order: Register while Checkout       | Orders         | E2E             | Full checkout flow with account creation                      |           | 
+|✅| 14  | Place Order: Register while Checkout       | Orders         | E2E             | Full checkout flow with account creation                      |tests\e2e\Account_create.spec.ts           | 
 |✅| 15  | Place Order: Register before Checkout      | Orders         | E2E (Hybrid)    | Create account first, then checkout                           | tests\e2e\Checkout.spec.ts          |
-|| 16  | Place Order: Login before Checkout         | Orders         | E2E (Hybrid)    | Login first, then checkout                                    |           | 
+|✅| 16  | Place Order: Login before Checkout         | Orders         | E2E (Hybrid)    | Login first, then checkout                                    |tests\e2e\Account_create.spec.ts           | 
 
 
 ### High Priority
