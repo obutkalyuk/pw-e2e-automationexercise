@@ -8,7 +8,7 @@ export class ProductsPage extends BasePage {
   }
 
   async addProductById(productId: string) {
-    await this.closeConsentIfPresent();
+    await this.handleCommonAds(); // Handle any ads that may appear before interacting with the product
     await this.page.locator(`.productinfo a[data-product-id="${productId}"]`).click();
     await this.page.getByRole('button', { name: 'Continue Shopping' }).click();
 }

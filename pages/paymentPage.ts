@@ -13,13 +13,12 @@ export class PaymentPage  extends BasePage {
 
     constructor(page: Page) {
         super(page);
-        this.nameOnCardInput = page.locator('name=name-on-card');
-        this.cardNumberInput = page.locator('data-qa=card-number');
-        this.cvcInput = page.locator('data-qa=cvc');
-        this.expiryMonthInput = page.locator('data-qa=expiry-month');
-        this.expiryYearInput = page.locator('data-qa=expiry-year');
-        this.payButton = page.locator('data-qa=pay-button');
-        
+        this.nameOnCardInput = page.locator('#payment-form input[data-qa=name-on-card]'); 
+        this.cardNumberInput = page.locator('#payment-form input[data-qa=card-number]');
+        this.cvcInput = page.locator('#payment-form input[data-qa=cvc]');
+        this.expiryMonthInput = page.locator('#payment-form input[data-qa=expiry-month]');
+        this.expiryYearInput = page.locator('#payment-form input[data-qa=expiry-year]');
+        this.payButton = page.locator('#payment-form button[data-qa=pay-button]');
         this.successMessage = page.locator('#success_message');
     }
 
@@ -33,11 +32,16 @@ export class PaymentPage  extends BasePage {
 
     async clickPayAndConfirm() {
         await this.payButton.click();
-        await expect(this.payButton).toBeHidden();  
+        await this.handleCommonAds(); // Handle any ads that may appear after payment
         
     }
 
-
+ async verifyPaymentSuccess() {
+    await expect(this.page).toHaveURL(/.*payment_done/, { timeout: 10000 });
+    const successMessage = this.page.locator('h2:has-text("Order Placed!")');
+    await expect(successMessage).toBeVisible({  timeout: 10000 });
+    await this.page.locator('a[data-qa="continue-button"]').click();
+  } 
     async getSuccessMessage() {
         return await this.successMessage.innerText();
     }

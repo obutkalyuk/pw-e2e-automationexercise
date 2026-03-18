@@ -8,7 +8,6 @@ export class BasePage {
     readonly loginLink: Locator;
     readonly logoutLink: Locator;
     readonly deleteAccountLink: Locator;
-    readonly consentButton: Locator;
     readonly menuContainer: Locator;
     readonly loggedInUserMarker: Locator;
 
@@ -22,28 +21,37 @@ export class BasePage {
         this.logoutLink = this.menuContainer.getByRole('link', { name: 'Logout' });
         this.deleteAccountLink = this.menuContainer.getByRole('link', { name: 'Delete Account' });
         this.loggedInUserMarker = this.menuContainer.locator('li').filter({ hasText: 'Logged in as' });
-        
-        this.consentButton = page.getByRole('button', { name: 'Consent' });
-    }
+         }
 
-    async closeConsentIfPresent() {
+    private async clickIfPresent(locator: Locator, timeout = 3000) {
         try {
-            if (await this.consentButton.isVisible({ timeout: 3000 })) {
-                await this.consentButton.click();
+            if (await locator.isVisible({ timeout })) {
+                await locator.click();
             }
         } catch (e) {
+            // Ignore timeout errors - element not present
         }
     }
 
+    async handleCommonAds() {
+        const adCloseButton = this.page.locator('div.GoogleActiveViewElement div[aria-label="Close ad"]');
+        const promoCloseButton = this.page.locator('div#ad_position_box div#dismiss-button');
+        const consentButton = this.page.getByRole('button', { name: 'Consent' });
+        await this.clickIfPresent(consentButton);
+        await this.clickIfPresent(adCloseButton);
+        await this.clickIfPresent(promoCloseButton);
+    }
+
+
     async goToLogin() {
         await this.loginLink.click(); 
-        await this.closeConsentIfPresent();
+        await this.handleCommonAds();
     }
     async goToProducts() { await this.productsLink.click();
-        await this.closeConsentIfPresent();
+        await this.handleCommonAds();
      }
     async goToCart() { await this.cartLink.click(); 
-        await this.closeConsentIfPresent();
+        await this.handleCommonAds();
     }
     async deleteAccount() {await this.deleteAccountLink.click();   
     }

@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { apiHelper } from '../../utils/apiHelper';
 import { disposeApiContext } from '../../utils/apiContext';
 import { User } from '../../data/user';
@@ -70,6 +70,7 @@ test('E2E-16: Place Order: Login before Checkout @critical' , async ({ page }, t
     await checkoutPage.placeOrder();
     await paymentPage.fillPaymentDetails(TEST_CARD);
     await paymentPage.clickPayAndConfirm(); 
+    await paymentPage.verifyPaymentSuccess();
 
 })
 
@@ -78,4 +79,15 @@ test.afterEach(async ({ request }) => {
     await disposeApiContext();
   });
 }); 
+
+test('BUG-4: Payment field is blocked by overlay on large screens', async ({ page }) => {
+    const paymentPage = new PaymentPage(page);
+
+    await page.setViewportSize({ width: 980, height: 900 });
+    await page.goto('/payment');
+    await paymentPage.handleCommonAds();
+    await expect(async () => {
+        await paymentPage.nameOnCardInput.click({ timeout: 3000 });
+    }).rejects.toThrow(/intercepts pointer events/);
+});
 
