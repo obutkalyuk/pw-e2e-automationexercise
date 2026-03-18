@@ -33,6 +33,9 @@ jobs:
     - name: Install Playwright Browsers
       if: steps.playwright-cache.outputs.cache-hit != 'true'
       run: npx playwright install --with-deps
+    - name: Install Playwright Operating System Dependencies
+      if: steps.playwright-cache.outputs.cache-hit == 'true'
+      run: npx playwright install-deps
     - name: Run Smoke Tests
       if: github.event_name == 'push' || github.event_name == 'pull_request'
       run: npm run test:smoke
