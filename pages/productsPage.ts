@@ -8,6 +8,7 @@ export class ProductsPage extends BasePage {
   readonly searchedProductsTitle: Locator;
   readonly productCards: Locator;
   readonly productNames: Locator;
+  readonly viewProductLinks: Locator;
   
   constructor(page: Page) {
     super(page);
@@ -17,12 +18,38 @@ export class ProductsPage extends BasePage {
     this.searchedProductsTitle = page.locator('.features_items .title.text-center', { hasText: 'Searched Products' });
     this.productCards = page.locator('.features_items .single-products');
     this.productNames = page.locator('.features_items .productinfo p');
+    this.viewProductLinks = page.locator('.features_items .choose a[href*="/product_details/"]');
   }
 
   async verifyProductsPageOpen() {
     await expect(this.page).toHaveURL(/\/products/);
     await expect(this.productsTitle).toContainText('All Products');
     await expect(this.productCards.first()).toBeVisible();
+  }
+
+  async verifyProductsListVisible() {
+    await expect(this.productCards.first()).toBeVisible();
+    expect(await this.productCards.count()).toBeGreaterThan(0);
+    await expect(this.viewProductLinks.first()).toBeVisible();
+  }
+
+  async openProductDetails(productNumber: number) {
+    await this.viewProductLinks.nth(productNumber - 1).click();
+    await this.handleCommonAds();
+  }
+
+  async getProductDetailsId(productNumber: number) {
+    const href = await this.viewProductLinks.nth(productNumber - 1).getAttribute('href');
+    if (!href) {
+      throw new Error(`Product details link for product #${productNumber} has no href`);
+    }
+
+    const match = href.match(/\/product_details\/(\d+)/);
+    if (!match) {
+      throw new Error(`Could not extract product id from href: ${href}`);
+    }
+
+    return match[1];
   }
 
   async searchProduct(searchTerm: string) {
@@ -64,9 +91,4 @@ export class ProductsPage extends BasePage {
     }
   }
  
-
-  
-
-
-
  }
