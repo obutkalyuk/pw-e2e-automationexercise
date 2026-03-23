@@ -35,9 +35,9 @@ _Negative cases and additional methods_
 | --- | --- | :----------------------------------------- | -------------- | --------------- | ------------------------------------------------------------- | --------- |
 |✅| E2E-1   | Register User                              | User / Account | E2E             | Full sign up + delete account, can optimize via API for setup | tests\e2e\Account_create.spec.ts |
 |✅| E2E-2   | Login User with correct email and password | User / Account | E2E             | Include delete account after login                            | tests\e2e\Account_login.spec.ts |
-|✅| 14  | Place Order: Register while Checkout       | Orders         | E2E             | Full checkout flow with account creation                      | tests\e2e\Account_create.spec.ts |
-|✅| 15  | Place Order: Register before Checkout      | Orders         | E2E (Hybrid)    | Create account first, then checkout                           | tests\e2e\Checkout.spec.ts |
-|✅| 16  | Place Order: Login before Checkout         | Orders         | E2E (Hybrid)    | Login first, then checkout                                    | tests\e2e\Account_create.spec.ts |
+|✅| E2E-14  | Place Order: Register while Checkout       | Orders         | E2E             | Full checkout flow with account creation                      | tests\e2e\Account_create.spec.ts |
+|✅| E2E-15  | Place Order: Register before Checkout      | Orders         | E2E (Hybrid)    | Create account first, then checkout                           | tests\e2e\Checkout.spec.ts |
+|✅| E2E-16  | Place Order: Login before Checkout         | Orders         | E2E (Hybrid)    | Login first, then checkout                                    | tests\e2e\Account_create.spec.ts |
 
 ### High Priority
 
@@ -47,7 +47,7 @@ _Negative cases and additional methods_
 |✅| E2E-4   | Logout User                                  | User / Account    | E2E             | Login + logout flow                                    | tests\e2e\Account_logout.spec.ts |
 |✅| E2E-8   | Verify All Products and product detail page  | Products          | E2E             | Check product list and details                         | tests\e2e\Products_details.spec.ts |
 |✅| E2E-9   | Search Product                               | Products          | E2E             | Verify search results                                  | tests\e2e\Products_search.spec.ts |
-|| 12  | Add Products in Cart                         | Products / Cart   | E2E             | Hover, add multiple products, verify prices and totals |          |
+|✅| E2E-12  | Add Products in Cart                         | Products / Cart   | E2E             | Hover, add multiple products, verify prices and totals |          |
 || 13  | Verify Product quantity in Cart              | Products / Cart   | E2E             | Increase quantity, verify in cart                      |          |
 || 17  | Remove Products From Cart                    | Products / Cart   | E2E             | Delete products from cart                              |          |
 || 20  | Search Products and Verify Cart After Login  | Products / Cart   | E2E             | Search, add to cart, login, verify persistence         |          |
