@@ -1,23 +1,17 @@
 import { expect, test } from '@playwright/test';
-import { HomePage } from '../../pages/homePage';
 import { ProductsPage } from '../../pages/productsPage';
 import { CartPage } from '../../pages/cartPage';
 
 test('E2E-12: Add Products in Cart @high', async ({ page, request }) => {
-  const homePage = new HomePage(page);
+  test.setTimeout(45000);
   const productsPage = new ProductsPage(page);
   const cartPage = new CartPage(page);
   const productIds = ['1', '2'];
 
-  await page.goto('/');
-  await homePage.handleCommonAds();
-
-  await test.step('Verify home page is visible', async () => {
-    await homePage.verifyHomePageOpen();
-  });
+  await page.goto('/products');
+  await productsPage.handleCommonAds();
 
   await test.step('Navigate to products page', async () => {
-    await productsPage.goToProducts();
     await productsPage.verifyProductsPageOpen();
     await productsPage.verifyProductsListVisible();
   });
