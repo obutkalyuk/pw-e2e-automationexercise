@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { CartProduct } from '../data/product';
 import { BasePage } from './basePage';
 
 export class CartPage  extends BasePage {
@@ -62,6 +63,19 @@ export class CartPage  extends BasePage {
     for (const id of products) {
         const productRow = this.page.locator(`tr#product-${id}`);
         await expect(productRow).toBeVisible();
+    }
+  }
+
+  async verifyCartProductsData(expectedProducts: CartProduct[]) {
+    const actualProducts = await this.getProducts();
+
+    expect(actualProducts).toHaveLength(expectedProducts.length);
+
+    for (const expectedProduct of expectedProducts) {
+      const actualProduct = actualProducts.find(product => product.id === expectedProduct.id);
+
+      expect(actualProduct, `Product with id ${expectedProduct.id} was not found in cart`).toBeTruthy();
+      expect(actualProduct).toEqual(expectedProduct);
     }
   }
  }

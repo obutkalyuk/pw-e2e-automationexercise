@@ -9,6 +9,8 @@ export class ProductsPage extends BasePage {
   readonly productCards: Locator;
   readonly productNames: Locator;
   readonly viewProductLinks: Locator;
+  readonly continueShoppingButton: Locator;
+  readonly viewCartLink: Locator;
   
   constructor(page: Page) {
     super(page);
@@ -19,6 +21,8 @@ export class ProductsPage extends BasePage {
     this.productCards = page.locator('.features_items .single-products');
     this.productNames = page.locator('.features_items .productinfo p');
     this.viewProductLinks = page.locator('.features_items .choose a[href*="/product_details/"]');
+    this.continueShoppingButton = page.getByRole('button', { name: 'Continue Shopping' });
+    this.viewCartLink = page.locator('#cartModal a[href="/view_cart"]');
   }
 
   async verifyProductsPageOpen() {
@@ -79,11 +83,20 @@ export class ProductsPage extends BasePage {
     }
   }
 
-  async addProductById(productId: string) {
-    await this.handleCommonAds(); // Handle any ads that may appear before interacting with the product
+  async addProductToCart(productId: string) {
+    await this.handleCommonAds();
     await this.page.locator(`.productinfo a[data-product-id="${productId}"]`).click();
-    await this.page.getByRole('button', { name: 'Continue Shopping' }).click();
-}
+  }
+
+  async addProductById(productId: string) {
+    await this.addProductToCart(productId);
+    await this.continueShoppingButton.click();
+  }
+
+  async viewCartFromModal() {
+    await this.viewCartLink.click();
+    await this.handleCommonAds();
+  }
 
   async addMultipleProducts(ids: string[]) {
     for (const id of ids) {

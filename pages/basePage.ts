@@ -36,10 +36,12 @@ export class BasePage {
     async handleCommonAds() {
         const adCloseButton = this.page.locator('div.GoogleActiveViewElement div[aria-label="Close ad"]');
         const promoCloseButton = this.page.locator('div#ad_position_box div#dismiss-button');
+        const iframeCloseButton = this.page.locator('iframe[name="ad_iframe"]').contentFrame().getByRole('button', { name: 'Close ad' });
         const consentButton = this.page.getByRole('button', { name: 'Consent' });
         await this.clickIfPresent(consentButton);
         await this.clickIfPresent(adCloseButton);
         await this.clickIfPresent(promoCloseButton);
+        await this.clickIfPresent(iframeCloseButton);
     }
 
 
