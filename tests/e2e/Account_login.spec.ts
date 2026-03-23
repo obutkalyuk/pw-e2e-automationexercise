@@ -6,29 +6,29 @@ import { LoginPage } from '../../pages/loginPage';
 
 
 test.describe('Login tests', () => {
-  let testUser: User;
+  let user: User;
 
   test.beforeEach(async ({ request }, testInfo) => {
-    testUser = User.generateRandom();
-    await apiHelper.createUser(request, testUser);
+    user = User.generateRandom();
+    await apiHelper.createUser(request, user);
     testInfo.annotations.push({
       type: 'Test Data',
-      description: `Name: ${testUser.name} | Email: ${testUser.email} | Password: ${testUser.password}`
+      description: `Name: ${user.name} | Email: ${user.email} | Password: ${user.password}`
     });
   });
 
   test(`E2E-2: Login User with correct email and password (Hybrid) @smoke @critical`, async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
-    await loginPage.login(testUser);
+    await loginPage.login(user);
 
-    await test.step(`Verify user ${testUser.name} is logged in`, async () => {
-      await loginPage.verifyLoginSuccess(testUser);
+    await test.step(`Verify user ${user.name} is logged in`, async () => {
+      await loginPage.verifyLoginSuccess(user);
     });
   });
 
 test.afterEach(async ({ request }) => {
-    await apiHelper.deleteUser(request, testUser);
+    await apiHelper.deleteUser(request, user);
     await disposeApiContext();
   });
 }); 

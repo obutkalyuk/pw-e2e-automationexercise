@@ -58,7 +58,6 @@ export class SignupPage extends BasePage {
     }
   }
 
-
   async fillForm(user: User) {
     await this.nameInput.waitFor({ state: 'visible', timeout: 10000 });
     await this.emailInput.waitFor({ state: 'visible', timeout: 10000 });
@@ -105,7 +104,6 @@ export class SignupPage extends BasePage {
     await this.mobileNumberInput.fill(user.mobileNumber);
     await this.createAccountButton.click({force: true}); 
     await this.handleCommonAds(); // Handle any ads that may appear after account creation
-
   }   
 
   async verifyAccountCreation() {

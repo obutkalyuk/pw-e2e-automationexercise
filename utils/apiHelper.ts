@@ -1,4 +1,4 @@
-import { APIRequestContext, expect, test } from '@playwright/test';
+import { APIRequestContext, expect, test, TestInfo } from '@playwright/test';
 import { User } from '../data/user';
 
 export const apiHelper = {
@@ -37,5 +37,23 @@ export const apiHelper = {
       expect(body.responseCode, `Deletion failed for ${user.email}: ${body.message}`).toBe(200);
       return body;
     });
+  },
+
+  async createManagedUser(request: APIRequestContext, testInfo: TestInfo): Promise<User> {
+    const user = User.generateRandom();
+    await this.createUser(request, user);
+    testInfo.annotations.push({
+      type: 'Test Data',
+      description: `Name: ${user.name} | Email: ${user.email} | Password: ${user.password}`
+    });
+    return user;
+  },
+
+  async deleteUserIfExists(request: APIRequestContext, user?: User) {
+    if (!user) {
+      return;
+    }
+
+    await this.deleteUser(request, user);
   }
 };

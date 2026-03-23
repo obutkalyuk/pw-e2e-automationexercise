@@ -21,5 +21,3 @@ test('E2E-1: Register User @critical @stable', async ({ page }, testInfo) => {
     await loginPage.verifyLoginSuccess(USER);
   });
 })
-
-
