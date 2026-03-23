@@ -26,6 +26,7 @@ _Negative cases and additional methods_
 |✅| API-7 | `/verifyLogin`   | POST       | Login with invalid details  | **Medium**   | Negative: error codes check   |tests\api\auth\account_flow.api.spec.ts|
 |✅| API-8 | `/brandsList`    | GET        | Get all brands list         | **Medium**   | brand list verification       |tests\api\catalog\catalog.api.spec.ts|
 |✅| API-9 | `/updateAccount` | PUT        | Update user account details | **Medium**   | update profile verification   |tests\api\auth\account_update.api.spec.ts|
+|✅| API-10 | `/updateAccount` | PUT        | Update fails for non-existing email | **Low**   | Negative: account not found   |tests\api\auth\account_update.api.spec.ts|
 
 ## E2E and Hybrid Tests
 ### Critical Priority

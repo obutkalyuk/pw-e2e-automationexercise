@@ -3,10 +3,12 @@ import { User } from '../../../data/user';
 import { apiHelper } from '../../../utils/apiHelper';
 
 test.describe('API Account Update', () => {
+  /* API matches account by email and still returns HTTP 200 for business errors. */
   test('[API-9] PUT /updateAccount - Update user account details @medium', async ({ request }, testInfo) => {
     const user = await apiHelper.createManagedUser(request, testInfo);
     const updatedUser = User.generateRandom();
 
+    // Email acts as the lookup key for updates, so we keep it unchanged.
     updatedUser.email = user.email;
     updatedUser.password = user.password;
 
@@ -44,5 +46,18 @@ test.describe('API Account Update', () => {
     } finally {
       await apiHelper.deleteUserIfExists(request, user);
     }
+  });
+
+  test('[API-10] PUT /updateAccount - Update fails for non-existing email @low', async ({ request }) => {
+    const user = User.generateRandom();
+
+    const response = await request.put('/api/updateAccount', {
+      form: user.toApiForm(),
+    });
+    const body = await response.json();
+
+    expect(response.status(), 'BUG: Server should return 404 for missing account, but returns 200').toBe(200);
+    expect(body.responseCode).toBe(404);
+    expect(body.message).toBe('Account not found!');
   });
 });
