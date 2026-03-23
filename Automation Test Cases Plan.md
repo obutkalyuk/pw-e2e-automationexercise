@@ -43,8 +43,8 @@ _Negative cases and additional methods_
 
 |**Status**| **#**   | **Test Case**                                    | **Category**         | **Automation Type** | **Notes**                                                  | **File Name** |
 | ---- | --- | :------------------------------------------- | ----------------- | --------------- | ------------------------------------------------------ | --------- |
-|| 3   | Login User with incorrect email and password | User / Account    | E2E             | Negative scenario                                      |          |
-|✅| 4   | Logout User                                  | User / Account    | E2E             | Login + logout flow                                    | tests\e2e\Account_logout.spec.ts |
+|✅| E2E-3   | Login User with incorrect email and password | User / Account    | E2E             | Negative scenario                                      |          |
+|✅| E2E-4   | Logout User                                  | User / Account    | E2E             | Login + logout flow                                    | tests\e2e\Account_logout.spec.ts |
 || 8   | Verify All Products and product detail page  | Products          | E2E             | Check product list and details                         |          |
 || 9   | Search Product                               | Products          | E2E             | Verify search results                                  |          |
 || 12  | Add Products in Cart                         | Products / Cart   | E2E             | Hover, add multiple products, verify prices and totals |          |
@@ -57,7 +57,7 @@ _Negative cases and additional methods_
 
 |**Status**| **#**   | **Test Case**                             | **Category**              | **Automation Type** | **Notes**                                                 | **File Name** |
 | --- | --- | ------------------------------------- | --------------------- | --------------- | ----------------------------------------------------- | --------- |
-|| 5   | Register User with existing email     | User / Account        | E2E             | Negative scenario for duplicate email                 |          |
+|✅| E2E-5   | Register User with existing email     | User / Account        | E2E             | Negative scenario for duplicate email                 |          |
 || 6   | Contact Us Form                       | Contact / Pages       | E2E             | Includes file upload and success message verification |          |
 || 10  | Verify Subscription in Home Page      | Pages / Subscription  | E2E             | Footer subscription                                   |          |
 || 11  | Verify Subscription in Cart Page      | Pages / Subscription  | E2E             | Footer subscription on cart page                      |          |
