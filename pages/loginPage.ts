@@ -6,18 +6,22 @@ export class LoginPage extends BasePage {
   readonly loginEmailInput: Locator;
   readonly loginPasswordInput: Locator;
   readonly loginButton: Locator;
+  readonly loginErrorMessage: Locator;
   readonly signupNameInput: Locator;
   readonly signupEmailInput: Locator;
   readonly signupButton: Locator;
+  readonly signupErrorMessage: Locator;
 
   constructor(page: Page) {
     super(page);
     this.loginEmailInput = page.locator('input[data-qa="login-email"]');
     this.loginPasswordInput = page.locator('input[data-qa="login-password"]');
     this.loginButton = page.locator('button[data-qa="login-button"]');
+    this.loginErrorMessage = page.locator('form[action="/login"]').filter({ hasText: 'incorrect' });
     this.signupNameInput = page.locator('input[data-qa="signup-name"]');
     this.signupEmailInput = page.locator('input[data-qa="signup-email"]');
     this.signupButton = page.locator('button[data-qa="signup-button"]');
+    this.signupErrorMessage = page.locator('form[action="/signup"] p');
 
 
   }
@@ -54,6 +58,17 @@ export class LoginPage extends BasePage {
       const loggedInMarker = this.page.locator('.navbar-nav li:has-text("Logged in as")');
       await expect(loggedInMarker).toBeVisible({  timeout: 20000 });
       await expect(loggedInMarker).toContainText(user.name);
+    }
+
+    async verifyLoginFailure() {
+      await expect(this.loginErrorMessage).toBeVisible({ timeout: 10000 });
+      await expect(this.loginErrorMessage).toContainText('Your email or password is incorrect!');
+      await expect(this.loggedInUserMarker).toBeHidden();
+    }
+
+    async verifySignupExistingEmailError() {
+      await expect(this.signupErrorMessage).toBeVisible({ timeout: 10000 });
+      await expect(this.signupErrorMessage).toContainText('Email Address already exist!');
     }
 
     async verifyLogoutSuccess() {

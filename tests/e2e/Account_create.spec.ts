@@ -2,6 +2,8 @@ import { test } from '@playwright/test';
 import { User } from '../../data/user';
 import { LoginPage } from '../../pages/loginPage';
 import { SignupPage } from '../../pages/signupPage';
+import { apiHelper } from '../../utils/apiHelper';
+import { disposeApiContext } from '../../utils/apiContext';
 
 
 test('E2E-1: Register User @critical @stable', async ({ page }, testInfo) => {
@@ -20,4 +22,21 @@ test('E2E-1: Register User @critical @stable', async ({ page }, testInfo) => {
     await signUpPage.verifyAccountCreation();
     await loginPage.verifyLoginSuccess(USER);
   });
-})
+});
+
+test('E2E-5: Register User with existing email @medium', async ({ page, request }, testInfo) => {
+  const loginPage = new LoginPage(page);
+  const existingUser = await apiHelper.createManagedUser(request, testInfo);
+
+  try {
+    await loginPage.goto();
+
+    await test.step(`Try to sign up again with existing email ${existingUser.email}`, async () => {
+      await loginPage.signUp(existingUser);
+      await loginPage.verifySignupExistingEmailError();
+    });
+  } finally {
+    await apiHelper.deleteUserIfExists(request, existingUser);
+    await disposeApiContext();
+  }
+});

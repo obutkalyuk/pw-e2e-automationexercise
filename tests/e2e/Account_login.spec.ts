@@ -27,6 +27,20 @@ test.describe('Login tests', () => {
     });
   });
 
+  test('E2E-3: Login User with incorrect email and password @high', async ({ page }, testInfo) => {
+    const loginPage = new LoginPage(page);
+    const invalidUser = Object.assign(new User(), user, {
+      password: 'WrongPassword123!',
+    });
+
+    await loginPage.goto();
+    await loginPage.login(invalidUser);
+
+    await test.step(`Verify login fails for user ${user.email}`, async () => {
+      await loginPage.verifyLoginFailure();
+    });
+  });
+
 test.afterEach(async ({ request }) => {
     await apiHelper.deleteUser(request, user);
     await disposeApiContext();
