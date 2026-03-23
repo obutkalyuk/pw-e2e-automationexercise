@@ -22,13 +22,20 @@ export class PaymentPage  extends BasePage {
         this.successMessage = page.locator('#success_message');
     }
 
+    private async fillAndVerify(locator: Locator, value: string) {
+        await locator.click();
+        await locator.fill('');
+        await locator.fill(value);
+        await expect(locator).toHaveValue(value);
+    }
+
     async fillPaymentDetails(details: CardDetails) {
-        await this.nameOnCardInput.fill(details.holder);
-        await this.cardNumberInput.fill(details.number);
-        await this.cvcInput.fill(details.cvc);
-        await this.expiryMonthInput.fill(details.expiryMonth);
-        await this.expiryYearInput.fill(details.expiryYear);
-}
+        await this.fillAndVerify(this.nameOnCardInput, details.holder);
+        await this.fillAndVerify(this.cardNumberInput, details.number);
+        await this.fillAndVerify(this.cvcInput, details.cvc);
+        await this.fillAndVerify(this.expiryMonthInput, details.expiryMonth);
+        await this.fillAndVerify(this.expiryYearInput, details.expiryYear);
+    }
 
     async clickPayAndConfirm() {
         await this.payButton.click();

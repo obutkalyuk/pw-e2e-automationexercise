@@ -91,6 +91,8 @@ export class ProductsPage extends BasePage {
   async addProductById(productId: string) {
     await this.addProductToCart(productId);
     await this.continueShoppingButton.click();
+    await expect(this.continueShoppingButton).toBeHidden();
+    await this.handleCommonAds();
   }
 
   async viewCartFromModal() {

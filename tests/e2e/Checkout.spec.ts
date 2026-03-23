@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { apiHelper } from '../../utils/apiHelper';
-import { disposeApiContext } from '../../utils/apiContext';
+import { disposeApiContext, getApiContext } from '../../utils/apiContext';
 import { User } from '../../data/user';
 import { LoginPage } from '../../pages/loginPage';
 import { SignupPage } from '../../pages/signupPage';
@@ -44,7 +44,8 @@ test('E2E-14: Place Order: Register while Checkout @critical' , async ({ page, r
             await cartPage.verifyProductInCart(products);
         });
     } finally {
-        await apiHelper.deleteUserIfExists(request, user);
+        const apiRequest = await getApiContext();
+        await apiHelper.deleteUserIfExists(apiRequest, user);
         await disposeApiContext();
     }
 })
@@ -77,12 +78,14 @@ test.describe('Place Order tests', () => {
                 await cartPage.verifyProductInCart(products);
             });
         } finally {
-            await apiHelper.deleteUserIfExists(request, user);
+            const apiRequest = await getApiContext();
+            await apiHelper.deleteUserIfExists(apiRequest, user);
             await disposeApiContext();
         }
 });
 
 test('E2E-16: Place Order: Login and Payment @critical' , async ({ page, request }, testInfo) => {
+    test.setTimeout(45_000);
     const loginPage = new LoginPage(page);
     const productPage = new ProductsPage(page);
     const cartPage = new CartPage(page);
@@ -96,7 +99,7 @@ test('E2E-16: Place Order: Login and Payment @critical' , async ({ page, request
         user = await apiHelper.createManagedUser(request, testInfo);
 
         await test.step(`Login with existing user`, async () => {
-            await loginPage.goToLogin();
+            await loginPage.goto();
             await loginPage.login(user);
             await loginPage.verifyLoginSuccess(user);
         });
@@ -115,7 +118,8 @@ test('E2E-16: Place Order: Login and Payment @critical' , async ({ page, request
             await paymentPage.verifyPaymentSuccess();
         });
     } finally {
-        await apiHelper.deleteUserIfExists(request, user);
+        const apiRequest = await getApiContext();
+        await apiHelper.deleteUserIfExists(apiRequest, user);
         await disposeApiContext();
     }
 })
