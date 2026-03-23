@@ -44,7 +44,7 @@ _Negative cases and additional methods_
 |**Status**| **#**   | **Test Case**                                    | **Category**         | **Automation Type** | **Notes**                                                  | **File Name** |
 | ---- | --- | :------------------------------------------- | ----------------- | --------------- | ------------------------------------------------------ | --------- |
 || 3   | Login User with incorrect email and password | User / Account    | E2E             | Negative scenario                                      |          |
-|| 4   | Logout User                                  | User / Account    | E2E             | Login + logout flow                                    |          |
+|✅| 4   | Logout User                                  | User / Account    | E2E             | Login + logout flow                                    | tests\e2e\Account_logout.spec.ts |
 || 8   | Verify All Products and product detail page  | Products          | E2E             | Check product list and details                         |          |
 || 9   | Search Product                               | Products          | E2E             | Verify search results                                  |          |
 || 12  | Add Products in Cart                         | Products / Cart   | E2E             | Hover, add multiple products, verify prices and totals |          |

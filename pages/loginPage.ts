@@ -55,4 +55,13 @@ export class LoginPage extends BasePage {
       await expect(loggedInMarker).toBeVisible({  timeout: 20000 });
       await expect(loggedInMarker).toContainText(user.name);
     }
+
+    async verifyLogoutSuccess() {
+      await expect(this.page).toHaveURL(/\/login/);
+      await expect(this.loginLink).toBeVisible({ timeout: 10000 });
+      await expect(this.loginEmailInput).toBeVisible({ timeout: 10000 });
+      await expect(this.loginButton).toBeVisible({ timeout: 10000 });
+      await expect(this.loggedInUserMarker).toBeHidden();
+      await expect(this.logoutLink).toBeHidden();
+    }
  }

@@ -53,6 +53,11 @@ export class BasePage {
     async goToCart() { await this.cartLink.click(); 
         await this.handleCommonAds();
     }
+    async logout() {
+        await this.logoutLink.waitFor({ state: 'visible', timeout: 10000 });
+        await this.logoutLink.click();
+        await this.handleCommonAds();
+    }
     async deleteAccount() {await this.deleteAccountLink.click();   
     }
 
