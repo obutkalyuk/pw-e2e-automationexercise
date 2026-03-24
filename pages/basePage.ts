@@ -42,6 +42,17 @@ export class BasePage {
         await this.clickIfPresent(adCloseButton);
         await this.clickIfPresent(promoCloseButton);
         await this.clickIfPresent(iframeCloseButton);
+
+        if (!this.page.url().includes('#google_vignette')) {
+            return;
+        }
+
+        await this.page.goBack().catch(() => {});
+        await this.page.waitForLoadState('domcontentloaded').catch(() => {});
+
+        if (this.page.url().includes('#google_vignette')) {
+            await this.page.reload({ waitUntil: 'domcontentloaded' }).catch(() => {});
+        }
     }
 
 

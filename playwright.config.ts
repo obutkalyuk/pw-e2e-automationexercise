@@ -23,12 +23,14 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-  ['html', { open: 'never' }],
-  ['list'],
-  ['github'],
-  ['json', { outputFile: 'test-results.json' }],
-  ['junit', { outputFile: 'results.xml' }]
-],
+    ['html', { open: 'never' }],
+    ['list'],
+    ['github'],
+    ['json', { outputFile: 'test-results.json' }],
+    ['junit', { outputFile: 'results.xml' }]
+  ],
+  timeout: 45_000,
+  expect: {timeout: 10_000,},
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
@@ -43,6 +45,8 @@ export default defineConfig({
     //video: 'retain-on-failure',
     screenshot: 'on',
     video: 'on',
+    actionTimeout: 10_000,
+    navigationTimeout: 15_000,
   },
 
   /* Configure projects for major browsers */

@@ -43,13 +43,13 @@ _Negative cases and additional methods_
 
 |**Status**| **#**   | **Test Case**                                    | **Category**         | **Automation Type** | **Notes**                                                  | **File Name** |
 | ---- | --- | :------------------------------------------- | ----------------- | --------------- | ------------------------------------------------------ | --------- |
-|✅| E2E-3   | Login User with incorrect email and password | User / Account    | E2E             | Negative scenario                                      |          |
+|✅| E2E-3   | Login User with incorrect email and password | User / Account    | E2E             | Negative scenario                                      |  tests\e2e\Account_login.spec.ts        |
 |✅| E2E-4   | Logout User                                  | User / Account    | E2E             | Login + logout flow                                    | tests\e2e\Account_logout.spec.ts |
 |✅| E2E-8   | Verify All Products and product detail page  | Products          | E2E             | Check product list and details                         | tests\e2e\Products_details.spec.ts |
 |✅| E2E-9   | Search Product                               | Products          | E2E             | Verify search results                                  | tests\e2e\Products_search.spec.ts |
-|✅| E2E-12  | Add Products in Cart                         | Products / Cart   | E2E             | Hover, add multiple products, verify prices and totals |          |
-|| 13  | Verify Product quantity in Cart              | Products / Cart   | E2E             | Increase quantity, verify in cart                      |          |
-|| 17  | Remove Products From Cart                    | Products / Cart   | E2E             | Delete products from cart                              |          |
+|✅| E2E-12  | Add Products in Cart                         | Products / Cart   | E2E             | Hover, add multiple products, verify prices and totals |  tests\e2e\Cart_add_products.spec.ts        |
+|✅| E2E-13  | Verify Product quantity in Cart              | Products / Cart   | E2E             | Increase quantity, verify in cart                      | tests\e2e\Cart_product_quantity.spec.ts         |
+|✅| E2E-17  | Remove Products From Cart                    | Products / Cart   | E2E             | Delete products from cart                              |  tests\e2e\Cart_remove_products.spec.ts        |
 || 20  | Search Products and Verify Cart After Login  | Products / Cart   | E2E             | Search, add to cart, login, verify persistence         |          |
 || 23  | Verify address details in Checkout page      | Orders / Checkout | E2E             | Verify delivery and billing address match registration |          |
 

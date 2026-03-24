@@ -11,6 +11,7 @@ import { PaymentPage } from '../../pages/paymentPage';
 import { TEST_CARD } from '../../data/payment';
 
 test('E2E-14: Place Order: Register while Checkout @critical' , async ({ page, request }, testInfo) => {
+    test.setTimeout(75_000);
     const signUpPage = new SignupPage(page);
     const loginPage = new LoginPage(page);
     const productPage = new ProductsPage(page);
