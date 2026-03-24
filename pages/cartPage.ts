@@ -1,43 +1,26 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { CartProduct } from '../data/product';
 import { BasePage } from './basePage';
+import { CartTableSection } from './sections/cartTableSection';
 
 export class CartPage  extends BasePage {
   readonly cartRows: Locator;
   readonly proceedToCheckoutButton: Locator;
+  readonly cartTable: CartTableSection;
   
 
   constructor(page: Page) {
     super(page);
-    this.cartRows = this.page.locator('#cart_info_table tbody tr');
+    this.cartTable = new CartTableSection(page);
+    this.cartRows = this.cartTable.rows;
     this.proceedToCheckoutButton = this.page.locator('a.btn.btn-default.check_out');
 
 
   }
 
-  async getProducts() {
-    const products: any[] = [];
-        const rows = await this.cartRows.all();
-
-        for (const row of rows) {
-            const fullId = await row.getAttribute('id');
-            const id = fullId?.replace('product-', '') || '';
-
-            const name = await row.locator('.cart_description h4 a').innerText();
-            const price = await row.locator('.cart_price p').innerText();
-            const quantity = await row.locator('.cart_quantity button').innerText();
-            const total = await row.locator('.cart_total_price').innerText();
-
-            products.push({
-                id: id,
-                name: name,
-                price: price, 
-                quantity: parseInt(quantity), 
-                total: total
-            });
-        }
-        return products;
-    }
+  async getProducts(): Promise<CartProduct[]> {
+    return await this.cartTable.getProducts();
+  }
 
   async proceedToCheckout() {
     await this.proceedToCheckoutButton.click();
@@ -60,10 +43,7 @@ export class CartPage  extends BasePage {
   } 
 
   async verifyProductInCart(products: string[]) { 
-    for (const id of products) {
-        const productRow = this.page.locator(`tr#product-${id}`);
-        await expect(productRow).toBeVisible();
-    }
+    await this.cartTable.verifyProductIds(products);
   }
 
   async verifyCartProductsData(expectedProducts: CartProduct[]) {

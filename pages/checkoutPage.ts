@@ -1,5 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { CartProduct, CheckoutData } from '../data/product';
 import { BasePage } from './basePage';
+import { CartTableSection } from './sections/cartTableSection';
 
 export class CheckoutPage  extends BasePage {
     
@@ -8,11 +10,13 @@ export class CheckoutPage  extends BasePage {
   readonly deliveryAddress: Locator;
   readonly billingAddress: Locator;
   readonly orderComments: Locator;
+  readonly cartTable: CartTableSection;
   
 
   constructor(page: Page) {
     super(page);
-    this.cartRows = this.page.locator('#cart_info_table tbody tr');
+    this.cartTable = new CartTableSection(page);
+    this.cartRows = this.cartTable.rows;
     this.placeOrderButton = this.page.locator('a.btn.btn-default.check_out');
     this.deliveryAddress = this.page.locator('ul#address_delivery');
     this.billingAddress = this.page.locator('ul#address_invoice');
@@ -20,27 +24,8 @@ export class CheckoutPage  extends BasePage {
   }
 
 
-async getCheckoutData() {
-    const products: any[] = [];
-    const rows = await this.page.locator('#cart_info_table tbody tr[id^="product-"]').all();
-
-    for (const row of rows) {
-        const fullId = await row.getAttribute('id');
-        const id = fullId?.replace('product-', '') || '';
-
-        const name = await row.locator('.cart_description h4 a').innerText();
-        const price = await row.locator('.cart_price p').innerText();
-        const quantity = await row.locator('.cart_quantity button').innerText();
-        const total = await row.locator('.cart_total_price').innerText();
-
-        products.push({
-            id: id,
-            name: name,
-            price: price.trim(), 
-            quantity: parseInt(quantity),
-            total: total.trim()  
-        });
-    }
+async getCheckoutData(): Promise<CheckoutData> {
+    const products: CartProduct[] = await this.cartTable.getProducts();
 
     const totalAmount = await this.page.locator('#cart_info_table tbody tr').last().locator('.cart_total_price').innerText();
 
@@ -56,10 +41,7 @@ async getCheckoutData() {
   } 
 
   async verifyProductInCheckout(products: string[]) { 
-    for (const id of products) {
-        const productRow = this.page.locator(`tr#product-${id}`);
-        await expect(productRow).toBeVisible();
-    }
+    await this.cartTable.verifyProductIds(products);
   }
 
   async placeOrder() {

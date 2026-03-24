@@ -1,18 +1,6 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { BasePage } from './basePage';
-
-type ProductApiModel = {
-  id: number;
-  name: string;
-  price: string;
-  brand: string;
-  category: {
-    usertype: {
-      usertype: string;
-    };
-    category: string;
-  };
-};
+import { ProductApiModel } from '../data/product';
 
 export class ProductDetailsPage extends BasePage {
   readonly productName: Locator;
