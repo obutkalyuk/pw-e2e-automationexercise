@@ -1,6 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './basePage';
 import { ProductCatalogSection } from './sections/productCatalogSection';
+import { ProductSidebarSection } from './sections/productSidebarSection';
 
 export class ProductsPage extends BasePage {
   readonly searchInput: Locator;
@@ -8,6 +9,7 @@ export class ProductsPage extends BasePage {
   readonly productsTitle: Locator;
   readonly searchedProductsTitle: Locator;
   readonly productCatalog: ProductCatalogSection;
+  readonly productSidebar: ProductSidebarSection;
   
   constructor(page: Page) {
     super(page);
@@ -16,6 +18,7 @@ export class ProductsPage extends BasePage {
     this.productsTitle = page.locator('.features_items .title.text-center').first();
     this.searchedProductsTitle = page.locator('.features_items .title.text-center', { hasText: 'Searched Products' });
     this.productCatalog = new ProductCatalogSection(page);
+    this.productSidebar = new ProductSidebarSection(page);
   }
 
   async verifyProductsPageOpen() {
