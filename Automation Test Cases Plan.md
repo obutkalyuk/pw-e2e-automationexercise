@@ -50,8 +50,8 @@ _Negative cases and additional methods_
 |✅| E2E-12  | Add Products in Cart                         | Products / Cart   | E2E             | Hover, add multiple products, verify prices and totals |  tests\e2e\Cart_add_products.spec.ts        |
 |✅| E2E-13  | Verify Product quantity in Cart              | Products / Cart   | E2E             | Increase quantity, verify in cart                      | tests\e2e\Cart_product_quantity.spec.ts         |
 |✅| E2E-17  | Remove Products From Cart                    | Products / Cart   | E2E             | Delete products from cart                              |  tests\e2e\Cart_remove_products.spec.ts        |
-|| 20  | Search Products and Verify Cart After Login  | Products / Cart   | E2E             | Search, add to cart, login, verify persistence         |          |
-|| 23  | Verify address details in Checkout page      | Orders / Checkout | E2E             | Verify delivery and billing address match registration |          |
+|✅| E2E-20  | Search Products and Verify Cart After Login  | Products / Cart   | E2E             | Search, add to cart, login, verify persistence         | tests\e2e\Cart_search_persistence.spec.ts |
+|✅| 23  | Verify address details in Checkout page      | Orders / Checkout | E2E             | Verify delivery and billing address match registration | tests\e2e\Checkout.spec.ts         |
 
 ### Medium Priority
 
@@ -81,3 +81,4 @@ _Negative cases and additional methods_
 | --- | ----- | --------------- | ---------- | --------------------------------------- | ------------ | ----------------------------- | ----|
 |✅| M-1   | Performance & Monitoring   | Playwright + CDP        | Network Throttling & Resource TTFB| **Medium** | Metrics: TTFB, DNS, Total     |tests/monitoring/performance.spec.ts|
 |✅| C-1   | Concurrency    | API / Stress | Parallel User Registration (5 threads)      | **Low** | Identification of slow assets |tests/api/auth/concurrency.spec.ts|
+

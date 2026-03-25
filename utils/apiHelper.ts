@@ -49,6 +49,21 @@ export const apiHelper = {
     return user;
   },
 
+  async addProductToCart(request: APIRequestContext, productId: string, cookieHeader: string) {
+    return await test.step(`API: Add product ${productId} to cart`, async () => {
+      const response = await request.get(`/add_to_cart/${productId}`, {
+        headers: {
+          Cookie: cookieHeader,
+        },
+      });
+
+      const body = await response.text();
+
+      expect(response.status()).toBe(200);
+      return body;
+    });
+  },
+
   async deleteUserIfExists(request: APIRequestContext, user?: User) {
     if (!user) {
       return;

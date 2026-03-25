@@ -124,6 +124,44 @@ test('E2E-16: Place Order: Login and Payment @critical' , async ({ page, request
         await disposeApiContext();
     }
 })
+
+test('E2E-23: Verify address details in Checkout page @high', async ({ page, request }, testInfo) => {
+    test.setTimeout(45_000);
+    const loginPage = new LoginPage(page);
+    const cartPage = new CartPage(page);
+    const checkoutPage = new CheckoutPage(page);
+    const productId = '1';
+    let user: User | undefined;
+
+    try {
+        user = await apiHelper.createManagedUser(request, testInfo);
+
+        await test.step(`Login with existing user`, async () => {
+            await loginPage.goto();
+            await loginPage.login(user);
+            await loginPage.verifyLoginSuccess(user);
+        });
+
+        await test.step(`Add product to cart via API and proceed to checkout`, async () => {
+            const cookieHeader = await loginPage.getCookieHeader();
+            await apiHelper.addProductToCart(request, productId, cookieHeader);
+
+            await page.goto('/view_cart');
+            await cartPage.handleCommonAds();
+            await cartPage.verifyCartIsOpen();
+            await cartPage.proceedToCheckout();
+            await checkoutPage.verifyProductInCheckout([productId]);
+        });
+
+        await test.step(`Verify delivery and billing addresses`, async () => {
+            await checkoutPage.verifyAddressDetails(user);
+        });
+    } finally {
+        const apiRequest = await getApiContext();
+        await apiHelper.deleteUserIfExists(apiRequest, user);
+        await disposeApiContext();
+    }
+})
 }); 
 
 test('BUG-4: Payment field is blocked by overlay on large screens', async ({ page }) => {

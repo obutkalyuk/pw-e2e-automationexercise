@@ -66,6 +66,10 @@ export class BasePage {
     async goToCart() { await this.cartLink.click(); 
         await this.handleCommonAds();
     }
+    async getCookieHeader() {
+        const cookies = await this.page.context().cookies();
+        return cookies.map(cookie => `${cookie.name}=${cookie.value}`).join('; ');
+    }
     async logout() {
         await this.logoutLink.waitFor({ state: 'visible', timeout: 10000 });
         await this.logoutLink.click();

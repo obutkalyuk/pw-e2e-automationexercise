@@ -1,7 +1,9 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { CartProduct, CheckoutData } from '../data/product';
+import { User } from '../data/user';
 import { BasePage } from './basePage';
 import { CartTableSection } from './sections/cartTableSection';
+import { formatCheckoutAddressLines } from '../utils/addressFormatter';
 
 export class CheckoutPage  extends BasePage {
     
@@ -42,6 +44,15 @@ async getCheckoutData(): Promise<CheckoutData> {
 
   async verifyProductInCheckout(products: string[]) { 
     await this.cartTable.verifyProductIds(products);
+  }
+
+  async verifyAddressDetails(user: User) {
+    const expectedLines = formatCheckoutAddressLines(user);
+
+    for (const line of expectedLines) {
+      await expect(this.deliveryAddress).toContainText(line);
+      await expect(this.billingAddress).toContainText(line);
+    }
   }
 
   async placeOrder() {
