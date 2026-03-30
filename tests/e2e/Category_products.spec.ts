@@ -36,7 +36,7 @@ test('E2E-18: View Category Products @medium', async ({ page, request }) => {
 
   await test.step('Open Women > Tops category page', async () => {
     await homePage.productSidebar.expandCategory('Women', () => homePage.handleCommonAds());
-    await homePage.productSidebar.openSubcategory('Women', 'Saree', () => homePage.handleCommonAds());
+    await homePage.productSidebar.openSubcategory('Women', 'Saree', '7', () => homePage.handleCommonAds());
     await homePage.productSidebar.verifyCategoryResult('Women', 'Saree', '7');
     await homePage.productCatalog.verifyProductsListVisible();
     await verifyVisibleProductsMatchCategory(homePage, body.products, 'Women', 'Saree');
@@ -44,7 +44,7 @@ test('E2E-18: View Category Products @medium', async ({ page, request }) => {
 
   await test.step('Open Men > Jeans category page', async () => {
     await homePage.productSidebar.expandCategory('Men', () => homePage.handleCommonAds());
-    await homePage.productSidebar.openSubcategory('Men', 'Jeans', () => homePage.handleCommonAds());
+    await homePage.productSidebar.openSubcategory('Men', 'Jeans', '6', () => homePage.handleCommonAds());
     await homePage.productSidebar.verifyCategoryResult('Men', 'Jeans', '6');
     await homePage.productCatalog.verifyProductsListVisible();
     await verifyVisibleProductsMatchCategory(homePage, body.products, 'Men', 'Jeans');

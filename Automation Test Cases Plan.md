@@ -57,11 +57,11 @@ _Negative cases and additional methods_
 
 |**Status**| **#**   | **Test Case**                             | **Category**              | **Automation Type** | **Notes**                                                 | **File Name** |
 | --- | --- | ------------------------------------- | --------------------- | --------------- | ----------------------------------------------------- | --------- |
-|✅| E2E-5   | Register User with existing email     | User / Account        | E2E             | Negative scenario for duplicate email                 |          |
+|✅| E2E-5   | Register User with existing email     | User / Account        | E2E             | Negative scenario for duplicate email                 |  tests\e2e\Account_create.spec.ts        |
 || 6   | Contact Us Form                       | Contact / Pages       | E2E             | Includes file upload and success message verification |          |
 || 10  | Verify Subscription in Home Page      | Pages / Subscription  | E2E             | Footer subscription                                   |          |
 || 11  | Verify Subscription in Cart Page      | Pages / Subscription  | E2E             | Footer subscription on cart page                      |          |
-|| 18  | View Category Products                | Products / Navigation | E2E             | Check categories and subcategories                    |          |
+|✅| 18  | View Category Products                | Products / Navigation | E2E             | Check categories and subcategories                    |  tests\e2e\Category_products.spec.ts        |
 || 19  | View & Cart Brand Products            | Products / Navigation | E2E             | Check brand filter and product listing                |          |
 || 21  | Add review on product                 | Products / Reviews    | E2E             | Verify review submission and success message          |          |
 || 22  | Add to cart from Recommended items    | Products / Cart       | E2E             | Check recommended items section                       |          |

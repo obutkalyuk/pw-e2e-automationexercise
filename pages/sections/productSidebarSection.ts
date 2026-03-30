@@ -36,6 +36,7 @@ export class ProductSidebarSection {
     const categoryToggle = this.categoryAccordion.locator(`a[href="#${categoryName}"]`);
     const categoryToggleText = categoryToggle.getByText(categoryName, { exact: true });
     const categoryPanel = this.page.locator(`#${categoryName}`);
+    const firstSubcategoryLink = categoryPanel.locator('ul li a').first();
 
     await categoryToggle.scrollIntoViewIfNeeded();
     await categoryToggleText.click();
@@ -44,12 +45,13 @@ export class ProductSidebarSection {
       await handleCommonAds();
     }
 
-    await expect(categoryPanel).toHaveClass(/in/);
+    await expect(firstSubcategoryLink).toBeVisible();
   }
 
   async openSubcategory(
     categoryName: 'Women' | 'Men' | 'Kids',
     subcategoryName: string,
+    categoryId: string,
     handleCommonAds?: () => Promise<void>
   ) {
     const categoryPanel = this.page.locator(`#${categoryName}`);
@@ -60,8 +62,13 @@ export class ProductSidebarSection {
 
     const subcategoryLink = categoryPanel.getByRole('link', { name: subcategoryName, exact: true });
 
-    await subcategoryLink.scrollIntoViewIfNeeded();
-    await subcategoryLink.click();
+    await subcategoryLink.evaluate((element: HTMLElement) => {
+      element.scrollIntoView({ block: 'center', inline: 'nearest' });
+    });
+    await Promise.all([
+      this.page.waitForURL(new RegExp(`/category_products/${categoryId}$`)),
+      subcategoryLink.click(),
+    ]);
 
     if (handleCommonAds) {
       await handleCommonAds();
