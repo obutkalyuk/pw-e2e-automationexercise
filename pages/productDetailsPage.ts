@@ -12,6 +12,12 @@ export class ProductDetailsPage extends BasePage {
   readonly quantityInput: Locator;
   readonly addToCartButton: Locator;
   readonly viewCartLink: Locator;
+  readonly writeYourReviewTab: Locator;
+  readonly reviewNameInput: Locator;
+  readonly reviewEmailInput: Locator;
+  readonly reviewTextarea: Locator;
+  readonly submitReviewButton: Locator;
+  readonly reviewSuccessMessage: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -24,6 +30,12 @@ export class ProductDetailsPage extends BasePage {
     this.quantityInput = page.locator('#quantity');
     this.addToCartButton = page.locator('.product-information button.btn.cart');
     this.viewCartLink = page.locator('#cartModal a[href="/view_cart"]');
+    this.writeYourReviewTab = page.getByRole('link', { name: 'Write Your Review' });
+    this.reviewNameInput = page.locator('#name');
+    this.reviewEmailInput = page.locator('#email');
+    this.reviewTextarea = page.locator('#review');
+    this.submitReviewButton = page.locator('#button-review');
+    this.reviewSuccessMessage = page.locator('#review-section .alert-success');
   }
 
   async verifyProductDetailsPageOpen() {
@@ -54,6 +66,26 @@ export class ProductDetailsPage extends BasePage {
 
   async addToCart() {
     await this.addToCartButton.click();
+  }
+
+  async verifyWriteYourReviewVisible() {
+    await this.writeYourReviewTab.scrollIntoViewIfNeeded();
+    await expect(this.writeYourReviewTab).toBeVisible();
+    await expect(this.reviewNameInput).toBeVisible();
+    await expect(this.reviewEmailInput).toBeVisible();
+    await expect(this.reviewTextarea).toBeVisible();
+  }
+
+  async submitReview(name: string, email: string, reviewText: string) {
+    await this.reviewNameInput.fill(name);
+    await this.reviewEmailInput.fill(email);
+    await this.reviewTextarea.fill(reviewText);
+    await this.submitReviewButton.click();
+  }
+
+  async verifyReviewSubmitted() {
+    await expect(this.reviewSuccessMessage).toBeVisible();
+    await expect(this.reviewSuccessMessage).toContainText('Thank you for your review.');
   }
 
   async viewCartFromModal() {
