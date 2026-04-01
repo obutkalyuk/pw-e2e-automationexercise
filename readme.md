@@ -17,9 +17,9 @@ The project is integrated with **GitHub Actions** for automated test execution:
 
 ## 🐞 Bug Tracking & QA Documentation
 
-- **[Test Plan] (./Automation Test Cases Plan.md)**: test plan with priorirt and automation status
+- **[Test Plan] (./Automation Test Cases Plan.md)**: test plan with priority and automation status
 - **[Issues List](https://github.com/obutkalyuk/pw-e2e-automationexercise/issues)**:  bug reports 
-- **[QA Questionnaire](./qa_questions.md)**:  questions for the development team and risk assessments.
+- **[QA Questionnaire] (./qa_questions.md)**:  questions for the development team and risk assessments.
 
 ## Project Structure
 
