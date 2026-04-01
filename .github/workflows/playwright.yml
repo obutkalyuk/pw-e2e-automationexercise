@@ -17,6 +17,8 @@ jobs:
       BASE_URL: ${{ secrets.BASE_URL }}
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
@@ -36,9 +38,26 @@ jobs:
     - name: Install Playwright Operating System Dependencies
       if: steps.playwright-cache.outputs.cache-hit == 'true'
       run: npx playwright install-deps
-    - name: Run Smoke Tests
+    - name: Get changed test files
+      id: changed
       if: github.event_name == 'push' || github.event_name == 'pull_request'
-      run: npm run test:smoke
+      run: |
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          BASE=${{ github.event.pull_request.base.sha }}
+        else
+          BASE=HEAD~1
+        fi
+        CHANGED=$(git diff --name-only $BASE HEAD | grep 'tests/.*\.spec\.ts' | tr '\n' ' ')
+        echo "tests=$CHANGED" >> $GITHUB_OUTPUT
+    - name: Run Smoke + Changed Tests
+      if: github.event_name == 'push' || github.event_name == 'pull_request'
+      run: |
+        # Smoke завжди
+        npx playwright test --grep @smoke
+        # Змінені тести (якщо є)
+        if [ -n "${{ steps.changed.outputs.tests }}" ]; then
+          npx playwright test ${{ steps.changed.outputs.tests }}
+        fi
     - name: Run Full Test Suite
       if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
       run: npm run test:full
