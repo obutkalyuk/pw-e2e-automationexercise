@@ -38,21 +38,22 @@ export class BasePage {
         const promoCloseButton = this.page.locator('div#ad_position_box div#dismiss-button');
         const iframeCloseButton = this.page.locator('iframe[name="ad_iframe"]').contentFrame().getByRole('button', { name: 'Close ad' });
         const consentButton = this.page.getByRole('button', { name: 'Consent' });
+        const genericCloseButton = this.page.getByRole('button', { name: /close/i }).or(this.page.getByRole('link', { name: /close/i })).or(this.page.getByText(/close/i)).last();
         await this.clickIfPresent(consentButton);
         await this.clickIfPresent(adCloseButton);
         await this.clickIfPresent(promoCloseButton);
         await this.clickIfPresent(iframeCloseButton);
+        await this.clickIfPresent(genericCloseButton);
+    }
 
-        if (!this.page.url().includes('#google_vignette')) {
-            return;
+    protected async handleAdsIfNeeded(adHandler?: () => Promise<void>) {
+        if (adHandler) {
+            await adHandler();
         }
+    }
 
-        await this.page.goBack().catch(() => {});
-        await this.page.waitForLoadState('domcontentloaded').catch(() => {});
-
-        if (this.page.url().includes('#google_vignette')) {
-            await this.page.reload({ waitUntil: 'domcontentloaded' }).catch(() => {});
-        }
+    protected isOnGoogleVignette() {
+        return /#google_vignette$/.test(this.page.url());
     }
 
 
