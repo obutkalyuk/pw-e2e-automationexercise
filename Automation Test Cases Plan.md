@@ -62,7 +62,7 @@ _Negative cases and additional methods_
 || 10  | Verify Subscription in Home Page      | Pages / Subscription  | E2E             | Footer subscription                                   |          |
 || 11  | Verify Subscription in Cart Page      | Pages / Subscription  | E2E             | Footer subscription on cart page                      |          |
 |✅| 18  | View Category Products                | Products / Navigation | E2E             | Check categories and subcategories                    |  tests\e2e\Category_products.spec.ts        |
-|| 19  | View & Cart Brand Products            | Products / Navigation | E2E             | Check brand filter and product listing                |          |
+|✅| 19  | View & Cart Brand Products            | Products / Navigation | E2E             | Check brand filter and product listing                | tests\e2e\Brand_products.spec.ts         |
 || 21  | Add review on product                 | Products / Reviews    | E2E             | Verify review submission and success message          |          |
 || 22  | Add to cart from Recommended items    | Products / Cart       | E2E             | Check recommended items section                       |          |
 || 24  | Download Invoice after purchase order | Orders / Checkout     | E2E             | Verify invoice download after purchase                |          |

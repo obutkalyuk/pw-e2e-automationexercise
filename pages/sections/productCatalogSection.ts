@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from '@playwright/test';
+import { ProductApiModel } from '../../data/product';
 
 export class ProductCatalogSection {
   readonly page: Page;
@@ -57,6 +58,35 @@ export class ProductCatalogSection {
       );
 
     return [...new Set(productIds)];
+  }
+
+  async verifyVisibleProductsMatchBrand(products: ProductApiModel[], brandName: string) {
+    const visibleProductIds = await this.getVisibleProductIds();
+    expect(visibleProductIds.length).toBeGreaterThan(0);
+
+    for (const productId of visibleProductIds) {
+      const product = products.find(item => item.id === Number(productId));
+
+      expect(product, `Product with id ${productId} was not found in API response`).toBeTruthy();
+      expect(product!.brand).toBe(brandName);
+    }
+  }
+
+  async verifyVisibleProductsMatchCategory(
+    products: ProductApiModel[],
+    categoryName: string,
+    subcategoryName: string
+  ) {
+    const visibleProductIds = await this.getVisibleProductIds();
+    expect(visibleProductIds.length).toBeGreaterThan(0);
+
+    for (const productId of visibleProductIds) {
+      const product = products.find(item => item.id === Number(productId));
+
+      expect(product, `Product with id ${productId} was not found in API response`).toBeTruthy();
+      expect(product!.category.usertype.usertype).toBe(categoryName);
+      expect(product!.category.category).toBe(subcategoryName);
+    }
   }
 
   async addProductToCartById(productId: string, handleCommonAds: () => Promise<void>) {

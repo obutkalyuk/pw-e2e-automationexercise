@@ -15,8 +15,14 @@
 |**11**|**UI**|**Third-party Scripts:** Why are there so many legacy jQuery scripts (prettyPhoto, etc.)? These are potential points of failure for automation.||
 |**12**|**Data**|**Password Policy:** Are there specific requirements for password length or special characters? This isn't documented.||
 |**13**|**Data**|**Cascade Deletion:** When a user is deleted, is their order history also wiped, or do orphaned records remain in the database?||
-|**14**|**Infra**|**Test Environment:** Can we disable ads (`adsbygoogle`) in the testing environment to reduce network noise and improve stability?|Workaround Implemented: Added handleConsent() logic to bypass the "Consent" overlay that was blocking the UI.|
-|**15**|**Infra**|**Timeout Handling:** How are DB timeouts handled? Will we get an internal "Fake 200" error or a standard `504 Gateway Timeout`?|
+|**14**|**Infra**|**Test Environment:** Can we provide a dedicated ad-free or deterministic test mode for automation?|Workaround Implemented: Added handleConsent() logic to bypass the "Consent" overlay that was blocking the UI.||
+|**15**|**Infra**|**Timeout Handling:** How are DB timeouts handled? Will we get an internal "Fake 200" error or a standard `504 Gateway Timeout`?||
+|**16**|**BA or PO**|**Reviews** Should reviews be available to anonymous users?||
+|**17**|**BA or PO**|**Reviews** what anti-spam mechanisms are in place?||
+|**18**|**BA or PO**|**Reviews** Is there moderation before publication?||
+|**19**|**BA or PO**|**Reviews** Do we need to validate that the reviewer actually purchased the product?||
+|**20**|**Infra**|Ad Display Rules: Are there deterministic rules for when overlays/interstitial ads appear by browser, region, cookie state, consent state, or first visit? Without this, UI automation must recover from third-party behavior blindly, which increases flakiness and makes defect triage harder.||
+|**21**|**Infra**|Ad-Free Test Mode: Is there a deterministic ad-free or reduced-noise mode for automation runs? This would reduce flaky failures caused by third-party overlays rather than actual product defects.||
 ### 📝 Strategic Observations & Risks (For the QA Lead/PO)
 
 

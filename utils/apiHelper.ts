@@ -1,4 +1,5 @@
 import { APIRequestContext, expect, test, TestInfo } from '@playwright/test';
+import { ProductApiModel } from '../data/product';
 import { User } from '../data/user';
 
 export const apiHelper = {
@@ -61,6 +62,18 @@ export const apiHelper = {
 
       expect(response.status()).toBe(200);
       return body;
+    });
+  },
+
+  async getProductsList(request: APIRequestContext): Promise<ProductApiModel[]> {
+    return await test.step('API: Get products list', async () => {
+      const response = await request.get('/api/productsList');
+      const body = await response.json();
+
+      expect(response.status()).toBe(200);
+      expect(body.responseCode).toBe(200);
+
+      return body.products as ProductApiModel[];
     });
   },
 

@@ -29,32 +29,47 @@ export class ProductSidebarSection extends BasePage {
     return new RegExp(`/category_products/${categoryId}$`);
   }
 
+  private getBrandUrlPattern(brandName: string) {
+    return new RegExp(`/brand_products/${encodeURIComponent(brandName)}$`);
+  }
+
   private isOnCategoryUrl(categoryId: string) {
     return this.getCategoryUrlPattern(categoryId).test(this.page.url());
   }
 
-  private async waitForCategoryUrlOrVignette(categoryId: string, timeout = 15_000) {
-    const targetCategoryPattern = this.getCategoryUrlPattern(categoryId);
+  private isOnBrandUrl(brandName: string) {
+    return this.getBrandUrlPattern(brandName).test(this.page.url());
+  }
 
+  private async waitForUrlOrVignette(targetUrlPattern: RegExp, timeout = 15_000) {
     try {
       await this.page.waitForURL(
-        url => targetCategoryPattern.test(url.toString()) || /#google_vignette$/.test(url.toString()),
+        url => targetUrlPattern.test(url.toString()) || /#google_vignette$/.test(url.toString()),
         { timeout }
       );
     } catch {
-      await expect(this.page).toHaveURL(targetCategoryPattern);
+      await expect(this.page).toHaveURL(targetUrlPattern);
     }
   }
 
-  private async clickSubcategoryLinkAndWaitForNavigation(subcategoryLink: Locator, categoryId: string) {
-    await this.scrollCategoryLinkIntoView(subcategoryLink);
-    await subcategoryLink.click();
-    await this.waitForCategoryUrlOrVignette(categoryId);
+  private async clickLinkAndWaitForNavigation(link: Locator, targetUrlPattern: RegExp) {
+    await this.scrollCategoryLinkIntoView(link);
+    await link.click();
+    await this.waitForUrlOrVignette(targetUrlPattern);
   }
 
-  private async recoverFromVignette(
-    subcategoryLink: Locator,
-    categoryId: string,
+  private async clickSubcategoryLinkAndWaitForNavigation(subcategoryLink: Locator, categoryId: string) {
+    await this.clickLinkAndWaitForNavigation(subcategoryLink, this.getCategoryUrlPattern(categoryId));
+  }
+
+  private async clickBrandLinkAndWaitForNavigation(brandLink: Locator, brandName: string) {
+    await this.clickLinkAndWaitForNavigation(brandLink, this.getBrandUrlPattern(brandName));
+  }
+
+  private async recoverNavigationFromVignette(
+    link: Locator,
+    targetUrlPattern: RegExp,
+    isOnTargetUrl: () => boolean,
     adHandler?: () => Promise<void>
   ) {
     if (!this.isOnGoogleVignette()) {
@@ -64,16 +79,16 @@ export class ProductSidebarSection extends BasePage {
     await this.handleAdsIfNeeded(adHandler);
 
     await this.page.waitForURL(
-      url => this.getCategoryUrlPattern(categoryId).test(url.toString()) || !/#google_vignette$/.test(url.toString()),
+      url => targetUrlPattern.test(url.toString()) || !/#google_vignette$/.test(url.toString()),
       { timeout: 5_000 }
     ).catch(() => {});
 
-    if (!this.isOnCategoryUrl(categoryId)) {
+    if (!isOnTargetUrl()) {
       await Promise.all([
-        this.page.waitForURL(this.getCategoryUrlPattern(categoryId)),
+        this.page.waitForURL(targetUrlPattern),
         (async () => {
-          await this.scrollCategoryLinkIntoView(subcategoryLink);
-          await subcategoryLink.click();
+          await this.scrollCategoryLinkIntoView(link);
+          await link.click();
         })(),
       ]);
     }
@@ -90,6 +105,19 @@ export class ProductSidebarSection extends BasePage {
   async verifyBrandsVisible() {
     await expect(this.brandsTitle).toBeVisible();
     await expect(this.leftSidebar.locator('.brands_products a').first()).toBeVisible();
+  }
+
+  async openBrand(brandName: string, adHandler?: () => Promise<void>) {
+    const brandLink = this.leftSidebar.locator('.brands_products').getByRole('link', { name: new RegExp(brandName, 'i') });
+
+    await this.clickBrandLinkAndWaitForNavigation(brandLink, brandName);
+    await this.handleAdsIfNeeded(adHandler);
+    await this.recoverNavigationFromVignette(
+      brandLink,
+      this.getBrandUrlPattern(brandName),
+      () => this.isOnBrandUrl(brandName),
+      adHandler
+    );
   }
 
   async expandCategory(categoryName: 'Women' | 'Men' | 'Kids', adHandler?: () => Promise<void>) {
@@ -120,12 +148,23 @@ export class ProductSidebarSection extends BasePage {
     const subcategoryLink = categoryPanel.getByRole('link', { name: subcategoryName, exact: true });
     await this.clickSubcategoryLinkAndWaitForNavigation(subcategoryLink, categoryId);
     await this.handleAdsIfNeeded(adHandler);
-    await this.recoverFromVignette(subcategoryLink, categoryId, adHandler);
+    await this.recoverNavigationFromVignette(
+      subcategoryLink,
+      this.getCategoryUrlPattern(categoryId),
+      () => this.isOnCategoryUrl(categoryId),
+      adHandler
+    );
   }
 
   async verifyCategoryResult(categoryName: string, subcategoryName: string, categoryId: string) {
     await expect(this.page).toHaveURL(this.getCategoryUrlPattern(categoryId));
     await expect(this.breadcrumb).toContainText(`${categoryName} > ${subcategoryName}`);
     await expect(this.categoryResultTitle).toHaveText(`${categoryName} - ${subcategoryName} Products`);
+  }
+
+  async verifyBrandResult(brandName: string) {
+    await expect(this.page).toHaveURL(this.getBrandUrlPattern(brandName));
+    await expect(this.breadcrumb).toContainText(brandName);
+    await expect(this.categoryResultTitle).toContainText(brandName);
   }
 }

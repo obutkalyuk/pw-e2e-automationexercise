@@ -1,31 +1,22 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { HomePage } from '../../pages/homePage';
-import { ProductApiModel } from '../../data/product';
+import { apiHelper } from '../../utils/apiHelper';
 
-async function verifyVisibleProductsMatchCategory(
-  homePage: HomePage,
-  products: ProductApiModel[],
-  categoryName: string,
-  subcategoryName: string
-) {
-  const visibleProductIds = await homePage.productCatalog.getVisibleProductIds();
-  expect(visibleProductIds.length).toBeGreaterThan(0);
+const firstCategory = {
+  group: 'Women' as const,
+  subcategory: 'Saree',
+  id: '7',
+};
 
-  for (const productId of visibleProductIds) {
-    const product = products.find(item => item.id === Number(productId));
-    expect(product, `Product with id ${productId} was not found in API response`).toBeTruthy();
-    expect(product!.category.usertype.usertype).toBe(categoryName);
-    expect(product!.category.category).toBe(subcategoryName);
-  }
-}
+const secondCategory = {
+  group: 'Men' as const,
+  subcategory: 'Jeans',
+  id: '6',
+};
 
 test('E2E-18: View Category Products @medium', async ({ page, request }) => {
   const homePage = new HomePage(page);
-  const response = await request.get('/api/productsList');
-  const body = await response.json();
-
-  expect(response.status()).toBe(200);
-  expect(body.responseCode).toBe(200);
+  const products = await apiHelper.getProductsList(request);
 
   await page.goto('/');
   await homePage.handleCommonAds();
@@ -34,19 +25,45 @@ test('E2E-18: View Category Products @medium', async ({ page, request }) => {
     await homePage.productSidebar.verifyCategoriesVisible();
   });
 
-  await test.step('Open Women > Tops category page', async () => {
-    await homePage.productSidebar.expandCategory('Women', () => homePage.handleCommonAds());
-    await homePage.productSidebar.openSubcategory('Women', 'Saree', '7', () => homePage.handleCommonAds());
-    await homePage.productSidebar.verifyCategoryResult('Women', 'Saree', '7');
+  await test.step(`Open ${firstCategory.group} > ${firstCategory.subcategory} category page`, async () => {
+    await homePage.productSidebar.expandCategory(firstCategory.group, () => homePage.handleCommonAds());
+    await homePage.productSidebar.openSubcategory(
+      firstCategory.group,
+      firstCategory.subcategory,
+      firstCategory.id,
+      () => homePage.handleCommonAds()
+    );
+    await homePage.productSidebar.verifyCategoryResult(
+      firstCategory.group,
+      firstCategory.subcategory,
+      firstCategory.id
+    );
     await homePage.productCatalog.verifyProductsListVisible();
-    await verifyVisibleProductsMatchCategory(homePage, body.products, 'Women', 'Saree');
+    await homePage.productCatalog.verifyVisibleProductsMatchCategory(
+      products,
+      firstCategory.group,
+      firstCategory.subcategory
+    );
   });
 
-  await test.step('Open Men > Jeans category page', async () => {
-    await homePage.productSidebar.expandCategory('Men', () => homePage.handleCommonAds());
-    await homePage.productSidebar.openSubcategory('Men', 'Jeans', '6', () => homePage.handleCommonAds());
-    await homePage.productSidebar.verifyCategoryResult('Men', 'Jeans', '6');
+  await test.step(`Open ${secondCategory.group} > ${secondCategory.subcategory} category page`, async () => {
+    await homePage.productSidebar.expandCategory(secondCategory.group, () => homePage.handleCommonAds());
+    await homePage.productSidebar.openSubcategory(
+      secondCategory.group,
+      secondCategory.subcategory,
+      secondCategory.id,
+      () => homePage.handleCommonAds()
+    );
+    await homePage.productSidebar.verifyCategoryResult(
+      secondCategory.group,
+      secondCategory.subcategory,
+      secondCategory.id
+    );
     await homePage.productCatalog.verifyProductsListVisible();
-    await verifyVisibleProductsMatchCategory(homePage, body.products, 'Men', 'Jeans');
+    await homePage.productCatalog.verifyVisibleProductsMatchCategory(
+      products,
+      secondCategory.group,
+      secondCategory.subcategory
+    );
   });
 });

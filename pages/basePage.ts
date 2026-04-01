@@ -56,16 +56,21 @@ export class BasePage {
         return /#google_vignette$/.test(this.page.url());
     }
 
-
-    async goToLogin() {
-        await this.loginLink.click(); 
+    private async navigateFromMenu(link: Locator) {
+        await this.handleCommonAds();
+        await link.click();
         await this.handleCommonAds();
     }
-    async goToProducts() { await this.productsLink.click();
-        await this.handleCommonAds();
+
+
+    async goToLogin() {
+        await this.navigateFromMenu(this.loginLink);
+    }
+    async goToProducts() {
+        await this.navigateFromMenu(this.productsLink);
      }
-    async goToCart() { await this.cartLink.click(); 
-        await this.handleCommonAds();
+    async goToCart() {
+        await this.navigateFromMenu(this.cartLink);
     }
     async getCookieHeader() {
         const cookies = await this.page.context().cookies();
