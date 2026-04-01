@@ -1,0 +1,51 @@
+# Playwright E2E - AutomationExercise
+
+This repository contains practice automation tests for the demo store [AutomationExercise](https://automationexercise.com).
+
+## Purpose
+
+- A learning project for Playwright E2E and API testing.
+- Demonstrates code organization patterns (Page Object).
+- Covers edge cases, infrastructure challenges, and UI/API inconsistencies.
+
+## CI/CD Integration
+
+The project is integrated with **GitHub Actions** for automated test execution:
+- **Smoke Tests**: Triggered on every `push` to the `main` branch to ensure core functionality is intact.
+- **Full Regression**: Can be triggered manually via `workflow_dispatch` or on a schedule.
+- **Artifacts**: Playwright reports are generated and stored for failed runs to facilitate debugging.
+
+## 🐞 Bug Tracking & QA Documentation
+
+- **[Issues List](https://github.com/obutkalyuk/pw-e2e-automationexercise/issues)**:  bug reports 
+- **[QA Questionnaire](./qa_questions.md)**:  questions for the development team and risk assessments.
+
+## Project Structure
+
+- /api # API-level tests
+- /e2e # full E2E scenarios using Playwright
+- /utils # helper functions, fixtures, data generators
+- playwright.config.ts # Playwright configuration
+- package.json # dependencies and scripts
+- Automation Test Cases Plan.md # test cases lists with priority
+- qa_questions.md # questions to developers and notes
+
+
+## How to Run
+
+Install dependencies:
+
+
+npm install
+
+
+Run all tests:
+
+
+npx playwright test
+
+
+Run interactive UI mode:
+
+npx playwright test --ui
+
