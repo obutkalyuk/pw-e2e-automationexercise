@@ -52,10 +52,10 @@ jobs:
     - name: Run Smoke + Changed Tests
       if: github.event_name == 'push' || github.event_name == 'pull_request'
       run: |
-        # Smoke api project separetly, e2e for chromium only
+        # Smoke api project separetly, e2e 
         npx playwright test --grep @smoke --project=api 
         mv results.xml results-api.xml
-        npx playwright test --grep @smoke 
+        npx playwright test --grep @smoke --project=chromium --project=firefox --project=webkit
         mv results.xml results-e2e.xml
         # updated tests
         if [ -n "${{ steps.changed.outputs.tests }}" ]; then
