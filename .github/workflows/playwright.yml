@@ -52,9 +52,10 @@ jobs:
     - name: Run Smoke + Changed Tests
       if: github.event_name == 'push' || github.event_name == 'pull_request'
       run: |
-        # Smoke завжди
-        npx playwright test --grep @smoke
-        # Змінені тести (якщо є)
+        # Smoke api project separetly, e2e for chromium only
+        npx playwright test --grep @smoke --project=api
+        npx playwright test --grep @smoke --project=chromium
+        # updated tests
         if [ -n "${{ steps.changed.outputs.tests }}" ]; then
           npx playwright test ${{ steps.changed.outputs.tests }}
         fi
