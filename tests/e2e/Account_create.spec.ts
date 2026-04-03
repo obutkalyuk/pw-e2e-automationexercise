@@ -1,15 +1,14 @@
-import { test } from '@playwright/test';
 import { User } from '../../data/user';
 import { LoginPage } from '../../pages/loginPage';
 import { SignupPage } from '../../pages/signupPage';
-import { apiHelper } from '../../utils/apiHelper';
-import { disposeApiContext } from '../../utils/apiContext';
+import { test } from '../../utils/fixtures';
 
 
-test('E2E-1: Register User @critical @stable', async ({ page }, testInfo) => {
+test('E2E-1: Register User @critical @stable', async ({ page, createdUserCleanup }, testInfo) => {
   const loginPage = new LoginPage(page);
   const signUpPage = new SignupPage(page);
   const USER = User.generateRandom();
+  createdUserCleanup.track(USER);
   testInfo.annotations.push({
       type: 'Test Data',
       description: `Name: ${USER.name} | Email: ${USER.email} | Password: ${USER.password}`
@@ -24,19 +23,13 @@ test('E2E-1: Register User @critical @stable', async ({ page }, testInfo) => {
   });
 });
 
-test('E2E-5: Register User with existing email @medium', async ({ page, request }, testInfo) => {
+test('E2E-5: Register User with existing email @medium', async ({ page, managedUser }) => {
   const loginPage = new LoginPage(page);
-  const existingUser = await apiHelper.createManagedUser(request, testInfo);
 
-  try {
-    await loginPage.goto();
+  await loginPage.goto();
 
-    await test.step(`Try to sign up again with existing email ${existingUser.email}`, async () => {
-      await loginPage.signUp(existingUser);
-      await loginPage.verifySignupExistingEmailError();
-    });
-  } finally {
-    await apiHelper.deleteUserIfExists(request, existingUser);
-    await disposeApiContext();
-  }
+  await test.step(`Try to sign up again with existing email ${managedUser.email}`, async () => {
+    await loginPage.signUp(managedUser);
+    await loginPage.verifySignupExistingEmailError();
+  });
 });

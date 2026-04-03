@@ -82,6 +82,20 @@ export const apiHelper = {
       return;
     }
 
-    await this.deleteUser(request, user);
+    await test.step(`API: Delete user if exists ${user.email}`, async () => {
+      const response = await request.delete('/api/deleteAccount', {
+        form: {
+          email: user.email,
+          password: user.password
+        }
+      });
+      const body = await response.json();
+
+      expect(response.status()).toBe(200);
+      expect(
+        [200, 404],
+        `Unexpected deletion response for ${user.email}: ${body.message}`
+      ).toContain(body.responseCode);
+    });
   }
 };
