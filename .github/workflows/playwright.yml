@@ -13,8 +13,13 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    permissions:
+      checks: write        # ← for junit report
+      pull-requests: write # ← for comments to PR
+      contents: read
     env:
       BASE_URL: ${{ secrets.BASE_URL }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
     - uses: actions/checkout@v4
       with:
