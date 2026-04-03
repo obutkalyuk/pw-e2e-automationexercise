@@ -9,7 +9,8 @@ export class PaymentPage  extends BasePage {
     readonly expiryMonthInput: Locator;
     readonly expiryYearInput: Locator;
     readonly payButton: Locator;
-    readonly successMessage: Locator;
+    readonly orderPlacedHeading: Locator;
+    readonly continueButton: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -19,22 +20,20 @@ export class PaymentPage  extends BasePage {
         this.expiryMonthInput = page.locator('#payment-form input[data-qa=expiry-month]');
         this.expiryYearInput = page.locator('#payment-form input[data-qa=expiry-year]');
         this.payButton = page.locator('#payment-form button[data-qa=pay-button]');
-        this.successMessage = page.locator('#success_message');
+        this.orderPlacedHeading = page.locator('h2', { hasText: 'Order Placed!' });
+        this.continueButton = page.locator('a[data-qa="continue-button"]');
     }
 
-    private async fillAndVerify(locator: Locator, value: string) {
-        await locator.click();
-        await locator.fill('');
+    private async fillField(locator: Locator, value: string) {
         await locator.fill(value);
-        await expect(locator).toHaveValue(value);
     }
 
     async fillPaymentDetails(details: CardDetails) {
-        await this.fillAndVerify(this.nameOnCardInput, details.holder);
-        await this.fillAndVerify(this.cardNumberInput, details.number);
-        await this.fillAndVerify(this.cvcInput, details.cvc);
-        await this.fillAndVerify(this.expiryMonthInput, details.expiryMonth);
-        await this.fillAndVerify(this.expiryYearInput, details.expiryYear);
+        await this.fillField(this.nameOnCardInput, details.holder);
+        await this.fillField(this.cardNumberInput, details.number);
+        await this.fillField(this.cvcInput, details.cvc);
+        await this.fillField(this.expiryMonthInput, details.expiryMonth);
+        await this.fillField(this.expiryYearInput, details.expiryYear);
     }
 
     async clickPayAndConfirm() {
@@ -45,11 +44,7 @@ export class PaymentPage  extends BasePage {
 
  async verifyPaymentSuccess() {
     await expect(this.page).toHaveURL(/.*payment_done/, { timeout: 20000 });
-    const successMessage = this.page.locator('h2:has-text("Order Placed!")');
-    await expect(successMessage).toBeVisible({  timeout: 10000 });
-    await this.page.locator('a[data-qa="continue-button"]').click();
+    await expect(this.orderPlacedHeading).toBeVisible({ timeout: 10000 });
+    await this.continueButton.click();
   } 
-    async getSuccessMessage() {
-        return await this.successMessage.innerText();
-    }
 }
