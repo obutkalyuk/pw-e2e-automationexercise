@@ -65,7 +65,7 @@ jobs:
     - name: Run Full Test Suite
       if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
       run: |
-        npx run test
+        npm run test:full
         mv results.xml results-full.xml
     - name: Publish Test Report to Summary
       uses: mikepenz/action-junit-report@v4
