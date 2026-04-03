@@ -79,6 +79,7 @@ export class SignupPage extends BasePage {
     await this.mobileNumberInput.waitFor({ state: 'visible', timeout: 10000 });
     await this.createAccountButton.waitFor({ state: 'visible', timeout: 10000 });
 
+    // Playwright automatically waits for visibility during action (click/fill)
     await this.selectTitle(user.title);
     //await this.nameInput.fill(user.name);
     //await this.emailInput.fill(user.email);
