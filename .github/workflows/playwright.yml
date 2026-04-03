@@ -85,6 +85,25 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 7
+    - name: Parse Test Results
+      id: results
+      if: always()
+      run: |
+        if ls results-*.xml 1> /dev/null 2>&1; then
+          TOTAL=$(grep -h 'tests=' results-*.xml | grep -oP 'tests="\K[0-9]+' | awk '{s+=$1} END {print s}')
+          FAILURES=$(grep -h 'failures=' results-*.xml | grep -oP 'failures="\K[0-9]+' | awk '{s+=$1} END {print s}')
+          SKIPPED=$(grep -h 'skipped=' results-*.xml | grep -oP 'skipped="\K[0-9]+' | awk '{s+=$1} END {print s}')
+          PASSED=$((TOTAL - FAILURES - SKIPPED))
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+          echo "failed=$FAILURES" >> $GITHUB_OUTPUT
+          echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
+          echo "passed=$PASSED" >> $GITHUB_OUTPUT
+        else
+          echo "total=0" >> $GITHUB_OUTPUT
+          echo "failed=0" >> $GITHUB_OUTPUT
+          echo "skipped=0" >> $GITHUB_OUTPUT
+          echo "passed=0" >> $GITHUB_OUTPUT
+        fi
     - name: Send Custom Mail
       if: always()
       uses: dawidd6/action-send-mail@v3
@@ -93,13 +112,31 @@ jobs:
         server_port: 465
         username: ${{ secrets.MAIL_USERNAME }}
         password: ${{ secrets.MAIL_PASSWORD }}
-        subject: "QA Report: ${{ github.workflow }} - ${{ job.status }}"
+        subject: "QA Report: ${{ github.workflow }} - ${{ job.status }} [${{ github.ref_name }}]"
         to: olga.butkalyuk@gmail.com
         from: Playwright Automation
         html_body: |
           <h3>Test Results Summary</h3>
-          <p><b>Workflow:</b> ${{ github.workflow }}</p>
-          <p><b>Status:</b> ${{ job.status == 'success' && '✅ PASSED' || '❌ FAILED' }}</p>
-          <p><b>Run Details:</b> <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to see detailed summary and errors</a></p>
-          <p><i>Check GitHub Artifacts for full HTML report with screenshots.</i></p>
-          <p><i>Artifacts are available for 7 days.</i></p>
+          <table cellpadding="6" cellspacing="0">
+            <tr><td><b>Workflow:</b></td><td>${{ github.workflow }}</td></tr>
+            <tr><td><b>Status:</b></td><td>${{ job.status == 'success' && '✅ PASSED' || '❌ FAILED' }}</td></tr>
+            <tr><td><b>Trigger:</b></td><td>${{ github.event_name }}</td></tr>
+            <tr><td><b>Branch:</b></td><td>${{ github.ref_name }}</td></tr>
+            <tr><td><b>Commit:</b></td><td><a href="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}">${{ github.sha }}</a></td></tr>
+          </table>
+
+          <h3>Test Statistics</h3>
+          <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse">
+            <tr style="background:#f0f0f0">
+              <th>Total</th><th>✅ Passed</th><th>⏭️ Skipped</th><th>❌ Failed</th>
+            </tr>
+            <tr style="text-align:center">
+              <td>${{ steps.results.outputs.total }}</td>
+              <td style="color:green">${{ steps.results.outputs.passed }}</td>
+              <td>${{ steps.results.outputs.skipped }}</td>
+              <td style="color:${{ steps.results.outputs.failed != '0' && 'red' || 'green' }}">${{ steps.results.outputs.failed }}</td>              
+            </tr>
+          </table>
+
+          <p><b>Run Details:</b> <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to see detailed summary</a></p>
+          <p><i>Check GitHub Artifacts for full HTML report with screenshots. Artifacts are available for 7 days.</i></p>
