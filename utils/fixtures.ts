@@ -1,5 +1,6 @@
 import { test as base } from '@playwright/test';
 import { User } from '../data/user';
+import { registerCommonAdHandlers } from './adHandlers';
 import { apiHelper } from './apiHelper';
 
 type CreatedUserCleanup = {
@@ -12,6 +13,11 @@ type Fixtures = {
 };
 
 export const test = base.extend<Fixtures>({
+  page: async ({ page }, use) => {
+    await registerCommonAdHandlers(page);
+    await use(page);
+  },
+
   managedUser: async ({ request }, use, testInfo) => {
     const user = await apiHelper.createManagedUser(request, testInfo);
     await use(user);
