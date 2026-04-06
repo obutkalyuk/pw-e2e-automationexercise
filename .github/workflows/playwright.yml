@@ -6,7 +6,7 @@ on:
   pull_request:
      branches: [ main, master ]
   schedule:
-    - cron: '0 2 * * *' #  02:00
+    - cron: '0 2 * * *' # 02:00
   workflow_dispatch:
 
 jobs:
@@ -14,8 +14,8 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     permissions:
-      checks: write        # ← for junit report
-      pull-requests: write # ← for comments to PR
+      checks: write
+      pull-requests: write
       contents: read
     env:
       BASE_URL: ${{ secrets.BASE_URL }}
@@ -36,7 +36,7 @@ jobs:
       id: playwright-cache
       with:
         path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}  
+        key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
     - name: Install Playwright Browsers
       if: steps.playwright-cache.outputs.cache-hit != 'true'
       run: npx playwright install --with-deps
@@ -57,12 +57,12 @@ jobs:
     - name: Run Smoke + Changed Tests
       if: github.event_name == 'push' || github.event_name == 'pull_request'
       run: |
-        # Smoke api project separetly, e2e 
-        npx playwright test --grep @smoke --project=api 
+        # Smoke api project separately, then browser e2e.
+        npx playwright test --grep @smoke --project=api
         mv results.xml results-api.xml
         npx playwright test --grep @smoke --project=chromium --project=firefox --project=webkit
         mv results.xml results-e2e.xml
-        # updated tests
+        # Run changed specs when present.
         if [ -n "${{ steps.changed.outputs.tests }}" ]; then
           npx playwright test ${{ steps.changed.outputs.tests }}
           mv results.xml results-changed.xml
@@ -70,7 +70,7 @@ jobs:
     - name: Run Full Test Suite
       if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
       run: |
-        npm run test:full||true
+        npm run test:full || true
         mv results.xml results-full.xml
     - name: Publish Test Report to Summary
       uses: mikepenz/action-junit-report@v4
@@ -104,6 +104,27 @@ jobs:
           echo "skipped=0" >> $GITHUB_OUTPUT
           echo "passed=0" >> $GITHUB_OUTPUT
         fi
+    - name: Determine Mail Status
+      id: mail_status
+      if: always()
+      env:
+        JOB_STATUS: ${{ job.status }}
+        TOTAL: ${{ steps.results.outputs.total }}
+        FAILED: ${{ steps.results.outputs.failed }}
+      run: |
+        if [ "$JOB_STATUS" != "success" ]; then
+          echo "subject_status=FAILED" >> $GITHUB_OUTPUT
+          echo "status_label=&#x274C; FAILED" >> $GITHUB_OUTPUT
+        elif [ "${FAILED:-0}" -gt 0 ]; then
+          echo "subject_status=FAILED" >> $GITHUB_OUTPUT
+          echo "status_label=&#x274C; FAILED" >> $GITHUB_OUTPUT
+        elif [ "${TOTAL:-0}" -eq 0 ]; then
+          echo "subject_status=NO_RESULTS" >> $GITHUB_OUTPUT
+          echo "status_label=&#x26A0;&#xFE0F; NO RESULTS" >> $GITHUB_OUTPUT
+        else
+          echo "subject_status=PASSED" >> $GITHUB_OUTPUT
+          echo "status_label=&#x2705; PASSED" >> $GITHUB_OUTPUT
+        fi
     - name: Send Custom Mail
       if: always()
       uses: dawidd6/action-send-mail@v3
@@ -112,14 +133,14 @@ jobs:
         server_port: 465
         username: ${{ secrets.MAIL_USERNAME }}
         password: ${{ secrets.MAIL_PASSWORD }}
-        subject: "QA Report: ${{ github.workflow }} - ${{ job.status }} [${{ github.ref_name }}]"
+        subject: "QA Report: ${{ github.workflow }} - ${{ steps.mail_status.outputs.subject_status }} [${{ github.ref_name }}]"
         to: olga.butkalyuk@gmail.com
         from: Playwright Automation
         html_body: |
           <h3>Test Results Summary</h3>
           <table cellpadding="6" cellspacing="0">
             <tr><td><b>Workflow:</b></td><td>${{ github.workflow }}</td></tr>
-            <tr><td><b>Status:</b></td><td>${{ job.status == 'success' && '✅ PASSED' || '❌ FAILED' }}</td></tr>
+            <tr><td><b>Status:</b></td><td>${{ steps.mail_status.outputs.status_label }}</td></tr>
             <tr><td><b>Trigger:</b></td><td>${{ github.event_name }}</td></tr>
             <tr><td><b>Branch:</b></td><td>${{ github.ref_name }}</td></tr>
             <tr><td><b>Commit:</b></td><td><a href="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}">${{ github.sha }}</a></td></tr>
@@ -128,13 +149,13 @@ jobs:
           <h3>Test Statistics</h3>
           <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse">
             <tr style="background:#f0f0f0">
-              <th>Total</th><th>✅ Passed</th><th>⏭️ Skipped</th><th>❌ Failed</th>
+              <th>Total</th><th>&#x2705; Passed</th><th>&#x23ED;&#xFE0F; Skipped</th><th>&#x274C; Failed</th>
             </tr>
             <tr style="text-align:center">
               <td>${{ steps.results.outputs.total }}</td>
               <td style="color:green">${{ steps.results.outputs.passed }}</td>
               <td>${{ steps.results.outputs.skipped }}</td>
-              <td style="color:${{ steps.results.outputs.failed != '0' && 'red' || 'green' }}">${{ steps.results.outputs.failed }}</td>              
+              <td style="color:${{ steps.results.outputs.failed != '0' && 'red' || 'green' }}">${{ steps.results.outputs.failed }}</td>
             </tr>
           </table>
 
