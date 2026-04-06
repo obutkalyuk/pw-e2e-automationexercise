@@ -7,7 +7,5 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 test-results.json
-test-results.json
-test-results.json
 .env
 results.xml
