@@ -6,7 +6,8 @@
     "test:smoke": "npx playwright test --grep @smoke",
     "test:full": "npx playwright test",
     "test:api": "npx playwright test --project=api",
-    "test:report": "npx playwright show-report"
+    "test:report": "npx playwright show-report",
+    "capture:network": "tsc scripts/capture-network.ts --outDir scripts/.generated --module commonjs --target es2020 --types node && node scripts/.generated/capture-network.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,8 @@
     "@faker-js/faker": "^9.9.0",
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.2.3",
-    "dotenv": "^17.3.1"
+    "dotenv": "^17.3.1",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
   }
 }
