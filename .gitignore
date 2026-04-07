@@ -1,6 +1,8 @@
 
 # Playwright
 node_modules/
+/scripts/.generated/
+/artifacts/network-captures/
 /test-results/
 /playwright-report/
 /blob-report/

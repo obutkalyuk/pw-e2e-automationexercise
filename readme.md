@@ -50,3 +50,27 @@ Run interactive UI mode:
 
 npx playwright test --ui
 
+## Network Capture
+
+Use the network capture utility to investigate cart, checkout, and payment flows without copying requests one by one from DevTools.
+
+Start the helper:
+
+`npm run capture:network -- --label checkout-payment --path /view_cart`
+
+How it works:
+- The browser opens in headed mode.
+- Manually prepare the page state.
+- Press `Enter` in the terminal to start recording.
+- Perform the target action in the browser.
+- Press `Enter` again to stop recording and save the results.
+
+Output:
+- JSON capture: `artifacts/network-captures/*.json`
+- Markdown summary: `artifacts/network-captures/*.md`
+
+Useful flags:
+- `--label <name>`: adds a readable name to the output files
+- `--path <relative-path>`: opens a specific page before capture starts
+- `--include-scripts`: keeps first-party script requests in the capture
+- `--slowmo <ms>`: slows browser actions for debugging
