@@ -41,12 +41,12 @@ _Session-based HTML/redirect/download request checks_
 
 |**Status**| **#** | **Transport Endpoint** | **Method** | **Description** | **Priority** | **Notes** |**File Name**|
 | -------- | ----- | ---------------------- | ---------- | --------------- | ------------ | --------- |-------------|
-|| TR-1 | `/login` | POST | Authenticate user via transport flow | **High** | Session-based login request; RQ-005 | |
-|| TR-2 | `/add_to_cart/{product_id}` | GET | Add product to cart for active session | **High** | Cart setup request without UI noise; RQ-018 | |
-|| TR-3 | `/checkout` | GET | Access checkout document for active cart session | **High** | Document flow access check; RQ-021 | |
-|| TR-4 | `/payment` | GET | Access payment document after checkout | **High** | Document flow access check; RQ-022 | |
-|| TR-5 | `/payment` | POST | Submit payment and verify redirect to order completion | **Critical** | Redirect-based transport validation; RQ-023, RQ-024 | |
-|| TR-6 | `/download_invoice/{orderId}` | GET | Download invoice after successful purchase | **Medium** | Transport download/content check; RQ-025 | |
+|✅| TR-1 | `/login` | POST | Authenticate user via transport flow | **High** | Session-based login request; RQ-005 |tests\api\transport\purchase.transport.api.spec.ts |
+|✅| TR-2 | `/add_to_cart/{product_id}` | GET | Add product to cart for active session | **High** | Cart setup request without UI noise; RQ-018 |tests\api\transport\purchase.transport.api.spec.ts |
+|✅| TR-3 | `/checkout` | GET | Access checkout document for active cart session | **High** | Document flow access check; RQ-021 |tests\api\transport\purchase.transport.api.spec.ts |
+|✅| TR-4 | `/payment` | GET | Access payment document after checkout | **High** | Document flow access check; RQ-022 |tests\api\transport\purchase.transport.api.spec.ts |
+|✅| TR-5 | `/payment` | POST | Submit payment and verify redirect to order completion | **Critical** | Redirect-based transport validation; RQ-023, RQ-024 |tests\api\transport\purchase.transport.api.spec.ts |
+|✅| TR-6 | `/download_invoice/{orderId}` | GET | Download invoice after successful purchase | **Medium** | Transport download/content check; RQ-025 | tests\api\transport\purchase.transport.api.spec.ts|
 ## E2E and Hybrid Tests
 ### Critical Priority
 
