@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test } from '../../utils/fixtures';
 import { HomePage } from '../../pages/homePage';
 import { apiHelper } from '../../utils/apiHelper';
 
