@@ -47,6 +47,9 @@ _Session-based HTML/redirect/download request checks_
 |✅| TR-4 | `/payment` | GET | Access payment document after checkout | **High** | Document flow access check; RQ-022 |tests\api\transport\purchase.transport.api.spec.ts |
 |✅| TR-5 | `/payment` | POST | Submit payment and verify redirect to order completion | **Critical** | Redirect-based transport validation; RQ-023, RQ-024 |tests\api\transport\purchase.transport.api.spec.ts |
 |✅| TR-6 | `/download_invoice/{orderId}` | GET | Download invoice after successful purchase | **Medium** | Transport download/content check; RQ-025 | tests\api\transport\purchase.transport.api.spec.ts|
+|✅| TR-7 | `/logout` | GET | Invalidate session and redirect to login | **Medium** | Transport logout redirect and session reset check; RQ-006 |tests\api\transport\purchase.transport.api.spec.ts |
+|✅| TR-8 | `/view_cart` | GET | Open cart document for active cart session | **High** | Transport cart document/content check; RQ-019 |tests\api\transport\purchase.transport.api.spec.ts |
+|✅| TR-9 | `/delete_cart/{product_id}` | GET | Remove product row from cart state | **High** | Transport delete-cart behavior check, including repeated product row removal; RQ-020 |tests\api\transport\purchase.transport.api.spec.ts |
 ## E2E and Hybrid Tests
 ### Critical Priority
 
@@ -105,6 +108,8 @@ _Session-based HTML/redirect/download request checks_
 | --- | ----- | --------------- | ---------- | --------------------------------------- | ------------ | ----------------------------- | ----|
 |✅| M-1   | Performance & Monitoring   | Playwright + CDP        | Network Throttling & Resource TTFB| **Medium** | Metrics: TTFB, DNS, Total     |tests/monitoring/performance.spec.ts|
 |✅| C-1   | Concurrency    | API / Stress | Parallel User Registration (5 threads)      | **Low** | Identification of slow assets |tests/api/auth/concurrency.spec.ts|
+
+
 
 
 

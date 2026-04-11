@@ -29,7 +29,7 @@ It is a technical working document for QA research and automation design.
 | ✅ | RQ-003 | Authentication | `/api/verifyLogin` | `DELETE` | Documented API | `message-based response` | `Message contract` | Medium | `API-15` | Unsupported method scenario. |
 | ✅ | RQ-004 | Authentication | `/api/verifyLogin` with invalid credentials | `POST` | Documented API | `message-based response` | `Message contract` | High | `API-7` | Site behavior may still return HTTP 200 while business response code indicates failure. |
 | ✅ | RQ-005 | Authentication | `/login` | `POST` | Observed web flow | `HTML redirect` | `Transport/document contract` | High | `TR-1`, `API-18` | Observed `302` redirect to `/`. |
-| 🟡 | RQ-006 | Authentication | `/logout` | `GET` | Observed web flow | `HTML redirect` | `Transport/document contract` | Medium | `E2E-4` | Observed `302` redirect to `/login`. No dedicated transport check yet. |
+| ✅ | RQ-006 | Authentication | `/logout` | `GET` | Observed web flow | `HTML redirect` | `Transport/document contract` | Medium | `E2E-4`, `TR-7` | Observed `302` redirect to `/login`. No dedicated transport check yet. |
 | ✅ | RQ-007 | Account lifecycle | `/api/createAccount` | `POST` | Documented API | `message-based response` | `Message contract` | High | `API-1`, `API-16` | Account creation API. |
 | ✅ | RQ-008 | Account lifecycle | `/api/deleteAccount` | `DELETE` | Documented API | `message-based response` | `Message contract` | High | `API-2`, `API-17` | Site behavior may still return HTTP 200 for negative outcomes. |
 | ✅ | RQ-009 | Account lifecycle | `/api/updateAccount` | `PUT` | Documented API | `message-based response` | `Message contract` | High | `API-9`, `API-10` | Account update API. |
@@ -42,8 +42,8 @@ It is a technical working document for QA research and automation design.
 | 🟡 | RQ-016 | Catalog | `/api/searchProduct` | `POST` | Documented API | `JSON` | `Schema contract` | High | `API-5` | Search results contract validation. Functional coverage exists; dedicated schema layer is still optional. |
 | ✅ | RQ-017 | Catalog | `/api/searchProduct` without `search_product` | `POST` | Documented API | `message-based response` | `Message contract` | Medium | `API-13` | Missing parameter scenario. |
 | ✅ | RQ-018 | Cart | `/add_to_cart/{product_id}` | `GET` | Observed web flow | `HTML` | `Transport/document contract` | High | `TR-2`, `API-18` | Useful shortcut in hybrid automation. |
-| 🟡 | RQ-019 | Cart | `/view_cart` | `GET` | Observed web flow | `HTML document` | `Transport/document contract` | High | `E2E-12`, `E2E-13`, `E2E-17`, `E2E-20` | Cart page view. No dedicated transport check yet. |
-| 🟡 | RQ-020 | Cart | `/delete_cart/{product_id}` | `GET` | Observed web flow | `HTML` | `Transport/document contract` | High | `E2E-17` | Removes whole product from cart. No dedicated transport check yet. |
+| ✅ | RQ-019 | Cart | `/view_cart` | `GET` | Observed web flow | `HTML document` | `Transport/document contract` | High | `E2E-12`, `E2E-13`, `E2E-17`, `E2E-20`, `TR-8`, `TR-9`| Cart page view. No dedicated transport check yet. |
+| ✅ | RQ-020 | Cart | `/delete_cart/{product_id}` | `GET` | Observed web flow | `HTML` | `Transport/document contract` | High | `E2E-17`, `TR-9`| Removes whole product from cart. No dedicated transport check yet. |
 | ✅ | RQ-021 | Checkout | `/checkout` | `GET` | Observed web flow | `HTML document` | `Transport/document contract` | High | `TR-3`, `API-18` | Checkout page open. |
 | ✅ | RQ-022 | Payment | `/payment` | `GET` | Observed web flow | `HTML document` | `Transport/document contract` | High | `TR-4`, `API-18` | Payment page open. |
 | ✅ | RQ-023 | Payment | `/payment` | `POST` | Observed web flow | `HTML redirect` | `Transport/document contract` | High | `TR-5` | Observed `302` redirect to `/payment_done/{orderId}`. Requires valid session and CSRF token. |

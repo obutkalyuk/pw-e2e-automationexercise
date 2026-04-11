@@ -8,6 +8,14 @@ type PaymentRedirectResult = {
   orderId: string;
 };
 
+type TransportCartProduct = {
+  id: string;
+  name: string;
+  price: string;
+  quantity: number;
+  total: string;
+};
+
 function extractAmountFromPrice(price: string): string {
   const match = price.match(/(\d+)/);
 
@@ -27,6 +35,39 @@ function extractOrderIdFromLocation(location: string): string {
 
   expect(location, 'Payment redirect location should contain order id').toMatch(/\/payment_done\/\d+/);
   return match![1];
+}
+
+function stripHtml(value: string): string {
+  return value.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function parseCartProducts(html: string): TransportCartProduct[] {
+  const products: TransportCartProduct[] = [];
+  const rowPattern = /<tr[^>]+id=["']product-(\d+)["'][\s\S]*?<\/tr>/gi;
+
+  for (const rowMatch of html.matchAll(rowPattern)) {
+    const rowHtml = rowMatch[0];
+    const id = rowMatch[1];
+    const nameMatch = rowHtml.match(/class=["'][^"']*cart_description[^"']*["'][\s\S]*?<h4>\s*<a[^>]*>([\s\S]*?)<\/a>/i);
+    const priceMatch = rowHtml.match(/class=["'][^"']*cart_price[^"']*["'][\s\S]*?<p>([\s\S]*?)<\/p>/i);
+    const quantityMatch = rowHtml.match(/class=["'][^"']*cart_quantity[^"']*["'][\s\S]*?<button[^>]*>(\d+)<\/button>/i);
+    const totalMatch = rowHtml.match(/class=["'][^"']*cart_total_price[^"']*["'][^>]*>([\s\S]*?)<\/p>/i);
+
+    expect(nameMatch, `Expected cart row for product ${id} to contain product name`).toBeTruthy();
+    expect(priceMatch, `Expected cart row for product ${id} to contain product price`).toBeTruthy();
+    expect(quantityMatch, `Expected cart row for product ${id} to contain product quantity`).toBeTruthy();
+    expect(totalMatch, `Expected cart row for product ${id} to contain product total`).toBeTruthy();
+
+    products.push({
+      id,
+      name: stripHtml(nameMatch![1]),
+      price: stripHtml(priceMatch![1]),
+      quantity: Number(quantityMatch![1]),
+      total: stripHtml(totalMatch![1]),
+    });
+  }
+
+  return products;
 }
 
 async function expectCookieValue(request: APIRequestContext, cookieName: string): Promise<string> {
@@ -141,6 +182,61 @@ export const apiHelper = {
     });
   },
 
+  async openCartViaTransport(request: APIRequestContext) {
+    return await test.step('Transport: Open cart document', async () => {
+      const response = await request.get('/view_cart');
+      const body = await response.text();
+
+      expect(response.status()).toBe(200);
+      expect(response.headers()['content-type'] ?? '').toContain('text/html');
+      expect(body).toContain('Shopping Cart');
+      return body;
+    });
+  },
+
+  async expectCartContainsProduct(request: APIRequestContext, productId: string, expectedQuantity?: number) {
+    return await test.step(`Transport: Verify cart contains product ${productId}`, async () => {
+      const cartHtml = await this.openCartViaTransport(request);
+      const products = parseCartProducts(cartHtml);
+      const product = products.find((item) => item.id === productId);
+
+      expect(product, `Expected product ${productId} to be present in cart`).toBeTruthy();
+      if (expectedQuantity !== undefined) {
+        expect(product!.quantity).toBe(expectedQuantity);
+      }
+      return {
+        cartHtml,
+        product: product!,
+        products,
+      };
+    });
+  },
+
+  async deleteProductFromCartViaTransport(request: APIRequestContext, productId: string) {
+    return await test.step(`Transport: Delete product ${productId} from cart`, async () => {
+      const response = await request.get(`/delete_cart/${productId}`);
+      const body = await response.text();
+
+      expect(response.status()).toBe(200);
+      expect(response.headers()['content-type'] ?? '').toContain('text/html');
+      return body;
+    });
+  },
+
+  async expectCartDoesNotContainProduct(request: APIRequestContext, productId: string) {
+    return await test.step(`Transport: Verify cart does not contain product ${productId}`, async () => {
+      const cartHtml = await this.openCartViaTransport(request);
+      const products = parseCartProducts(cartHtml);
+      const product = products.find((item) => item.id === productId);
+
+      expect(product, `Expected product ${productId} to be absent from cart`).toBeFalsy();
+      return {
+        cartHtml,
+        products,
+      };
+    });
+  },
+
   async openCheckoutViaTransport(request: APIRequestContext) {
     return await test.step('Transport: Open checkout document', async () => {
       const response = await request.get('/checkout');
@@ -225,6 +321,26 @@ export const apiHelper = {
     });
   },
 
+  async logoutViaTransport(request: APIRequestContext) {
+    return await test.step('Transport: Logout user', async () => {
+      const response = await request.get('/logout', {
+        maxRedirects: 0,
+      });
+
+      expect(response.status()).toBe(302);
+      expect(response.headers()['location']).toBe('/login');
+
+      const homeResponse = await request.get('/');
+      const homeHtml = await homeResponse.text();
+
+      expect(homeResponse.status()).toBe(200);
+      expect(homeHtml).toContain('Signup / Login');
+      expect(homeHtml).not.toContain('Logged in as');
+
+      return response;
+    });
+  },
+
   async downloadInvoiceViaTransport(request: APIRequestContext, orderId: string, expectedAmount?: string) {
     return await test.step(`Transport: Download invoice for order ${orderId}`, async () => {
       const response = await request.get(`/download_invoice/${orderId}`);
@@ -242,11 +358,18 @@ export const apiHelper = {
 
   async getExpectedInvoiceAmountForProduct(request: APIRequestContext, productId: string): Promise<string> {
     return await test.step(`API: Get expected invoice amount for product ${productId}`, async () => {
+      const product = await this.getProductById(request, productId);
+      return extractAmountFromPrice(product.price);
+    });
+  },
+
+  async getProductById(request: APIRequestContext, productId: string): Promise<ProductApiModel> {
+    return await test.step(`API: Get product ${productId} from products list`, async () => {
       const products = await this.getProductsList(request);
       const product = products.find((item) => String(item.id) === productId);
 
       expect(product, `Product ${productId} should exist in products list`).toBeTruthy();
-      return extractAmountFromPrice(product!.price);
+      return product!;
     });
   },
 
