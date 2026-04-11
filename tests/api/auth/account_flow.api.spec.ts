@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { userDetailResponseSchema } from '../../../data/apiSchemas';
 import { User } from '../../../data/user';
 
 test.describe('API Account Management Flow', () => {
@@ -26,7 +27,7 @@ test.describe('API Account Management Flow', () => {
       const response = await request.get('/api/getUserDetailByEmail', {
         params: { email: testUser.email }
       });
-      const body = await response.json();
+      const body = userDetailResponseSchema.parse(await response.json());
 
       expect(response.status()).toBe(200);
       expect(body.responseCode, `FAILED TO GET USER. Email attempted: ${testUser.email} Server message: ${body.message}`).toBe(200);

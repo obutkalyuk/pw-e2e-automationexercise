@@ -26,6 +26,7 @@ Within that scope, the project focuses on the QA work that can still be done wel
 
 - **Coverage beyond basic UI paths**: separate API, E2E, hybrid, transport, chain, and monitoring coverage
 - **Contract-aware testing**: API and web requests are analyzed by response type, not treated as one generic layer
+- **Schema contract validation with Zod**: structured JSON endpoints are validated against reusable schemas, while tests keep only business-specific assertions
 - **Handling imperfect systems**: tests account for non-standard behavior such as business failures returned with HTTP 200
 - **QA analysis, not only automation**: repository includes a test plan, QA questionnaire, API/request inventory, and documented defects
 - **Investigation tooling**: custom network capture utility for checkout and payment flow research
@@ -48,6 +49,12 @@ Not every important behavior in this app is a JSON API. Some risks live in redir
 ### Custom API helper for non-standard responses
 
 The target application may return HTTP 200 even when the business operation fails. Helpers validate response body codes and messages to reduce false-positive passes.
+
+### Schema contracts with Zod
+
+Structured JSON endpoints use reusable Zod schemas for contract validation.
+
+This keeps response-shape checks centralized, lets tests focus on business intent, and makes contract failures point directly to the invalid field path.
 
 ## Project Structure
 

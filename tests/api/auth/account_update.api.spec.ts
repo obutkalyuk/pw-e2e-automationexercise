@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { userDetailResponseSchema } from '../../../data/apiSchemas';
 import { User } from '../../../data/user';
 import { apiHelper } from '../../../utils/apiHelper';
 
@@ -25,7 +26,7 @@ test.describe('API Account Update', () => {
       const getResponse = await request.get('/api/getUserDetailByEmail', {
         params: { email: user.email },
       });
-      const getBody = await getResponse.json();
+      const getBody = userDetailResponseSchema.parse(await getResponse.json());
 
       expect(getResponse.status()).toBe(200);
       expect(getBody.responseCode).toBe(200);

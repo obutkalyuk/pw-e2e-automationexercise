@@ -33,13 +33,13 @@ It is a technical working document for QA research and automation design.
 | ✅ | RQ-007 | Account lifecycle | `/api/createAccount` | `POST` | Documented API | `message-based response` | `Message contract` | High | `API-1`, `API-16` | Account creation API. |
 | ✅ | RQ-008 | Account lifecycle | `/api/deleteAccount` | `DELETE` | Documented API | `message-based response` | `Message contract` | High | `API-2`, `API-17` | Site behavior may still return HTTP 200 for negative outcomes. |
 | ✅ | RQ-009 | Account lifecycle | `/api/updateAccount` | `PUT` | Documented API | `message-based response` | `Message contract` | High | `API-9`, `API-10` | Account update API. |
-| 🟡 | RQ-010 | Account lifecycle | `/api/getUserDetailByEmail` | `GET` | Documented API | `JSON` | `Schema contract` | High | `API-6` | User details contract validation. Functional coverage exists; dedicated schema layer is still optional. |
+| ✅ | RQ-010 | Account lifecycle | `/api/getUserDetailByEmail` | `GET` | Documented API | `JSON` | `Schema contract` | High | `API-6` | User details contract validation via Zod schema. |
 | 📝 | RQ-011 | Account lifecycle | `/delete_account` | `GET` | Observed web flow | `HTML document` | `Transport/document contract` | Medium | `E2E-27` (planned) | UI account deletion flow. |
-| 🟡 | RQ-012 | Catalog | `/api/productsList` | `GET` | Documented API | `JSON` | `Schema contract` | High | `API-4` | Suitable for Zod schema validation. Functional coverage exists; dedicated schema layer is still optional. |
+| ✅ | RQ-012 | Catalog | `/api/productsList` | `GET` | Documented API | `JSON` | `Schema contract` | High | `API-4` | Product list contract validated with Zod schema. |
 | ✅ | RQ-013 | Catalog | `/api/productsList` | `POST` | Documented API | `message-based response` | `Message contract` | Medium | `API-11` | Verify actual transport behavior together with business response code/message. |
-| 🟡 | RQ-014 | Catalog | `/api/brandsList` | `GET` | Documented API | `JSON` | `Schema contract` | High | `API-8` | Suitable for Zod schema validation. Functional coverage exists; dedicated schema layer is still optional. |
+| ✅ | RQ-014 | Catalog | `/api/brandsList` | `GET` | Documented API | `JSON` | `Schema contract` | High | `API-8` | Brand list contract validated with Zod schema. |
 | ✅ | RQ-015 | Catalog | `/api/brandsList` | `PUT` | Documented API | `message-based response` | `Message contract` | Medium | `API-12` | Unsupported method scenario. |
-| 🟡 | RQ-016 | Catalog | `/api/searchProduct` | `POST` | Documented API | `JSON` | `Schema contract` | High | `API-5` | Search results contract validation. Functional coverage exists; dedicated schema layer is still optional. |
+| ✅ | RQ-016 | Catalog | `/api/searchProduct` | `POST` | Documented API | `JSON` | `Schema contract` | High | `API-5` | Search results contract validated with Zod schema. |
 | ✅ | RQ-017 | Catalog | `/api/searchProduct` without `search_product` | `POST` | Documented API | `message-based response` | `Message contract` | Medium | `API-13` | Missing parameter scenario. |
 | ✅ | RQ-018 | Cart | `/add_to_cart/{product_id}` | `GET` | Observed web flow | `HTML` | `Transport/document contract` | High | `TR-2`, `API-18` | Useful shortcut in hybrid automation. |
 | ✅ | RQ-019 | Cart | `/view_cart` | `GET` | Observed web flow | `HTML document` | `Transport/document contract` | High | `E2E-12`, `E2E-13`, `E2E-17`, `E2E-20`, `TR-8`, `TR-9`| Cart page view. No dedicated transport check yet. |
