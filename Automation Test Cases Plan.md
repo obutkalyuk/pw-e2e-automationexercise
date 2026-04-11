@@ -32,8 +32,8 @@ _Negative cases and additional methods_
 |✅| API-13 | `/searchProduct` | POST | Reject search without required parameter | **Medium** | Negative: missing `search_product`; RQ-017 | tests\api\catalog\catalog.api.spec.ts|
 |✅| API-14 | `/verifyLogin` | POST | Reject verify login without required parameter | **Medium** | Negative: missing email/password; RQ-002 |tests\api\auth\account_flow.api.spec.ts|
 |✅| API-15 | `/verifyLogin` | DELETE | Reject unsupported method for verify login | **Medium** | Negative: method not supported; RQ-003 |tests\api\auth\account_flow.api.spec.ts |
-|| API-16 | `/createAccount` | POST | Reject create account with invalid or incomplete data | **Low** | Negative validation scenario; RQ-007 | |
-|| API-17 | `/deleteAccount` | DELETE | Reject delete account with invalid credentials | **Low** | Negative cleanup scenario; RQ-008 | |
+|✅| API-16 | `/createAccount` | POST | Reject create account with invalid or incomplete data | **Low** | Negative validation scenario; RQ-007 |tests\api\auth\account_flow.api.spec.ts |
+|✅| API-17 | `/deleteAccount` | DELETE | Reject delete account with invalid credentials | **Low** | Negative cleanup scenario; RQ-008 |tests\api\auth\account_flow.api.spec.ts |
 
 ### Transport Request Coverage
 
