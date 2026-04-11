@@ -8,7 +8,7 @@
 |✅| API-1 | `/createAccount` | POST       | Create user account             | **Critical** | Base for all hybrid tests; RQ-007 |tests\api\auth\account_flow.api.spec.ts|
 |✅| API-2 | `/deleteAccount` | DELETE     | Delete user account             | **Critical** | Cleanup; RQ-008           |tests\api\auth\account_flow.api.spec.ts|
 |✅| API-3 | `/verifyLogin`   | POST       | Verify login with valid details | **Critical** | authorization check; RQ-001|tests\api\auth\account_flow.api.spec.ts|
-| | API-18 | Purchase request chain (login -> cart -> checkout -> payment) | Hybrid | Verify end-to-end transactional request chain without UI noise | **Critical** | Planned smoke coverage for session, cart, checkout, CSRF, payment redirect chain; RQ-005, RQ-018, RQ-021, RQ-022, RQ-024 | |
+|✅ | API-18 | Purchase request chain (login -> cart -> checkout -> payment) | Hybrid | Verify end-to-end transactional request chain without UI noise | **Critical** | Planned smoke coverage for session, cart, checkout, CSRF, payment redirect chain; RQ-005, RQ-018, RQ-021, RQ-022, RQ-024 |tests\api\chain\purchase.chain.api.spec.ts |
 ### High Priority (Regression API)
 
 |**Status**| **#** | **API Endpoint**        | **Method** | **Description**         | **Priority** | **Notes**               | **File Name** |

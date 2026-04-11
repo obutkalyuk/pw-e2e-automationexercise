@@ -1,6 +1,6 @@
 import { APIRequestContext, expect, test, TestInfo } from '@playwright/test';
 import { TEST_CARD } from '../data/payment';
-import { ProductApiModel } from '../data/product';
+import { ProductApiModel, STORE_CURRENCY_PREFIX } from '../data/product';
 import { User } from '../data/user';
 
 type PaymentRedirectResult = {
@@ -150,6 +150,15 @@ export const apiHelper = {
       expect(response.headers()['content-type'] ?? '').toContain('text/html');
       expect(body).toContain('Address Details');
       return body;
+    });
+  },
+
+  async expectCheckoutContainsAmount(request: APIRequestContext, expectedAmount: string) {
+    return await test.step(`Transport: Verify checkout contains amount ${expectedAmount}`, async () => {
+      const checkoutHtml = await this.openCheckoutViaTransport(request);
+
+      expect(checkoutHtml).toContain(`${STORE_CURRENCY_PREFIX} ${expectedAmount}`);
+      return checkoutHtml;
     });
   },
 
