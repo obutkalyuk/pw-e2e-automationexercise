@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { userDetailResponseSchema } from '../../../data/apiSchemas';
 import { User } from '../../../data/user';
 
 test.describe('API Account Management Flow', () => {
@@ -26,7 +27,7 @@ test.describe('API Account Management Flow', () => {
       const response = await request.get('/api/getUserDetailByEmail', {
         params: { email: testUser.email }
       });
-      const body = await response.json();
+      const body = userDetailResponseSchema.parse(await response.json());
 
       expect(response.status()).toBe(200);
       expect(body.responseCode, `FAILED TO GET USER. Email attempted: ${testUser.email} Server message: ${body.message}`).toBe(200);
@@ -49,7 +50,7 @@ test.describe('API Account Management Flow', () => {
       expect(body.message, 'Server confirmation message').toBe('User exists!');
     });
 
-    /* API returns HTTP 200 for 404/400 errors. Testing business logic codes instead of HTTP statuses to maintain CI stability */
+    /* Known API bug (#1): server returns HTTP 200 for business-error responses. */
     await test.step(`[API-7] VERIFY LOGIN WITH INVALID PASSWORD: ${testUser.email}`, async () => {
 
       const response = await request.post('/api/verifyLogin', {
@@ -59,7 +60,10 @@ test.describe('API Account Management Flow', () => {
       });
       const body = await response.json();
 
-      expect(response.status(), 'BUG: Server should return 404 for invalid login, but returns 200').toBe(200); 
+      expect(
+        response.status(),
+        'Known API bug (#1): server returns HTTP 200 for business-error responses.'
+      ).toBe(200);
       expect(body.responseCode, 'Business logic code for User Not Found').toBe(404);
       expect(body.message).toBe('User not found!');
     });
@@ -77,5 +81,61 @@ test.describe('API Account Management Flow', () => {
       expect(body.responseCode, `FAILED TO DELETE USER. Email attempted: ${testUser.email} Server message: ${body.message}`).toBe(200);
       expect(body.message).toBe('Account deleted!');
     });
+  });
+
+  test('[API-14] POST /verifyLogin - Reject request without required parameter @medium', async ({ request }) => {
+    const response = await request.post('/api/verifyLogin', {
+      form: {
+        password: 'WrongPassword123!'
+      }
+    });
+    const body = await response.json();
+
+    expect(response.status()).toBe(200);
+    expect(body.responseCode).toBe(400);
+    expect(body.message).toBe('Bad request, email or password parameter is missing in POST request.');
+  });
+
+  test('[API-15] DELETE /verifyLogin - Reject unsupported method @medium', async ({ request }) => {
+    const response = await request.delete('/api/verifyLogin');
+    const body = await response.json();
+
+    expect(response.status()).toBe(200);
+    expect(body.responseCode).toBe(405);
+    expect(body.message).toBe('This request method is not supported.');
+  });
+
+  test('[API-16] POST /createAccount - Reject invalid or incomplete account data @low', async ({ request }) => {
+    const response = await request.post('/api/createAccount', {
+      form: {
+        name: 'Broken User',
+        email: `broken_${Date.now()}@example.com`,
+        password: 'Test1234'
+      }
+    });
+    const body = await response.json();
+
+    expect(response.status()).toBe(200);
+    expect(body.responseCode).toBe(400);
+    expect(body.message).toBe('Bad request, firstname parameter is missing in POST request.');
+  });
+
+  test('[API-17] DELETE /deleteAccount - Reject delete with invalid credentials @low', async ({ request }) => {
+    const user = User.generateRandom();
+
+    const response = await request.delete('/api/deleteAccount', {
+      form: {
+        email: user.email,
+        password: user.password
+      }
+    });
+    const body = await response.json();
+
+    expect(
+      response.status(),
+      'Known API bug (#1): server returns HTTP 200 for business-error responses.'
+    ).toBe(200);
+    expect(body.responseCode).toBe(404);
+    expect(body.message).toBe('Account not found!');
   });
 });

@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test';
+import { userDetailResponseSchema } from '../../../data/apiSchemas';
 import { User } from '../../../data/user';
 import { apiHelper } from '../../../utils/apiHelper';
 
 test.describe('API Account Update', () => {
-  /* API matches account by email and still returns HTTP 200 for business errors. */
+  /* Known API bug (#1): server returns HTTP 200 for business-error responses. */
   test('[API-9] PUT /updateAccount - Update user account details @medium', async ({ request }, testInfo) => {
     const user = await apiHelper.createManagedUser(request, testInfo);
     const updatedUser = User.generateRandom();
@@ -25,7 +26,7 @@ test.describe('API Account Update', () => {
       const getResponse = await request.get('/api/getUserDetailByEmail', {
         params: { email: user.email },
       });
-      const getBody = await getResponse.json();
+      const getBody = userDetailResponseSchema.parse(await getResponse.json());
 
       expect(getResponse.status()).toBe(200);
       expect(getBody.responseCode).toBe(200);
@@ -56,7 +57,10 @@ test.describe('API Account Update', () => {
     });
     const body = await response.json();
 
-    expect(response.status(), 'BUG: Server should return 404 for missing account, but returns 200').toBe(200);
+    expect(
+      response.status(),
+      'Known API bug (#1): server returns HTTP 200 for business-error responses.'
+    ).toBe(200);
     expect(body.responseCode).toBe(404);
     expect(body.message).toBe('Account not found!');
   });

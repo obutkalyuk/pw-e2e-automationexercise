@@ -1,3 +1,5 @@
+export const STORE_CURRENCY_PREFIX = 'Rs.';
+
 export type CartProduct = {
   id: string;
   name: string;
