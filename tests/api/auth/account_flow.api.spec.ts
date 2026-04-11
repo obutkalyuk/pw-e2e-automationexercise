@@ -78,4 +78,26 @@ test.describe('API Account Management Flow', () => {
       expect(body.message).toBe('Account deleted!');
     });
   });
+
+  test('[API-14] POST /verifyLogin - Reject request without required parameter @medium', async ({ request }) => {
+    const response = await request.post('/api/verifyLogin', {
+      form: {
+        password: 'WrongPassword123!'
+      }
+    });
+    const body = await response.json();
+
+    expect(response.status()).toBe(200);
+    expect(body.responseCode).toBe(400);
+    expect(body.message).toBe('Bad request, email or password parameter is missing in POST request.');
+  });
+
+  test('[API-15] DELETE /verifyLogin - Reject unsupported method @medium', async ({ request }) => {
+    const response = await request.delete('/api/verifyLogin');
+    const body = await response.json();
+
+    expect(response.status()).toBe(200);
+    expect(body.responseCode).toBe(405);
+    expect(body.message).toBe('This request method is not supported.');
+  });
 });

@@ -79,4 +79,31 @@ test.describe('API Catalog Endpoints', () => {
       })
     );
   });
+
+  test('[API-11] POST /productsList - Reject unsupported method @medium', async ({ request }) => {
+    const response = await request.post('/api/productsList');
+    const body = await response.json();
+
+    expect(response.status()).toBe(200);
+    expect(body.responseCode).toBe(405);
+    expect(body.message).toBe('This request method is not supported.');
+  });
+
+  test('[API-12] PUT /brandsList - Reject unsupported method @medium', async ({ request }) => {
+    const response = await request.put('/api/brandsList');
+    const body = await response.json();
+
+    expect(response.status()).toBe(200);
+    expect(body.responseCode).toBe(405);
+    expect(body.message).toBe('This request method is not supported.');
+  });
+
+  test('[API-13] POST /searchProduct - Reject request without search_product @medium', async ({ request }) => {
+    const response = await request.post('/api/searchProduct');
+    const body = await response.json();
+
+    expect(response.status()).toBe(200);
+    expect(body.responseCode).toBe(400);
+    expect(body.message).toBe('Bad request, search_product parameter is missing in POST request.');
+  });
 });

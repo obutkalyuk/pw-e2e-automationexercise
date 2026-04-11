@@ -27,11 +27,11 @@ _Negative cases and additional methods_
 |✅| API-8 | `/brandsList`    | GET        | Get all brands list         | **Medium**   | brand list verification; RQ-014|tests\api\catalog\catalog.api.spec.ts|
 |✅| API-9 | `/updateAccount` | PUT        | Update user account details | **Medium**   | update profile verification; RQ-009|tests\api\auth\account_update.api.spec.ts|
 |✅| API-10 | `/updateAccount` | PUT        | Update fails for non-existing email | **Low**   | Negative: account not found; RQ-009|tests\api\auth\account_update.api.spec.ts|
-|| API-11 | `/productsList` | POST | Reject unsupported method for product list | **Medium** | Negative: method not supported; RQ-013 | |
-|| API-12 | `/brandsList` | PUT | Reject unsupported method for brand list | **Medium** | Negative: method not supported; RQ-015 | |
-|| API-13 | `/searchProduct` | POST | Reject search without required parameter | **Medium** | Negative: missing `search_product`; RQ-017 | |
-|| API-14 | `/verifyLogin` | POST | Reject verify login without required parameter | **Medium** | Negative: missing email/password; RQ-002 | |
-|| API-15 | `/verifyLogin` | DELETE | Reject unsupported method for verify login | **Medium** | Negative: method not supported; RQ-003 | |
+|✅| API-11 | `/productsList` | POST | Reject unsupported method for product list | **Medium** | Negative: method not supported; RQ-013 |tests\api\catalog\catalog.api.spec.ts |
+|✅| API-12 | `/brandsList` | PUT | Reject unsupported method for brand list | **Medium** | Negative: method not supported; RQ-015 |tests\api\catalog\catalog.api.spec.ts |
+|✅| API-13 | `/searchProduct` | POST | Reject search without required parameter | **Medium** | Negative: missing `search_product`; RQ-017 | tests\api\catalog\catalog.api.spec.ts|
+|✅| API-14 | `/verifyLogin` | POST | Reject verify login without required parameter | **Medium** | Negative: missing email/password; RQ-002 |tests\api\auth\account_flow.api.spec.ts|
+|✅| API-15 | `/verifyLogin` | DELETE | Reject unsupported method for verify login | **Medium** | Negative: method not supported; RQ-003 |tests\api\auth\account_flow.api.spec.ts |
 || API-16 | `/createAccount` | POST | Reject create account with invalid or incomplete data | **Low** | Negative validation scenario; RQ-007 | |
 || API-17 | `/deleteAccount` | DELETE | Reject delete account with invalid credentials | **Low** | Negative cleanup scenario; RQ-008 | |
 
