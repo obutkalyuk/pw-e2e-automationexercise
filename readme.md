@@ -46,6 +46,8 @@ Some flows use API or transport setup before UI validation. This keeps precondit
 
 Not every important behavior in this app is a JSON API. Some risks live in redirects, HTML documents, cookies, CSRF handling, and download responses, so those flows are tested directly.
 
+Broken purchase-state transitions are also probed at this layer, because guardrail defects are easier to localize through direct session and redirect checks than through UI-only symptoms.
+
 ### Custom API helper for non-standard responses
 
 The target application may return HTTP 200 even when the business operation fails. Helpers validate response body codes and messages to reduce false-positive passes.
@@ -86,6 +88,7 @@ qa_questions.md
 - **Non-standard error handling**: some API endpoints return HTTP 200 even for negative business outcomes
 - **Broken UI confirmations**: some UI flows show success messages without sending any network request
 - **Transport-specific risks**: checkout and payment flows depend on redirects, cookies, and CSRF token handling
+- **Broken purchase guardrails**: anonymous checkout/payment access and stale purchase state after logout are covered as known-defect transport checks
 - **Third-party interference**: overlays can affect browser automation and need dedicated handling
 - **Known product defects**: for example, invoice download flow can return an incorrect total amount
 

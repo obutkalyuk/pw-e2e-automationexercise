@@ -9,6 +9,13 @@ type PaymentRedirectResult = {
   orderId: string;
 };
 
+type TransportResponseSnapshot = {
+  status: number;
+  location: string;
+  contentType: string;
+  body: string;
+};
+
 function extractAmountFromPrice(price: string): string {
   const match = price.match(/(\d+)/);
 
@@ -25,6 +32,31 @@ async function expectCookieValue(request: APIRequestContext, cookieName: string)
 }
 
 export const apiHelper = {
+  async captureTransportResponse(
+    request: APIRequestContext,
+    path: string,
+    options?: {
+      method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+      form?: Record<string, string>;
+      headers?: Record<string, string>;
+      maxRedirects?: number;
+    }
+  ): Promise<TransportResponseSnapshot> {
+    const response = await request.fetch(path, {
+      method: options?.method ?? 'GET',
+      form: options?.form,
+      headers: options?.headers,
+      maxRedirects: options?.maxRedirects ?? 0,
+    });
+
+    return {
+      status: response.status(),
+      location: response.headers()['location'] ?? '',
+      contentType: response.headers()['content-type'] ?? '',
+      body: await response.text(),
+    };
+  },
+
  
   async createUser(request: APIRequestContext, user: User) {
     return await test.step(`API: Create user ${user.email}`, async () => {
@@ -252,6 +284,30 @@ export const apiHelper = {
         location,
         orderId,
       };
+    });
+  },
+
+  async submitPaymentViaTransportRaw(request: APIRequestContext): Promise<TransportResponseSnapshot> {
+    return await test.step('Transport: Submit payment without happy-path assumptions', async () => {
+      const paymentPage = await request.get('/payment');
+      const paymentHtml = await paymentPage.text();
+      const csrfToken = extractCsrfToken(paymentHtml);
+
+      return await this.captureTransportResponse(request, '/payment', {
+        method: 'POST',
+        form: {
+          csrfmiddlewaretoken: csrfToken,
+          name_on_card: TEST_CARD.holder,
+          card_number: TEST_CARD.number,
+          cvc: TEST_CARD.cvc,
+          expiry_month: TEST_CARD.expiryMonth,
+          expiry_year: TEST_CARD.expiryYear,
+        },
+        headers: {
+          Origin: process.env.BASE_URL!,
+          Referer: `${process.env.BASE_URL}/payment`,
+        },
+      });
     });
   },
 
