@@ -2,8 +2,15 @@ import { APIRequestContext, expect, test } from '@playwright/test';
 import { TEST_CARD } from '../../data/payment';
 import { STORE_CURRENCY_PREFIX } from '../../data/product';
 import { User } from '../../data/user';
-import { extractCsrfToken, extractOrderIdFromLocation, parseCartProducts } from '../transportHtml';
-import { PaymentRedirectResult, TransportResponseSnapshot, expectCookieValue, extractAmountFromPrice } from '../apiHelper';
+import { extractCsrfToken, extractPaymentArtifactIdFromLocation, parseCartProducts } from '../transportHtml';
+import {
+  PaymentFormSnapshot,
+  PaymentRedirectResult,
+  PaymentSubmitObservation,
+  TransportResponseSnapshot,
+  expectCookieValue,
+  extractAmountFromPrice,
+} from '../apiHelper';
 
 export const purchaseTransportHelper = {
   async captureTransportResponse(
@@ -176,6 +183,26 @@ export const purchaseTransportHelper = {
     });
   },
 
+  async openPaymentFormSnapshot(request: APIRequestContext): Promise<PaymentFormSnapshot> {
+    return await test.step('Transport: Open payment form and capture CSRF token', async () => {
+      const response = await request.get('/payment');
+      const body = await response.text();
+
+      expect(response.status()).toBe(200);
+      expect(response.headers()['content-type'] ?? '').toContain('text/html');
+      expect(body).toContain('Payment');
+      expect(body).toContain('csrfmiddlewaretoken');
+
+      return {
+        status: response.status(),
+        location: response.headers()['location'] ?? '',
+        contentType: response.headers()['content-type'] ?? '',
+        body,
+        csrfToken: extractCsrfToken(body),
+      };
+    });
+  },
+
   async submitPaymentViaTransport(request: APIRequestContext): Promise<PaymentRedirectResult> {
     return await test.step('Transport: Submit payment and capture redirect', async () => {
       const paymentPage = await request.get('/payment');
@@ -205,11 +232,44 @@ export const purchaseTransportHelper = {
       expect(response.status()).toBe(302);
 
       const location = response.headers()['location'] ?? '';
-      const orderId = extractOrderIdFromLocation(location);
+      const paymentArtifactId = extractPaymentArtifactIdFromLocation(location);
 
       return {
         location,
-        orderId,
+        paymentArtifactId,
+      };
+    });
+  },
+
+  async submitPaymentWithCsrfTokenRaw(
+    request: APIRequestContext,
+    csrfToken: string
+  ): Promise<PaymentSubmitObservation> {
+    return await test.step('Transport: Submit payment with provided CSRF token', async () => {
+      const response = await request.post('/payment', {
+        form: {
+          csrfmiddlewaretoken: csrfToken,
+          name_on_card: TEST_CARD.holder,
+          card_number: TEST_CARD.number,
+          cvc: TEST_CARD.cvc,
+          expiry_month: TEST_CARD.expiryMonth,
+          expiry_year: TEST_CARD.expiryYear,
+        },
+        headers: {
+          Origin: process.env.BASE_URL!,
+          Referer: `${process.env.BASE_URL}/payment`,
+        },
+        maxRedirects: 0,
+      });
+
+      const location = response.headers()['location'] ?? '';
+
+      return {
+        status: response.status(),
+        location,
+        contentType: response.headers()['content-type'] ?? '',
+        body: await response.text(),
+        paymentArtifactId: /\/payment_done\/\d+/.test(location) ? extractPaymentArtifactIdFromLocation(location) : null,
       };
     });
   },
@@ -238,9 +298,9 @@ export const purchaseTransportHelper = {
     });
   },
 
-  async openPaymentDoneViaTransport(request: APIRequestContext, orderId: string) {
-    return await test.step(`Transport: Open payment_done for order ${orderId}`, async () => {
-      const response = await request.get(`/payment_done/${orderId}`);
+  async openPaymentDoneViaTransport(request: APIRequestContext, paymentArtifactId: string) {
+    return await test.step(`Transport: Open payment_done artifact ${paymentArtifactId}`, async () => {
+      const response = await request.get(`/payment_done/${paymentArtifactId}`);
       const body = await response.text();
 
       expect(response.status()).toBe(200);
@@ -270,9 +330,9 @@ export const purchaseTransportHelper = {
     });
   },
 
-  async downloadInvoiceViaTransport(request: APIRequestContext, orderId: string, expectedAmount?: string) {
-    return await test.step(`Transport: Download invoice for order ${orderId}`, async () => {
-      const response = await request.get(`/download_invoice/${orderId}`);
+  async downloadInvoiceViaTransport(request: APIRequestContext, paymentArtifactId: string, expectedAmount?: string) {
+    return await test.step(`Transport: Download invoice for payment artifact ${paymentArtifactId}`, async () => {
+      const response = await request.get(`/download_invoice/${paymentArtifactId}`);
       const body = await response.text();
 
       expect(response.status()).toBe(200);

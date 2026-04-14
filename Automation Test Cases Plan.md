@@ -13,6 +13,7 @@
 |✅| API-20 | Payment without checkout should be blocked | Hybrid | Verify logged-in user cannot create order before explicit checkout transition | **Critical** | Known defect `#18`; payment/order creation from invalid purchase state |tests\api\chain\purchase.chain.break.api.spec.ts|
 |✅| API-21 | Checkout after logout should be invalidated | Hybrid | Verify stale checkout state cannot be reused after session logout | **High** | Known defect `#19`; stale authenticated purchase context after logout |tests\api\chain\purchase.chain.break.api.spec.ts|
 |✅| API-22 | Payment without login should be blocked | Hybrid | Verify anonymous payment access cannot create success artifacts or order ids | **Critical** | Known defect `#20`; anonymous payment submission |tests\api\chain\purchase.chain.break.api.spec.ts|
+|✅| API-23 | Repeated payment submit should preserve consistent purchase completion state | Hybrid | Verify repeated payment submission after valid checkout does not produce inconsistent completion artifacts | **Critical** | Exploratory behavior coverage for repeated payment submission after valid checkout; verifies observed completion artifacts, invoice availability, and post-submit cart state without assuming backend persistence truth |tests\api\chain\payment.idempotency.api.spec.ts|
 
 ### High Priority (Regression API)
 
@@ -59,6 +60,7 @@ _Session-based HTML/redirect/download request checks_
 |✅| TR-11 | `/payment` | GET/POST | Block payment flow before checkout transition in authenticated session | **High** | Known defect `#18`; transport probe for pre-checkout payment/order creation gap |tests\api\chain\purchase.chain.break.api.spec.ts|
 |✅| TR-12 | `/checkout`, `/payment`, `/logout` | GET/POST | Invalidate checkout/payment access after logout | **High** | Known defect `#19`; transport probe for stale purchase state after session invalidation |tests\api\chain\purchase.chain.break.api.spec.ts|
 |✅| TR-13 | `/payment` | GET/POST | Block anonymous payment access and success artifacts | **High** | Known defect `#20`; transport probe for anonymous payment submission gap |tests\api\chain\purchase.chain.break.api.spec.ts|
+|✅| TR-14 | `/payment` | POST | Replay POST /payment in the same session after one payment form load | **High** | Transport-first replay probe for duplicate payment submission with shared CSRF/session context; captures redirect/order-like artifacts and response behavior on repeated submit |tests\api\chain\payment.idempotency.api.spec.ts|
 
 ## E2E and Hybrid Tests
 ### Critical Priority
@@ -118,3 +120,4 @@ _Session-based HTML/redirect/download request checks_
 | --- | ----- | --------------- | ---------- | --------------------------------------- | ------------ | ----------------------------- | ----|
 |✅| M-1 | Performance & Monitoring | Playwright + CDP | Network Throttling & Resource TTFB | **Medium** | Metrics: TTFB, DNS, Total |tests/monitoring/performance.spec.ts|
 |✅| C-1 | Concurrency | API / Stress | Parallel User Registration (5 threads) | **Low** | Identification of slow assets |tests/api/auth/concurrency.spec.ts|
+

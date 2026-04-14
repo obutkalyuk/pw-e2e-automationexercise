@@ -51,7 +51,7 @@ test.describe('Transport Request Coverage', () => {
 
     const paymentResult = await apiHelper.submitPaymentViaTransport(request);
 
-    await apiHelper.openPaymentDoneViaTransport(request, paymentResult.orderId);
+    await apiHelper.openPaymentDoneViaTransport(request, paymentResult.paymentArtifactId);
   });
 
   test('[TR-6] GET /download_invoice/{orderId} - download invoice after successful purchase @medium', async ({ request, managedUser }) => {
@@ -64,6 +64,6 @@ test.describe('Transport Request Coverage', () => {
 
     const paymentResult = await apiHelper.submitPaymentViaTransport(request);
 
-    await apiHelper.downloadInvoiceViaTransport(request, paymentResult.orderId, expectedAmount);
+    await apiHelper.downloadInvoiceViaTransport(request, paymentResult.paymentArtifactId, expectedAmount);
   });
 });

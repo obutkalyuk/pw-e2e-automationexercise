@@ -16,6 +16,6 @@ test.describe('Full Purchase Flow Coverage', () => {
 
     const paymentResult = await apiHelper.submitPaymentViaTransport(request);
 
-    await apiHelper.openPaymentDoneViaTransport(request, paymentResult.orderId);
+    await apiHelper.openPaymentDoneViaTransport(request, paymentResult.paymentArtifactId);
   });
 });

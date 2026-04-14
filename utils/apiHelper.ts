@@ -5,7 +5,15 @@ import { purchaseTransportHelper } from './api/purchaseTransportHelper';
 
 export type PaymentRedirectResult = {
   location: string;
-  orderId: string;
+  paymentArtifactId: string;
+};
+
+export type PaymentFormSnapshot = TransportResponseSnapshot & {
+  csrfToken: string | null;
+};
+
+export type PaymentSubmitObservation = TransportResponseSnapshot & {
+  paymentArtifactId: string | null;
 };
 
 export type TransportResponseSnapshot = {
