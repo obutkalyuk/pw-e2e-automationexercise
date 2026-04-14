@@ -15,10 +15,10 @@ export function extractCsrfToken(html: string): string {
   return match![1];
 }
 
-export function extractOrderIdFromLocation(location: string): string {
+export function extractPaymentArtifactIdFromLocation(location: string): string {
   const match = location.match(/\/payment_done\/(\d+)/);
 
-  expect(location, 'Payment redirect location should contain order id').toMatch(/\/payment_done\/\d+/);
+  expect(location, 'Payment redirect location should contain payment artifact value').toMatch(/\/payment_done\/\d+/);
   return match![1];
 }
 
