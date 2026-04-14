@@ -22,6 +22,13 @@ export function extractPaymentArtifactIdFromLocation(location: string): string {
   return match![1];
 }
 
+export function extractInvoiceAmount(invoiceBody: string): string {
+  const match = invoiceBody.match(/Your total purchase amount is\s+(\d+)/i);
+
+  expect(invoiceBody, 'Invoice body should contain a numeric total amount').toMatch(/Your total purchase amount is\s+\d+/i);
+  return match![1];
+}
+
 export function stripHtml(value: string): string {
   return value.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 }

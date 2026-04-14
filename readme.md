@@ -89,8 +89,10 @@ qa_questions.md
 - **Broken UI confirmations**: some UI flows show success messages without sending any network request
 - **Transport-specific risks**: checkout and payment flows depend on redirects, cookies, and CSRF token handling
 - **Broken purchase guardrails**: anonymous checkout/payment access and stale purchase state after logout are covered as known-defect transport checks
+- **Weak purchase artifacts**: known defect `#24` shows `/payment_done/{value}` can render a generic success page for arbitrary integer values
 - **Third-party interference**: overlays can affect browser automation and need dedicated handling
-- **Known product defects**: for example, invoice download flow can return an incorrect total amount
+- **Security/configuration exposure**: known defect `#25` shows public Django debug pages exposing internal route patterns
+- **Known product defects**: for example, replayed payment completion can expose invalid purchase artifacts such as `payment_done/0`
 
 ## CI/CD
 
