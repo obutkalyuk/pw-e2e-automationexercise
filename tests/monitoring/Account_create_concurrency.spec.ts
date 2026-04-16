@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { User } from '../../data/user';
 import { LoginPage } from '../../pages/loginPage';
 import { SignupPage } from '../../pages/signupPage';
+import { applyAdAndConsentMitigation } from '../../utils/fixtures';
 
 test('C-1 Concurrency Probe: User registration under parallel load', async ({ browser }) => {
     const taskCount = 10;
@@ -9,6 +10,7 @@ test('C-1 Concurrency Probe: User registration under parallel load', async ({ br
     const tasks = Array.from({ length: taskCount }).map(async () => {
         const context = await browser.newContext();
         const page = await context.newPage();
+        await applyAdAndConsentMitigation(context, page);
         const user = User.generateRandom();
 
         try {
@@ -32,4 +34,3 @@ test('C-1 Concurrency Probe: User registration under parallel load', async ({ br
         throw new Error(`${failed.length} users failed to register under parallel load.`);
     }
 });
-
