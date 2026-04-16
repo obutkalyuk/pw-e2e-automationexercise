@@ -10,6 +10,7 @@ test.describe('Broken Purchase Chain Coverage', () => {
 
     await apiHelper.addProductToCartViaTransport(request, productId);
     const cartResult = await apiHelper.expectCartContainsProduct(request, productId, 1);
+    expect(cartResult.product.quantity).toBe(1);
     const checkoutResponse = await apiHelper.captureTransportResponse(request, '/checkout');
 
     expect(checkoutResponse.status).toBe(302);
@@ -19,7 +20,6 @@ test.describe('Broken Purchase Chain Coverage', () => {
     expect(checkoutResponse.body).not.toContain('Proceed To Payment');
     expect(checkoutResponse.body).not.toContain('csrfmiddlewaretoken');
     expect(checkoutResponse.body).not.toMatch(/payment_done\/\d+/);
-    expect(cartResult.product.quantity).toBe(1);
   });
 
   test('[API-20][TR-11] Payment without checkout should not create an order @critical', async ({ request, managedUser }) => {

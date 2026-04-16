@@ -14,7 +14,7 @@ export const apiProductSchema = z.object({
 });
 
 export const productsListResponseSchema = z.object({
-  responseCode: z.number(),
+  responseCode: z.literal(200),
   products: z.array(apiProductSchema),
 });
 
@@ -26,7 +26,7 @@ export const brandSchema = z.object({
 });
 
 export const brandsListResponseSchema = z.object({
-  responseCode: z.number(),
+  responseCode: z.literal(200),
   brands: z.array(brandSchema),
 });
 
@@ -39,19 +39,19 @@ export const userDetailSchema = z.object({
   birth_month: z.string().optional(),
   birth_year: z.string().optional(),
   first_name: z.string(),
-  last_name: z.string().optional(),
+  last_name: z.string(),
   company: z.string().optional(),
-  address1: z.string().optional(),
+  address1: z.string(),
   address2: z.string().optional(),
-  country: z.string().optional(),
-  state: z.string().optional(),
-  city: z.string().optional(),
-  zipcode: z.string().optional(),
+  country: z.string(),
+  state: z.string(),
+  city: z.string(),
+  zipcode: z.string(),
   mobile_number: z.string().optional(),
 });
 
 export const userDetailResponseSchema = z.object({
-  responseCode: z.number(),
+  responseCode: z.literal(200),
   message: z.string().optional(),
   user: userDetailSchema,
 });

@@ -29,7 +29,10 @@ export class BasePage {
                 await locator.click();
             }
         } catch (e) {
-            // Ignore timeout errors - element not present
+            if (e instanceof Error && /timeout|timed out/i.test(e.message)) {
+                return;
+            }
+            throw e;
         }
     }
 
@@ -38,7 +41,10 @@ export class BasePage {
         const promoCloseButton = this.page.locator('div#ad_position_box div#dismiss-button');
         const iframeCloseButton = this.page.locator('iframe[name="ad_iframe"]').contentFrame().getByRole('button', { name: 'Close ad' });
         const consentButton = this.page.getByRole('button', { name: 'Consent' });
-        const genericCloseButton = this.page.getByRole('button', { name: /close/i }).or(this.page.getByRole('link', { name: /close/i })).or(this.page.getByText(/close/i)).last();
+        const genericCloseButton = this.page
+            .getByRole('button', { name: /^close$/i })
+            .or(this.page.getByRole('link', { name: /^close$/i }))
+            .first();
         await this.clickIfPresent(consentButton);
         await this.clickIfPresent(adCloseButton);
         await this.clickIfPresent(promoCloseButton);

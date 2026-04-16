@@ -9,7 +9,9 @@ test.describe('API Catalog Endpoints', () => {
     expect(response.status()).toBe(200);
     expect(body.responseCode).toBe(200);
     expect(body.products.length).toBeGreaterThan(0);
-    expect(body.products[0].price).toContain('Rs.');
+    for (const product of body.products.slice(0, 3)) {
+      expect(product.price).toMatch(/Rs\.\s*\d+/);
+    }
   });
 
   test('[API-5] POST /searchProduct - Search for a product @high', async ({ request }, testInfo) => {

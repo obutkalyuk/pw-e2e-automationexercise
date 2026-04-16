@@ -69,7 +69,7 @@ test.describe('Place Order tests', () => {
         });
     });
 
-    test('E2E-16: Place Order: Login and Payment @critical' , async ({ page, managedUser }) => {
+    test('E2E-16: Place Order: Login before Checkout @critical' , async ({ page, managedUser }) => {
         test.setTimeout(45_000);
         const loginPage = new LoginPage(page);
         const productPage = new ProductsPage(page);

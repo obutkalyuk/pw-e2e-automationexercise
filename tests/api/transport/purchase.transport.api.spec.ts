@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../../utils/fixtures';
 import { apiHelper } from '../../../utils/apiHelper';
+import { extractInvoiceAmount } from '../../../utils/transportHtml';
 
 test.describe('Transport Request Coverage', () => {
   test('[TR-1] POST /login - authenticate user via transport flow @high', async ({ request, managedUser }) => {
@@ -63,7 +64,9 @@ test.describe('Transport Request Coverage', () => {
     await apiHelper.openCheckoutViaTransport(request);
 
     const paymentResult = await apiHelper.submitPaymentViaTransport(request);
+    const invoiceBody = await apiHelper.downloadInvoiceViaTransport(request, paymentResult.paymentArtifactId, expectedAmount);
+    const invoiceAmount = extractInvoiceAmount(invoiceBody);
 
-    await apiHelper.downloadInvoiceViaTransport(request, paymentResult.paymentArtifactId, expectedAmount);
+    expect(invoiceAmount).toBe(expectedAmount);
   });
 });
