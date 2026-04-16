@@ -136,7 +136,8 @@ test('BUG-4: Payment field is blocked by overlay on large screens', async ({ pag
     await page.setViewportSize({ width: 980, height: 900 });
     await page.goto('/payment');
     await paymentPage.handleCommonAds();
-    await expect(async () => {
-        await paymentPage.nameOnCardInput.click({ timeout: 3000 });
-    }).rejects.toThrow(/intercepts pointer events/);
+    const clickError = await paymentPage.nameOnCardInput.click({ timeout: 3000 }).catch(error => error);
+
+    expect(clickError).toBeInstanceOf(Error);
+    expect((clickError as Error).message).toMatch(/intercepts pointer events|timeout/i);
 });

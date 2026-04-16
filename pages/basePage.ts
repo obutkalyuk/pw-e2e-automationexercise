@@ -29,6 +29,9 @@ export class BasePage {
                 await locator.click();
             }
         } catch (e) {
+            if (this.page.isClosed()) {
+                return;
+            }
             if (e instanceof Error && /timeout|timed out/i.test(e.message)) {
                 return;
             }

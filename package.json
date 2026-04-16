@@ -7,7 +7,8 @@
     "test:full": "npx playwright test",
     "test:api": "npx playwright test --project=api",
     "test:report": "npx playwright show-report",
-    "capture:network": "tsc scripts/capture-network.ts --outDir scripts/.generated --module commonjs --target es2020 --types node && node scripts/.generated/capture-network.js"
+    "capture:network": "tsc scripts/capture-network.ts --outDir scripts/.generated --module commonjs --target es2020 --types node && node scripts/.generated/capture-network.js",
+    "spike:ads": "tsx scripts/ad-traffic-spike.ts"
   },
   "keywords": [],
   "author": "",
