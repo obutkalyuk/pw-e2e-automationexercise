@@ -10,7 +10,7 @@ import { PaymentPage } from '../../pages/paymentPage';
 import { TEST_CARD } from '../../data/payment';
 import { test } from '../../utils/fixtures';
 
-test('E2E-14: Place Order: Register while Checkout @critical' , async ({ page, createdUserCleanup }, testInfo) => {
+test('E2E-14: Register while Checkout preserves cart @critical' , async ({ page, createdUserCleanup }, testInfo) => {
     test.setTimeout(75_000);
     const signUpPage = new SignupPage(page);
     const loginPage = new LoginPage(page);
@@ -45,7 +45,7 @@ test('E2E-14: Place Order: Register while Checkout @critical' , async ({ page, c
 })
 
 test.describe('Place Order tests', () => {
-    test('E2E-15: Place Order: Login while Checkout @critical', async ({ page, managedUser }) => {
+    test('E2E-15: Login while Checkout preserves cart @critical', async ({ page, managedUser }) => {
         const productPage = new ProductsPage(page);
         const cartPage = new CartPage(page);
         const loginPage = new LoginPage(page);
