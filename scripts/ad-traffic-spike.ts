@@ -21,7 +21,7 @@ import { CartPage } from '../pages/cartPage';
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 type BrowserName = 'chromium' | 'firefox' | 'webkit';
-type RunMode = 'standard' | 'baseline';
+type RunMode = 'standard' | 'baseline' | 'targeted-ad-block';
 type FlowName =
   | 'products-details'
   | 'brand-products'
@@ -142,6 +142,25 @@ const FIRST_PARTY_HOSTS = new Set([
   'www.automationexercise.com',
 ]);
 
+const AD_DOMAINS_PRIMARY = [
+  'pagead2.googlesyndication.com',
+  'tpc.googlesyndication.com',
+  'googleads.g.doubleclick.net',
+  'googleads4.g.doubleclick.net',
+  'ep1.adtrafficquality.google',
+  'ep2.adtrafficquality.google',
+] as const;
+
+const AD_DOMAINS_SECONDARY = [
+  'cm.g.doubleclick.net',
+  's0.2mdn.net',
+] as const;
+
+const TARGETED_AD_BLOCK_HOSTS: ReadonlySet<string> = new Set([
+  ...AD_DOMAINS_PRIMARY,
+  ...AD_DOMAINS_SECONDARY,
+]);
+
 function getArgValue(name: string): string | undefined {
   const flag = `--${name}`;
   const withEqualsPrefix = `${flag}=`;
@@ -211,7 +230,10 @@ function parseOptions(): CliOptions {
     headed: hasFlag('headed'),
     slowMo,
     browsers: parseCsvList(getArgValue('browsers'), ['chromium', 'firefox', 'webkit'] as const),
-    modes: parseCsvList(getArgValue('modes'), ['standard', 'baseline'] as const),
+    modes: parseCsvList(
+      getArgValue('modes'),
+      ['standard', 'baseline', 'targeted-ad-block'] as const
+    ),
     flows: parseCsvList(getArgValue('flows'), FLOW_NAMES),
     outputRoot,
   };
@@ -610,6 +632,31 @@ async function applyBaselineRouting(context: BrowserContext): Promise<void> {
   });
 }
 
+async function applyTargetedAdBlockRouting(context: BrowserContext): Promise<void> {
+  await context.route('**/*', async (route) => {
+    const requestUrl = route.request().url();
+    let parsedUrl: URL | null = null;
+
+    try {
+      parsedUrl = new URL(requestUrl);
+    } catch {
+      parsedUrl = null;
+    }
+
+    if (!parsedUrl || !['http:', 'https:'].includes(parsedUrl.protocol)) {
+      await route.continue();
+      return;
+    }
+
+    if (TARGETED_AD_BLOCK_HOSTS.has(parsedUrl.hostname)) {
+      await route.abort();
+      return;
+    }
+
+    await route.continue();
+  });
+}
+
 async function runProductsDetailsFlow(page: Page): Promise<void> {
   const homePage = new HomePage(page);
   const productsPage = new ProductsPage(page);
@@ -725,6 +772,8 @@ async function executeRun(
 
   if (mode === 'baseline') {
     await applyBaselineRouting(context);
+  } else if (mode === 'targeted-ad-block') {
+    await applyTargetedAdBlockRouting(context);
   }
 
   const page = await context.newPage();
@@ -1062,6 +1111,7 @@ function buildMarkdownReport(
     '## Notes',
     '',
     '- `baseline` mode aborts every third-party HTTP(S) request to establish a clean reference profile.',
+    `- \`targeted-ad-block\` aborts only the shortlisted ad-serving hosts: ${[...TARGETED_AD_BLOCK_HOSTS].map((host) => `\`${host}\``).join(', ')}.`,
     '- Initiator stacks are best-effort and are only collected in Chromium via CDP.',
     '- Each run also writes a raw `run.json` alongside `network.har` for deeper inspection.',
     '',

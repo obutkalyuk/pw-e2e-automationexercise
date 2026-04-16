@@ -40,19 +40,9 @@ export class BasePage {
     }
 
     async handleCommonAds() {
-        const adCloseButton = this.page.locator('div.GoogleActiveViewElement div[aria-label="Close ad"]');
-        const promoCloseButton = this.page.locator('div#ad_position_box div#dismiss-button');
-        const iframeCloseButton = this.page.locator('iframe[name="ad_iframe"]').contentFrame().getByRole('button', { name: 'Close ad' });
-        const consentButton = this.page.getByRole('button', { name: 'Consent' });
-        const genericCloseButton = this.page
-            .getByRole('button', { name: /^close$/i })
-            .or(this.page.getByRole('link', { name: /^close$/i }))
-            .first();
-        await this.clickIfPresent(consentButton);
-        await this.clickIfPresent(adCloseButton);
-        await this.clickIfPresent(promoCloseButton);
-        await this.clickIfPresent(iframeCloseButton);
-        await this.clickIfPresent(genericCloseButton);
+        // Third-party ad traffic is now blocked at the network layer in the shared fixture.
+        // Keep this method as a no-op for now so existing page-object calls stay intact
+        // while we validate that the old click-based ad handling is no longer needed.
     }
 
     protected async handleAdsIfNeeded(adHandler?: () => Promise<void>) {

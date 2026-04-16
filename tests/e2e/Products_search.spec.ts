@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test } from '../../utils/fixtures';
 import { ProductsPage } from '../../pages/productsPage';
 
 test('E2E-9: Search Product @high', async ({ page }, testInfo) => {
