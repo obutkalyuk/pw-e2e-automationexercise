@@ -58,6 +58,17 @@ Structured JSON endpoints use reusable Zod schemas for contract validation.
 
 This keeps response-shape checks centralized, lets tests focus on business intent, and makes contract failures point directly to the invalid field path.
 
+### Targeted UI stability mitigation
+
+The shared Playwright UI setup applies targeted mitigation for third-party ad traffic and consent overlays served by `automationexercise.com`.
+
+This is intentionally narrow:
+- known ad-serving hosts are blocked at the network layer
+- consent overlays are neutralized in the DOM to reduce screenshot noise and click interception
+- broad third-party blocking is avoided to preserve normal site behavior
+
+This keeps the suite focused on product behavior rather than external advertising artifacts.
+
 ## Project Structure
 
 ```text
@@ -90,7 +101,7 @@ qa_questions.md
 - **Transport-specific risks**: checkout and payment flows depend on redirects, cookies, and CSRF token handling
 - **Broken purchase guardrails**: anonymous checkout/payment access and stale purchase state after logout are covered as known-defect transport checks
 - **Weak purchase artifacts**: known defect `#24` shows `/payment_done/{value}` can render a generic success page for arbitrary integer values
-- **Third-party interference**: overlays can affect browser automation and need dedicated handling
+- **Third-party interference**: external ad and consent layers can affect browser automation and require dedicated mitigation
 - **Security/configuration exposure**: known defect `#25` shows public Django debug pages exposing internal route patterns
 - **Known product defects**: for example, replayed payment completion can expose invalid purchase artifacts such as `payment_done/0`
 
