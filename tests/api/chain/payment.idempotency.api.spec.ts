@@ -3,7 +3,7 @@ import { test } from '../../../utils/fixtures';
 import { apiHelper } from '../../../utils/apiHelper';
 
 test.describe('Payment Idempotency Coverage', () => {
-  test('[API-23][TR-14] Repeated payment submit in one session should preserve consistent completion artifacts @critical', async ({ request, managedUser }, testInfo) => {
+  test('[API-23][TR-14] Repeated payment submit in one session should preserve consistent completion artifacts @high', async ({ request, managedUser }, testInfo) => {
     test.fail(true, 'Known defect (#22): /payment exposes an amount-derived payment artifact value and replay after cart reset yields payment_done/0 with invoice access.');
 
     const productId = '1';

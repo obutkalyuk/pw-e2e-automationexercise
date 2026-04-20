@@ -1,9 +1,34 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type APIRequestContext } from '@playwright/test';
 import { userDetailResponseSchema } from '../../../data/apiSchemas';
 import { User } from '../../../data/user';
 
+async function createAccount(request: APIRequestContext, testUser: User) {
+  const response = await request.post('/api/createAccount', {
+    form: testUser.toApiForm(),
+  });
+  const body = await response.json();
+
+  expect(response.status()).toBe(200);
+  expect(body.responseCode, `Response code mismatch for ${testUser.email} Server message: ${body.message}`).toBe(201);
+  expect(body.message, 'Server confirmation message').toBe('User created!');
+}
+
+async function deleteAccount(request: APIRequestContext, testUser: User) {
+  const response = await request.delete('/api/deleteAccount', {
+    form: {
+      email: testUser.email,
+      password: testUser.password
+    }
+  });
+  const body = await response.json();
+
+  expect(response.status()).toBe(200);
+  expect(body.responseCode, `FAILED TO DELETE USER. Email attempted: ${testUser.email} Server message: ${body.message}`).toBe(200);
+  expect(body.message).toBe('Account deleted!');
+}
+
 test.describe('API Account Management Flow', () => {
-  test('[API] Full account lifecycle: create -> details -> verify -> invalid login -> delete @smoke @critical', async ({ request }, testInfo) => {
+  test('[API-1] POST /createAccount - Create user account @critical', async ({ request }, testInfo) => {
     const testUser = User.generateRandom();
 
     console.log(`Run context: ${testInfo.title} | User: ${testUser.email}`);
@@ -12,16 +37,20 @@ test.describe('API Account Management Flow', () => {
       description: `Email: ${testUser.email} | Password: ${testUser.password}`
     });
 
-    await test.step(`[API-1] USER CREATION: ${testUser.email}`, async () => {
-      const response = await request.post('/api/createAccount', {
-        form: testUser.toApiForm(),
-      });
-      const body = await response.json();
+    await createAccount(request, testUser);
+    await deleteAccount(request, testUser);
+  });
 
-      expect(response.status()).toBe(200);
-      expect(body.responseCode, `Response code mismatch for ${testUser.email} Server message: ${body.message}`).toBe(201);
-      expect(body.message, 'Server confirmation message').toBe('User created!');
+  test('[API-6] GET /getUserDetailByEmail - Get user account detail @high', async ({ request }, testInfo) => {
+    const testUser = User.generateRandom();
+
+    console.log(`Run context: ${testInfo.title} | User: ${testUser.email}`);
+    testInfo.annotations.push({
+      type: 'Test Data',
+      description: `Email: ${testUser.email} | Password: ${testUser.password}`
     });
+
+    await createAccount(request, testUser);
 
     await test.step(`[API-6] GET USER DETAILS: ${testUser.email}`, async () => {
       const response = await request.get('/api/getUserDetailByEmail', {
@@ -35,6 +64,20 @@ test.describe('API Account Management Flow', () => {
       expect(body.user.email).toBe(testUser.email);
       expect(body.user.first_name).toBe(testUser.firstName);
     });
+
+    await deleteAccount(request, testUser);
+  });
+
+  test('[API-3] POST /verifyLogin - Verify login with valid details @critical @smoke', async ({ request }, testInfo) => {
+    const testUser = User.generateRandom();
+
+    console.log(`Run context: ${testInfo.title} | User: ${testUser.email}`);
+    testInfo.annotations.push({
+      type: 'Test Data',
+      description: `Email: ${testUser.email} | Password: ${testUser.password}`
+    });
+
+    await createAccount(request, testUser);
 
     await test.step(`[API-3] VERIFY LOGIN: ${testUser.email}`, async () => {
       const response = await request.post('/api/verifyLogin', {
@@ -50,9 +93,22 @@ test.describe('API Account Management Flow', () => {
       expect(body.message, 'Server confirmation message').toBe('User exists!');
     });
 
+    await deleteAccount(request, testUser);
+  });
+
+  test('[API-7] POST /verifyLogin - Login with invalid details @medium', async ({ request }, testInfo) => {
+    const testUser = User.generateRandom();
+
+    console.log(`Run context: ${testInfo.title} | User: ${testUser.email}`);
+    testInfo.annotations.push({
+      type: 'Test Data',
+      description: `Email: ${testUser.email} | Password: ${testUser.password}`
+    });
+
+    await createAccount(request, testUser);
+
     /* Known API bug (#1): server returns HTTP 200 for business-error responses. */
     await test.step(`[API-7] VERIFY LOGIN WITH INVALID PASSWORD: ${testUser.email}`, async () => {
-
       const response = await request.post('/api/verifyLogin', {
         form: {
           email: testUser.email,
@@ -68,19 +124,20 @@ test.describe('API Account Management Flow', () => {
       expect(body.message).toBe('User not found!');
     });
 
-    await test.step(`[API-2] USER DELETE: ${testUser.email}`, async () => {
-      const response = await request.delete('/api/deleteAccount', {
-        form: {
-          email: testUser.email,
-          password: testUser.password
-        }
-      });
-      const body = await response.json();
+    await deleteAccount(request, testUser);
+  });
 
-      expect(response.status()).toBe(200);
-      expect(body.responseCode, `FAILED TO DELETE USER. Email attempted: ${testUser.email} Server message: ${body.message}`).toBe(200);
-      expect(body.message).toBe('Account deleted!');
+  test('[API-2] DELETE /deleteAccount - Delete user account @critical', async ({ request }, testInfo) => {
+    const testUser = User.generateRandom();
+
+    console.log(`Run context: ${testInfo.title} | User: ${testUser.email}`);
+    testInfo.annotations.push({
+      type: 'Test Data',
+      description: `Email: ${testUser.email} | Password: ${testUser.password}`
     });
+
+    await createAccount(request, testUser);
+    await deleteAccount(request, testUser);
   });
 
   test('[API-14] POST /verifyLogin - Reject request without required parameter @medium', async ({ request }) => {

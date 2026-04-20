@@ -2,7 +2,7 @@ import { LoginPage } from '../../pages/loginPage';
 import { test } from '../../utils/fixtures';
 
 test.describe('Logout tests', () => {
-  test('E2E-4: Logout User (Hybrid) @high', async ({ page, managedUser }) => {
+  test('E2E-4: Logout User @high', async ({ page, managedUser }) => {
     const loginPage = new LoginPage(page);
 
     await loginPage.goto();

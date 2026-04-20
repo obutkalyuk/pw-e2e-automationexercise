@@ -4,7 +4,7 @@ import { test } from '../../utils/fixtures';
 
 
 test.describe('Login tests', () => {
-  test(`E2E-2: Login User with correct email and password (Hybrid) @smoke @critical`, 
+  test(`E2E-2: Login User with correct email and password @smoke @critical`, 
     async ({ page, managedUser }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();

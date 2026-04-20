@@ -38,10 +38,17 @@ test.describe('Transport Request Coverage', () => {
     await apiHelper.expectCartDoesNotContainProduct(request, productId);
   });
 
-  test('[TR-2][TR-3][TR-4] cart -> checkout -> payment documents for active session @high', async ({ request, managedUser }) => {
+  test('[TR-2][TR-3][TR-4] active session cart -> checkout -> payment document flow @high', async ({ request, managedUser }) => {
     await apiHelper.loginViaTransport(request, managedUser);
+
+    // TR-2: add product to cart and verify it is present in the active session cart.
     await apiHelper.addProductToCartViaTransport(request, '1');
+    await apiHelper.expectCartContainsProduct(request, '1', 1);
+
+    // TR-3: verify the checkout document is reachable for the active cart session.
     await apiHelper.openCheckoutViaTransport(request);
+
+    // TR-4: verify the payment document is reachable after checkout.
     await apiHelper.openPaymentViaTransport(request);
   });
 

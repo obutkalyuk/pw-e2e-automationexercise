@@ -4,7 +4,7 @@ import { LoginPage } from '../../pages/loginPage';
 import { SignupPage } from '../../pages/signupPage';
 import { applyAdAndConsentMitigation } from '../../utils/fixtures';
 
-test('C-1 Concurrency Probe: User registration under parallel load', async ({ browser }) => {
+test('C-1: Concurrency Probe - User registration under parallel load @low', async ({ browser }) => {
     const taskCount = 10;
 
     const tasks = Array.from({ length: taskCount }).map(async () => {
