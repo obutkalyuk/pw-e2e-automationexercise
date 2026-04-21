@@ -1,0 +1,153 @@
+name: Nightly
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  full-regression:
+    name: full-regression
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Check formatting
+        run: npm run format:check
+      - name: Lint
+        run: npm run lint
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_ENV"
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+      - name: Install Playwright operating system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
+      - name: Run full test suite
+        shell: bash
+        run: |
+          set +e
+          npm run test:full
+          status=$?
+          if [ -f results.xml ]; then
+            mv results.xml results-full.xml
+          fi
+          exit $status
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
+        with:
+          name: playwright-report-nightly
+          path: playwright-report/
+          retention-days: 7
+      - name: Parse test results
+        id: results
+        if: always()
+        shell: bash
+        run: |
+          if [ -f results-full.xml ]; then
+            total="$(grep -oP 'tests="\K[0-9]+' results-full.xml | awk '{s+=$1} END {print s+0}')"
+            failures="$(grep -oP 'failures="\K[0-9]+' results-full.xml | awk '{s+=$1} END {print s+0}')"
+            skipped="$(grep -oP 'skipped="\K[0-9]+' results-full.xml | awk '{s+=$1} END {print s+0}')"
+            passed="$((total - failures - skipped))"
+            echo "total=$total" >> "$GITHUB_OUTPUT"
+            echo "failed=$failures" >> "$GITHUB_OUTPUT"
+            echo "skipped=$skipped" >> "$GITHUB_OUTPUT"
+            echo "passed=$passed" >> "$GITHUB_OUTPUT"
+          else
+            echo "total=0" >> "$GITHUB_OUTPUT"
+            echo "failed=0" >> "$GITHUB_OUTPUT"
+            echo "skipped=0" >> "$GITHUB_OUTPUT"
+            echo "passed=0" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Write nightly summary
+        if: always()
+        shell: bash
+        env:
+          TOTAL: ${{ steps.results.outputs.total }}
+          PASSED: ${{ steps.results.outputs.passed }}
+          SKIPPED: ${{ steps.results.outputs.skipped }}
+          FAILED: ${{ steps.results.outputs.failed }}
+        run: |
+          {
+            echo "## test summary"
+            echo
+            echo "| Job | Tests | Passed | Skipped | Failed | Notes |"
+            echo "| --- | ---: | ---: | ---: | ---: | --- |"
+            echo "| full-regression | $TOTAL | $PASSED | $SKIPPED | $FAILED | full suite via npm run test:full |"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Determine mail status
+        id: mail-status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+          TOTAL: ${{ steps.results.outputs.total }}
+          FAILED: ${{ steps.results.outputs.failed }}
+        shell: bash
+        run: |
+          if [ "$JOB_STATUS" != "success" ]; then
+            echo "subject-status=FAILED" >> "$GITHUB_OUTPUT"
+            echo "status-label=&#x274C; FAILED" >> "$GITHUB_OUTPUT"
+          elif [ "${FAILED:-0}" -gt 0 ]; then
+            echo "subject-status=FAILED" >> "$GITHUB_OUTPUT"
+            echo "status-label=&#x274C; FAILED" >> "$GITHUB_OUTPUT"
+          elif [ "${TOTAL:-0}" -eq 0 ]; then
+            echo "subject-status=NO_RESULTS" >> "$GITHUB_OUTPUT"
+            echo "status-label=&#x26A0;&#xFE0F; NO RESULTS" >> "$GITHUB_OUTPUT"
+          else
+            echo "subject-status=PASSED" >> "$GITHUB_OUTPUT"
+            echo "status-label=&#x2705; PASSED" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Send custom mail
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: 'QA Report: ${{ github.workflow }} - ${{ steps.mail-status.outputs.subject-status }} [${{ github.ref_name }}]'
+          to: olga.butkalyuk@gmail.com
+          from: Playwright Automation
+          html_body: |
+            <h3>Test Results Summary</h3>
+            <table cellpadding="6" cellspacing="0">
+              <tr><td><b>Workflow:</b></td><td>${{ github.workflow }}</td></tr>
+              <tr><td><b>Status:</b></td><td>${{ steps.mail-status.outputs.status-label }}</td></tr>
+              <tr><td><b>Trigger:</b></td><td>${{ github.event_name }}</td></tr>
+              <tr><td><b>Branch:</b></td><td>${{ github.ref_name }}</td></tr>
+              <tr><td><b>Commit:</b></td><td><a href="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}">${{ github.sha }}</a></td></tr>
+            </table>
+
+            <h3>Test Statistics</h3>
+            <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse">
+              <tr style="background:#f0f0f0">
+                <th>Total</th><th>&#x2705; Passed</th><th>&#x23ED;&#xFE0F; Skipped</th><th>&#x274C; Failed</th>
+              </tr>
+              <tr style="text-align:center">
+                <td>${{ steps.results.outputs.total }}</td>
+                <td style="color:green">${{ steps.results.outputs.passed }}</td>
+                <td>${{ steps.results.outputs.skipped }}</td>
+                <td style="color:${{ steps.results.outputs.failed != '0' && 'red' || 'green' }}">${{ steps.results.outputs.failed }}</td>
+              </tr>
+            </table>
+
+            <p><b>Run Details:</b> <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to see detailed summary</a></p>
+            <p><i>Check GitHub Artifacts for full HTML report with screenshots. Artifacts are available for 7 days.</i></p>
