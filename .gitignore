@@ -12,6 +12,10 @@ node_modules/
 test-results.json
 .env
 results.xml
+*.log
 full-run.log
 test_log.txt
+test1_log.txt
 creation.log
+structure.txt
+tree.txt

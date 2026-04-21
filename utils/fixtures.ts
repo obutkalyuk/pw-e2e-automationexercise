@@ -1,6 +1,6 @@
 import { BrowserContext, Page, test as base } from '@playwright/test';
-import { User } from '../data/user';
-import { apiHelper } from './apiHelper';
+import { User } from '../data/user.data';
+import { apiHelper } from './api-helper';
 
 type CreatedUserCleanup = {
   track: (user: User) => void;

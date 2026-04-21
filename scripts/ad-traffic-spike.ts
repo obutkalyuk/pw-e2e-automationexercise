@@ -14,9 +14,9 @@ import {
   type Request,
   type Response,
 } from '@playwright/test';
-import { HomePage } from '../pages/homePage';
-import { ProductsPage } from '../pages/productsPage';
-import { CartPage } from '../pages/cartPage';
+import { HomePage } from '../pages/home.page';
+import { ProductsPage } from '../pages/products.page';
+import { CartPage } from '../pages/cart.page';
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 

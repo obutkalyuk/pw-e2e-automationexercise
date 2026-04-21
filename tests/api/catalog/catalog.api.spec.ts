@@ -3,7 +3,7 @@ import {
   brandsListResponseSchema,
   productsListResponseSchema,
   searchProductResponseSchema,
-} from '../../../data/apiSchemas';
+} from '../../../data/api-schemas.data';
 
 test.describe('API Catalog Endpoints', () => {
   test('[API-4] GET /productsList - Get all products list @high', async ({ request }) => {

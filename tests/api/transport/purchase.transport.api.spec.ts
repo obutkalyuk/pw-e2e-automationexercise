@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../../utils/fixtures';
-import { apiHelper } from '../../../utils/apiHelper';
-import { extractInvoiceAmount } from '../../../utils/transportHtml';
+import { apiHelper } from '../../../utils/api-helper';
+import { extractInvoiceAmount } from '../../../utils/transport-html';
 
 test.describe('Transport Request Coverage', () => {
   test('[TR-1] POST /login - authenticate user via transport flow @high', async ({
