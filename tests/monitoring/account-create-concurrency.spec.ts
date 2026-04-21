@@ -10,7 +10,7 @@ test('C-1: Concurrency Probe - User registration under parallel load @low', asyn
   const tasks = Array.from({ length: taskCount }).map(async () => {
     const context = await browser.newContext();
     const page = await context.newPage();
-    await applyAdAndConsentMitigation(context, page);
+    await applyAdAndConsentMitigation(context);
     const user = User.generateRandom();
 
     try {

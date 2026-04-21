@@ -1,4 +1,4 @@
-import { BrowserContext, Page, test as base } from '@playwright/test';
+import { BrowserContext, test as base } from '@playwright/test';
 import { User } from '../data/user.data';
 import { apiHelper } from './api-helper';
 
@@ -21,6 +21,10 @@ const TARGETED_AD_BLOCK_HOSTS = new Set([
   'cm.g.doubleclick.net',
   's0.2mdn.net',
 ]);
+
+const TARGETED_AD_BLOCK_PATTERN = new RegExp(
+  [...TARGETED_AD_BLOCK_HOSTS].map((host) => host.replace(/\./g, '\\.')).join('|'),
+);
 
 const CONSENT_NEUTRALIZATION_SCRIPT = `
 (() => {
@@ -80,36 +84,16 @@ const CONSENT_NEUTRALIZATION_SCRIPT = `
 })();
 `;
 
-export async function applyAdAndConsentMitigation(context: BrowserContext, page: Page) {
-  await page.addInitScript(CONSENT_NEUTRALIZATION_SCRIPT);
-
-  await context.route('**/*', async (route) => {
-    const requestUrl = route.request().url();
-    let parsedUrl: URL | null = null;
-
-    try {
-      parsedUrl = new URL(requestUrl);
-    } catch {
-      parsedUrl = null;
-    }
-
-    if (!parsedUrl || !['http:', 'https:'].includes(parsedUrl.protocol)) {
-      await route.continue();
-      return;
-    }
-
-    if (TARGETED_AD_BLOCK_HOSTS.has(parsedUrl.hostname)) {
-      await route.abort();
-      return;
-    }
-
-    await route.continue();
+export async function applyAdAndConsentMitigation(context: BrowserContext) {
+  await context.addInitScript(CONSENT_NEUTRALIZATION_SCRIPT);
+  await context.route(TARGETED_AD_BLOCK_PATTERN, async (route) => {
+    await route.abort();
   });
 }
 
 export const test = base.extend<Fixtures>({
   page: async ({ page }, use) => {
-    await applyAdAndConsentMitigation(page.context(), page);
+    await applyAdAndConsentMitigation(page.context());
 
     await use(page);
   },
