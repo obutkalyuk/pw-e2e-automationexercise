@@ -1,0 +1,226 @@
+name: CI PR
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+jobs:
+  changed-tests:
+    name: changed-tests
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: read
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Check formatting
+        run: npm run format:check
+      - name: Lint
+        run: npm run lint
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_ENV"
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+      - name: Install Playwright operating system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
+      - name: Detect changed test files
+        id: changed
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+          else
+            base_sha="${{ github.event.before }}"
+          fi
+
+          if [ -z "$base_sha" ] || [ "$base_sha" = "0000000000000000000000000000000000000000" ]; then
+            base_sha="$(git rev-list --max-parents=0 HEAD)"
+          fi
+
+          changed_tests="$(git diff --name-only "$base_sha" "${{ github.sha }}" | grep -E '^tests/.*\.spec\.ts$' || true)"
+
+          if [ -n "$changed_tests" ]; then
+            echo "has-tests=true" >> "$GITHUB_OUTPUT"
+            echo "tests=$(echo "$changed_tests" | tr '\n' ' ' | xargs)" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-tests=false" >> "$GITHUB_OUTPUT"
+            echo "tests=" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run changed specs
+        if: steps.changed.outputs.has-tests == 'true'
+        shell: bash
+        run: |
+          set +e
+          npx playwright test ${{ steps.changed.outputs.tests }}
+          status=$?
+          if [ -f results.xml ]; then
+            mv results.xml results-changed.xml
+          fi
+          exit $status
+      - name: No changed specs detected
+        if: steps.changed.outputs.has-tests != 'true'
+        run: echo "No changed spec files found in this diff."
+      - name: Publish test report to summary
+        uses: mikepenz/action-junit-report@v4
+        if: always() && hashFiles('results-changed.xml') != ''
+        with:
+          report_paths: results-changed.xml
+          detailed_summary: true
+          include_passed: true
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
+        with:
+          name: playwright-report-changed-tests
+          path: playwright-report/
+          retention-days: 7
+
+  smoke:
+    name: smoke
+    needs: changed-tests
+    if: always()
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: read
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_ENV"
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+      - name: Install Playwright operating system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
+      - name: Run API smoke tests
+        id: smoke-api
+        continue-on-error: true
+        shell: bash
+        run: |
+          npx playwright test --grep @smoke --project=api
+          status=$?
+          if [ -f results.xml ]; then
+            mv results.xml results-smoke-api.xml
+          fi
+          exit $status
+      - name: Run browser smoke tests
+        id: smoke-browser
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          npx playwright test --grep @smoke --project=chromium --project=firefox --project=webkit
+          status=$?
+          if [ -f results.xml ]; then
+            mv results.xml results-smoke-browser.xml
+          fi
+          exit $status
+      - name: Fail smoke job when any smoke segment fails
+        if: always() && (steps.smoke-api.outcome != 'success' || steps.smoke-browser.outcome != 'success')
+        run: exit 1
+      - name: Publish test report to summary
+        uses: mikepenz/action-junit-report@v4
+        if: always() && hashFiles('results-smoke-*.xml') != ''
+        with:
+          report_paths: results-smoke-*.xml
+          detailed_summary: true
+          include_passed: true
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
+        with:
+          name: playwright-report-smoke
+          path: playwright-report/
+          retention-days: 7
+
+  a11y-smoke:
+    name: a11y-smoke
+    needs: changed-tests
+    if: always()
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Check for a11y smoke coverage
+        id: a11y
+        shell: bash
+        run: |
+          if rg -n '@a11y-smoke' tests >/dev/null; then
+            echo "has-tests=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-tests=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run a11y smoke tests
+        if: steps.a11y.outputs.has-tests == 'true'
+        shell: bash
+        run: |
+          set +e
+          npx playwright test --grep @a11y-smoke
+          status=$?
+          if [ -f results.xml ]; then
+            mv results.xml results-a11y-smoke.xml
+          fi
+          exit $status
+      - name: Placeholder for a11y smoke tests
+        if: steps.a11y.outputs.has-tests != 'true'
+        run: echo "No @a11y-smoke tests tagged yet. Job reserved for lightweight accessibility checks."
+      - name: Publish test report to summary
+        uses: mikepenz/action-junit-report@v4
+        if: always() && hashFiles('results-a11y-smoke.xml') != ''
+        with:
+          report_paths: results-a11y-smoke.xml
+          detailed_summary: true
+          include_passed: true
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
+        with:
+          name: playwright-report-a11y-smoke
+          path: playwright-report/
+          retention-days: 7
