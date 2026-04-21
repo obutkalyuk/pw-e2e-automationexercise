@@ -63,9 +63,9 @@ jobs:
         shell: bash
         run: |
           if [ -f results-full.xml ]; then
-            total="$(grep -oP 'tests="\K[0-9]+' results-full.xml | awk '{s+=$1} END {print s+0}')"
-            failures="$(grep -oP 'failures="\K[0-9]+' results-full.xml | awk '{s+=$1} END {print s+0}')"
-            skipped="$(grep -oP 'skipped="\K[0-9]+' results-full.xml | awk '{s+=$1} END {print s+0}')"
+            total="$(grep -oPm1 'tests="\K[0-9]+' results-full.xml || echo 0)"
+            failures="$(grep -oPm1 'failures="\K[0-9]+' results-full.xml || echo 0)"
+            skipped="$(grep -oPm1 'skipped="\K[0-9]+' results-full.xml || echo 0)"
             passed="$((total - failures - skipped))"
             echo "total=$total" >> "$GITHUB_OUTPUT"
             echo "failed=$failures" >> "$GITHUB_OUTPUT"
