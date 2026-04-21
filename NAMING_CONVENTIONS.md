@@ -19,19 +19,19 @@
 
 ### Pattern by layer
 
-| Layer | Pattern | Example |
-|-------|---------|---------|
-| E2E spec | `<feature>-<scenario>.spec.ts` | `cart-add-products.spec.ts` |
-| API spec | `<feature>-<scenario>.api.spec.ts` | `account-flow.api.spec.ts` |
-| Chain spec | `<feature>-<scenario>.chain.api.spec.ts` | `purchase-happy-path.chain.api.spec.ts` |
-| Transport spec | `<feature>.transport.api.spec.ts` | `purchase.transport.api.spec.ts` |
-| Monitoring spec | `<feature>-<scenario>.spec.ts` | `account-create-concurrency.spec.ts` |
-| Page Object | `<feature>.page.ts` | `cart.page.ts` |
-| Section | `<feature>.section.ts` | `cart-table.section.ts` |
-| API Helper | `<feature>.api.helper.ts` | `account.api.helper.ts` |
-| General util | `<name>.ts` | `fixtures.ts`, `address-formatter.ts` |
-| Data | `<entity>.data.ts` | `user.data.ts`, `payment.data.ts` |
-| Types | `<entity>.types.ts` | `user.types.ts` |
+| Layer           | Pattern                                  | Example                                 |
+| --------------- | ---------------------------------------- | --------------------------------------- |
+| E2E spec        | `<feature>-<scenario>.spec.ts`           | `cart-add-products.spec.ts`             |
+| API spec        | `<feature>-<scenario>.api.spec.ts`       | `account-flow.api.spec.ts`              |
+| Chain spec      | `<feature>-<scenario>.chain.api.spec.ts` | `purchase-happy-path.chain.api.spec.ts` |
+| Transport spec  | `<feature>.transport.api.spec.ts`        | `purchase.transport.api.spec.ts`        |
+| Monitoring spec | `<feature>-<scenario>.spec.ts`           | `account-create-concurrency.spec.ts`    |
+| Page Object     | `<feature>.page.ts`                      | `cart.page.ts`                          |
+| Section         | `<feature>.section.ts`                   | `cart-table.section.ts`                 |
+| API Helper      | `<feature>.api.helper.ts`                | `account.api.helper.ts`                 |
+| General util    | `<name>.ts`                              | `fixtures.ts`, `address-formatter.ts`   |
+| Data            | `<entity>.data.ts`                       | `user.data.ts`, `payment.data.ts`       |
+| Types           | `<entity>.types.ts`                      | `user.types.ts`                         |
 
 > **Layer prefix** is carried by the **folder**, not the file name — e.g. `tests/e2e/` means all files inside are E2E, no need to add `e2e` to the file name itself.
 
@@ -84,18 +84,18 @@ Methods should read as **actions** or **queries** — use verb-first naming.
 
 ```ts
 // ✅ Good
-addProductToCart()
-loginUser()
-submitOrder()
-getProductById()
-assertOrderConfirmed()
-waitForOverlayToDisappear()
+addProductToCart();
+loginUser();
+submitOrder();
+getProductById();
+assertOrderConfirmed();
+waitForOverlayToDisappear();
 
 // ❌ Bad
-doLogin()
-handleSubmit()
-process()
-check()
+doLogin();
+handleSubmit();
+process();
+check();
 ```
 
 ### Assertions in helpers
@@ -140,14 +140,14 @@ Test descriptions should describe **behavior**, not implementation:
 
 ```ts
 // ✅ Good
-test('should add product to cart from search results')
-test('should retain cart contents after logout and login')
-test('should reject payment with expired card')
+test('should add product to cart from search results');
+test('should retain cart contents after logout and login');
+test('should reject payment with expired card');
 
 // ❌ Bad
-test('cart test')
-test('add product')
-test('test login form')
+test('cart test');
+test('add product');
+test('test login form');
 ```
 
 `describe` blocks group by **feature** or **user flow**:
@@ -155,10 +155,10 @@ test('test login form')
 ```ts
 describe('Cart', () => {
   describe('Adding products', () => {
-    test('should add single product from product page')
-    test('should add multiple products from search results')
-  })
-})
+    test('should add single product from product page');
+    test('should add multiple products from search results');
+  });
+});
 ```
 
 ---
@@ -204,15 +204,15 @@ constructor(private page: any) {}
 
 ## What Goes Where
 
-| Thing | Where |
-|-------|-------|
-| Reusable locator logic | Page Object or Section |
-| Multi-step UI flow | Page Object method |
-| API request/response | `utils/api/<feature>.api.helper.ts` |
-| Test data (static) | `data/<entity>.data.ts` |
-| Fixtures (setup/teardown) | `utils/fixtures.ts` |
-| One-off test data | inside the test itself |
-| Shared assertion logic | helper method with `assert` prefix |
+| Thing                     | Where                               |
+| ------------------------- | ----------------------------------- |
+| Reusable locator logic    | Page Object or Section              |
+| Multi-step UI flow        | Page Object method                  |
+| API request/response      | `utils/api/<feature>.api.helper.ts` |
+| Test data (static)        | `data/<entity>.data.ts`             |
+| Fixtures (setup/teardown) | `utils/fixtures.ts`                 |
+| One-off test data         | inside the test itself              |
+| Shared assertion logic    | helper method with `assert` prefix  |
 
 ---
 
@@ -225,6 +225,7 @@ Extract to `pages/sections/` when the DOM block:
 - has meaningful **internal structure** (table rows, card grid, etc.)
 
 Do **not** extract:
+
 - a single button or input
 - a block used in only one place with no reuse potential
 
