@@ -280,11 +280,27 @@ jobs:
         id: a11y
         shell: bash
         run: |
-          if rg -n '@a11y-smoke' tests >/dev/null; then
+          if grep -R -n '@a11y-smoke' tests >/dev/null; then
             echo "has-tests=true" >> "$GITHUB_OUTPUT"
           else
             echo "has-tests=false" >> "$GITHUB_OUTPUT"
           fi
+      - name: Get Playwright version
+        if: steps.a11y.outputs.has-tests == 'true'
+        run: echo "PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_ENV"
+      - name: Cache Playwright browsers
+        if: steps.a11y.outputs.has-tests == 'true'
+        uses: actions/cache@v4
+        id: playwright-cache-a11y
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright browsers
+        if: steps.a11y.outputs.has-tests == 'true' && steps.playwright-cache-a11y.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+      - name: Install Playwright operating system dependencies
+        if: steps.a11y.outputs.has-tests == 'true' && steps.playwright-cache-a11y.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
       - name: Run a11y smoke tests
         if: steps.a11y.outputs.has-tests == 'true'
         shell: bash

@@ -1,17 +1,17 @@
 # Naming Conventions
 
-> Applies to: test files, page objects, helpers, data, utils  
+> Applies to: test files, page objects, helpers, data, utils
 > Stack: Playwright + TypeScript
 
 ---
 
 ## General Rules
 
-- **kebab-case** for all file names — no exceptions
+- **kebab-case** for all file names - no exceptions
 - **camelCase** for variables, functions, class methods
 - **PascalCase** for class names
 - No abbreviations unless universally known (`url`, `api`, `id`)
-- Name should answer: _what does this do / what is this?_ — not _how_ it does it
+- Name should answer: _what does this do / what is this?_ - not _how_ it does it
 
 ---
 
@@ -33,29 +33,32 @@
 | Data            | `<entity>.data.ts`                       | `user.data.ts`, `payment.data.ts`       |
 | Types           | `<entity>.types.ts`                      | `user.types.ts`                         |
 
-> **Layer prefix** is carried by the **folder**, not the file name — e.g. `tests/e2e/` means all files inside are E2E, no need to add `e2e` to the file name itself.
+> **Layer prefix** is carried by the **folder**, not the file name - for example, `tests/e2e/` already makes files E2E, so there is no need to add `e2e` to the file name itself.
+>
+> `chain` specs cover multi-step business flows across several API calls.
+> `transport` specs cover raw HTTP behavior such as status codes, headers, and payload shape without modeling a user flow.
 
 ---
 
 ## Folder Structure
 
-```
+```text
 tests/
-  e2e/              ← UI end-to-end tests
+  e2e/              <- UI end-to-end tests
   api/
-    auth/           ← auth-related API tests
+    auth/           <- auth-related API tests
     catalog/
-    chain/          ← multi-step API scenarios
-    transport/      ← raw transport-level tests
-  monitoring/       ← concurrency, health checks
+    chain/          <- multi-step API scenarios
+    transport/      <- raw transport-level tests
+  monitoring/       <- concurrency, health checks
 
-pages/              ← Page Object classes
-  sections/         ← reusable DOM sections
+pages/              <- Page Object classes
+  sections/         <- reusable DOM sections
 
-utils/              ← shared utilities and helpers
-  api/              ← API-specific helpers
+utils/              <- shared utilities and helpers
+  api/              <- API-specific helpers
 
-data/               ← test data and schemas
+data/               <- test data and schemas
 ```
 
 ---
@@ -80,10 +83,10 @@ class PurchaseTransportHelper {}
 
 ## Method Naming
 
-Methods should read as **actions** or **queries** — use verb-first naming.
+Methods should read as **actions** or **queries** - use verb-first naming.
 
 ```ts
-// ✅ Good
+// Good
 addProductToCart();
 loginUser();
 submitOrder();
@@ -91,7 +94,7 @@ getProductById();
 assertOrderConfirmed();
 waitForOverlayToDisappear();
 
-// ❌ Bad
+// Bad
 doLogin();
 handleSubmit();
 process();
@@ -100,14 +103,14 @@ check();
 
 ### Assertions in helpers
 
-Prefix with `assert` or `verify` — never hide assertions inside generic method names:
+Prefix with `assert` or `verify` - never hide assertions inside generic method names:
 
 ```ts
-// ✅
+// Good
 assertProductInCart(productName: string)
 verifyOrderStatus(expected: string)
 
-// ❌
+// Bad
 checkCart()     // unclear what "check" means
 validate()      // too vague
 ```
@@ -116,16 +119,16 @@ validate()      // too vague
 
 ## Locator Naming
 
-Locators are **nouns** — they describe the element, not the action:
+Locators are **nouns** - they describe the element, not the action:
 
 ```ts
-// ✅ Good
+// Good
 readonly submitButton = this.page.getByRole('button', { name: 'Submit' });
 readonly productCard = this.page.locator('[data-testid="product-card"]');
 readonly cartItemRow = this.page.locator('.cart_info tbody tr');
 readonly errorMessage = this.page.getByRole('alert');
 
-// ❌ Bad
+// Bad
 readonly btn = ...
 readonly el = ...
 readonly item1 = ...
@@ -139,16 +142,25 @@ readonly clickHere = ...
 Test descriptions should describe **behavior**, not implementation:
 
 ```ts
-// ✅ Good
+// Good
 test('should add product to cart from search results');
 test('should retain cart contents after logout and login');
 test('should reject payment with expired card');
 
-// ❌ Bad
+// Bad
 test('cart test');
 test('add product');
 test('test login form');
 ```
+
+When a test is mapped to a manual test plan, keep the descriptive title and prefix it with the test ID. Tags may be appended for execution strategy or stability:
+
+```ts
+test('E2E-1: Register User @critical @stable');
+test('API-3: Get all products list @smoke');
+```
+
+Use this traceability format when it adds value; otherwise a plain behavior-focused description is fine.
 
 `describe` blocks group by **feature** or **user flow**:
 
@@ -166,12 +178,12 @@ describe('Cart', () => {
 ## Variables
 
 ```ts
-// ✅ Good
+// Good
 const productName = 'Blue Top';
 const expectedTotal = 150;
 const isLoggedIn = true;
 
-// ❌ Bad
+// Bad
 const pn = 'Blue Top';
 const x = 150;
 const flag = true;
@@ -188,15 +200,15 @@ const hasError = response.status !== 200;
 
 ## TypeScript
 
-- No `any` — use proper types or `unknown` + type guard
+- No `any` - use proper types or `unknown` + type guard
 - API responses: always type with an interface or Zod schema
 - Page Object constructor: always typed `Page` from `@playwright/test`
 
 ```ts
-// ✅
+// Good
 constructor(private readonly page: Page) {}
 
-// ❌
+// Bad
 constructor(private page: any) {}
 ```
 
@@ -233,7 +245,7 @@ Do **not** extract:
 
 ## Helper File Responsibility
 
-One helper = one responsibility. If a file does more than one of these — split it:
+One helper = one responsibility. If a file does more than one of these - split it:
 
 - HTTP request/response
 - HTML parsing
