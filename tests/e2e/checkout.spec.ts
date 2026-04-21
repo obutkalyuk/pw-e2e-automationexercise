@@ -9,6 +9,7 @@ import { CheckoutPage } from '../../pages/checkout.page';
 import { PaymentPage } from '../../pages/payment.page';
 import { TEST_CARD } from '../../data/payment.data';
 import { test } from '../../utils/fixtures';
+import { extractInvoiceAmount } from '../../utils/transport-html';
 
 test('E2E-14: Register while Checkout preserves cart @high', async ({
   page,
@@ -133,6 +134,75 @@ test.describe('Place Order tests', () => {
 
     await test.step(`Verify delivery and billing addresses`, async () => {
       await checkoutPage.verifyAddressDetails(managedUser);
+    });
+  });
+
+  test('E2E-24: Download invoice after purchase order @high', async ({
+    page,
+    request,
+    managedUser,
+  }, testInfo) => {
+    test.setTimeout(60_000);
+    const loginPage = new LoginPage(page);
+    const cartPage = new CartPage(page);
+    const checkoutPage = new CheckoutPage(page);
+    const paymentPage = new PaymentPage(page);
+    const signUpPage = new SignupPage(page);
+    const productId = '1';
+    const expectedAmount = await apiHelper.getExpectedInvoiceAmountForProduct(request, productId);
+
+    await test.step('Login with existing user', async () => {
+      await loginPage.goto();
+      await loginPage.login(managedUser);
+      await loginPage.verifyLoginSuccess(managedUser);
+    });
+
+    await test.step('Prepare cart via API using browser session cookies', async () => {
+      const cookieHeader = await loginPage.getCookieHeader();
+      await apiHelper.addProductToCart(request, productId, cookieHeader);
+
+      await page.goto('/view_cart');
+      await cartPage.verifyCartIsOpen();
+      await cartPage.verifyProductInCart([productId]);
+    });
+
+    await test.step('Complete checkout via UI', async () => {
+      await cartPage.proceedToCheckout();
+      await checkoutPage.verifyProductInCheckout([productId]);
+      await checkoutPage.placeOrder();
+      await paymentPage.fillPaymentDetails(TEST_CARD);
+      await paymentPage.clickPayAndConfirm();
+      await paymentPage.verifyOrderPlaced();
+    });
+
+    await test.step('Download invoice and verify its contents', async () => {
+      const download = await paymentPage.downloadInvoice();
+      const suggestedFileName = download.suggestedFilename();
+      const downloadPath = testInfo.outputPath(suggestedFileName);
+
+      await download.saveAs(downloadPath);
+
+      const invoiceContent = await download.createReadStream().then(async (stream) => {
+        if (!stream) {
+          throw new Error('Downloaded invoice stream is not available');
+        }
+
+        const chunks: Buffer[] = [];
+        for await (const chunk of stream) {
+          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+        }
+        return Buffer.concat(chunks).toString('utf-8');
+      });
+
+      expect(suggestedFileName.toLowerCase()).toContain('invoice');
+      expect(invoiceContent).toContain('Your total purchase amount is');
+      expect(extractInvoiceAmount(invoiceContent)).toBe(expectedAmount);
+    });
+
+    await test.step('Continue and delete account via UI', async () => {
+      await paymentPage.continueAfterOrderPlaced();
+      await paymentPage.deleteAccount();
+      await signUpPage.verifyAccountDeleted();
     });
   });
 });

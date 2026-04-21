@@ -6,6 +6,7 @@ export class ProductCatalogSection {
   readonly productCards: Locator;
   readonly productNames: Locator;
   readonly viewProductLinks: Locator;
+  readonly cartModal: Locator;
   readonly continueShoppingButton: Locator;
   readonly viewCartLink: Locator;
 
@@ -14,6 +15,7 @@ export class ProductCatalogSection {
     this.productCards = page.locator('.features_items .single-products');
     this.productNames = page.locator('.features_items .productinfo p');
     this.viewProductLinks = page.locator('.features_items .choose a[href*="/product_details/"]');
+    this.cartModal = page.locator('#cartModal');
     this.continueShoppingButton = page.getByRole('button', { name: 'Continue Shopping' });
     this.viewCartLink = page.locator('#cartModal a[href="/view_cart"]');
   }
@@ -91,24 +93,37 @@ export class ProductCatalogSection {
 
   async addProductToCartById(productId: string, handleCommonAds: () => Promise<void>) {
     await handleCommonAds();
-    await this.page.locator(`.productinfo a[data-product-id="${productId}"]`).click();
+    const addToCartButton = this.page.locator(`.productinfo a[data-product-id="${productId}"]`);
+
+    await addToCartButton.scrollIntoViewIfNeeded();
+    await addToCartButton.click({ trial: true });
+    await addToCartButton.click();
   }
 
   async addProductToCartByNumber(productNumber: number, handleCommonAds: () => Promise<void>) {
     await handleCommonAds();
-    await this.page
+    const addToCartButton = this.page
       .locator('.features_items .productinfo a.add-to-cart')
-      .nth(productNumber - 1)
-      .click();
+      .nth(productNumber - 1);
+
+    await addToCartButton.scrollIntoViewIfNeeded();
+    await addToCartButton.click({ trial: true });
+    await addToCartButton.click();
   }
 
   async continueShopping(handleCommonAds: () => Promise<void>) {
+    await expect(this.cartModal).toBeVisible();
+    await expect(this.continueShoppingButton).toBeVisible();
+    await this.continueShoppingButton.click({ trial: true });
     await this.continueShoppingButton.click();
-    await expect(this.continueShoppingButton).toBeHidden();
+    await expect(this.cartModal).toBeHidden();
     await handleCommonAds();
   }
 
   async viewCartFromModal(handleCommonAds: () => Promise<void>) {
+    await expect(this.cartModal).toBeVisible();
+    await expect(this.viewCartLink).toBeVisible();
+    await this.viewCartLink.click({ trial: true });
     await this.viewCartLink.click();
     await handleCommonAds();
   }

@@ -51,6 +51,21 @@ export class BasePage {
     }
   }
 
+  protected async clickWhenReady(locator: Locator) {
+    await locator.scrollIntoViewIfNeeded();
+    await locator.click({ trial: true });
+    await locator.click({ noWaitAfter: true });
+  }
+
+  protected async clickAndWaitForUrl(locator: Locator, url: string | RegExp) {
+    await locator.scrollIntoViewIfNeeded();
+    await locator.click({ trial: true });
+    await Promise.all([
+      this.page.waitForURL(url, { waitUntil: 'domcontentloaded' }),
+      locator.click({ noWaitAfter: true }),
+    ]);
+  }
+
   protected isOnGoogleVignette() {
     return /#google_vignette$/.test(this.page.url());
   }
@@ -76,11 +91,11 @@ export class BasePage {
   }
   async logout() {
     await this.logoutLink.waitFor({ state: 'visible', timeout: 10000 });
-    await this.logoutLink.click();
+    await this.clickAndWaitForUrl(this.logoutLink, '**/login');
     await this.handleCommonAds();
   }
   async deleteAccount() {
-    await this.deleteAccountLink.click();
+    await this.clickAndWaitForUrl(this.deleteAccountLink, '**/delete_account');
   }
 
   async verifyLoggedInAs(userName: string) {

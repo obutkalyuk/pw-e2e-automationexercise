@@ -4,7 +4,14 @@ import { LoginPage } from '../../pages/login.page';
 import { SignupPage } from '../../pages/signup.page';
 import { applyAdAndConsentMitigation } from '../../utils/fixtures';
 
-test('C-1: Concurrency Probe - User registration under parallel load @low', async ({ browser }) => {
+test('C-1: Concurrency Probe - User registration under parallel load @low', async ({
+  browser,
+  browserName,
+}) => {
+  test.fail(
+    browserName === 'chromium' || browserName === 'firefox',
+    'Known defect #5: Create Account button intermittently fails to submit signup form on /signup under parallel load.',
+  );
   const taskCount = 10;
 
   const tasks = Array.from({ length: taskCount }).map(async () => {

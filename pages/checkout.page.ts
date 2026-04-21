@@ -57,7 +57,6 @@ export class CheckoutPage extends BasePage {
   }
 
   async placeOrder() {
-    await this.placeOrderButton.click();
-    await expect(this.placeOrderButton).toBeHidden();
+    await this.clickAndWaitForUrl(this.placeOrderButton, /\/payment/);
   }
 }
