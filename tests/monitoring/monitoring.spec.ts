@@ -6,17 +6,17 @@ test('M-1: Network Performance Insight with Throttling @medium', async ({ page }
 
   // 1. `Create a direct session to the Chrome DevTools Protocol (CDP)`
   const session = await page.context().newCDPSession(page);
-  
+
   // Switch on the network emulation (Slow 3G style)
   await session.send('Network.emulateNetworkConditions', {
     offline: false,
-    downloadThroughput: 1.6 * 1024 * 1024 / 8, // ~1.6 Mbps
-    uploadThroughput: 750 * 1024 / 8,        // ~750 Kbps
-    latency: 150,                            // 150ms add to very step
+    downloadThroughput: (1.6 * 1024 * 1024) / 8, // ~1.6 Mbps
+    uploadThroughput: (750 * 1024) / 8, // ~750 Kbps
+    latency: 150, // 150ms add to very step
   });
 
   // 2. listeners on API
-  page.on('requestfinished', request => {
+  page.on('requestfinished', (request) => {
     const timing = request.timing();
     if (['fetch', 'xhr'].includes(request.resourceType())) {
       const ttfb = timing.responseStart - timing.requestStart;
@@ -38,10 +38,10 @@ test('M-1: Network Performance Insight with Throttling @medium', async ({ page }
       total: entry.duration,
     };
   });
-    testInfo.annotations.push({
-      type: 'Test Data',
-      description: `Network Throttling: Slow 3G | Metrics: ${JSON.stringify(metrics)}`
-    });
+  testInfo.annotations.push({
+    type: 'Test Data',
+    description: `Network Throttling: Slow 3G | Metrics: ${JSON.stringify(metrics)}`,
+  });
   console.log(`--- Performance Metrics (UNDER THROTTLING) ---`);
   console.table(metrics);
 });

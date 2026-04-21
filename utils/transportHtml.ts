@@ -18,19 +18,27 @@ export function extractCsrfToken(html: string): string {
 export function extractPaymentArtifactIdFromLocation(location: string): string {
   const match = location.match(/\/payment_done\/(\d+)/);
 
-  expect(location, 'Payment redirect location should contain payment artifact value').toMatch(/\/payment_done\/\d+/);
+  expect(location, 'Payment redirect location should contain payment artifact value').toMatch(
+    /\/payment_done\/\d+/,
+  );
   return match![1];
 }
 
 export function extractInvoiceAmount(invoiceBody: string): string {
   const match = invoiceBody.match(/Your total purchase amount is\s+(\d+)/i);
 
-  expect(invoiceBody, 'Invoice body should contain a numeric total amount').toMatch(/Your total purchase amount is\s+\d+/i);
+  expect(invoiceBody, 'Invoice body should contain a numeric total amount').toMatch(
+    /Your total purchase amount is\s+\d+/i,
+  );
   return match![1];
 }
 
 export function stripHtml(value: string): string {
-  return value.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+  return value
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 export function parseCartProducts(html: string): TransportCartProduct[] {
@@ -40,14 +48,25 @@ export function parseCartProducts(html: string): TransportCartProduct[] {
   for (const rowMatch of html.matchAll(rowPattern)) {
     const rowHtml = rowMatch[0];
     const id = rowMatch[1];
-    const nameMatch = rowHtml.match(/class=["'][^"']*cart_description[^"']*["'][\s\S]*?<h4>\s*<a[^>]*>([\s\S]*?)<\/a>/i);
-    const priceMatch = rowHtml.match(/class=["'][^"']*cart_price[^"']*["'][\s\S]*?<p>([\s\S]*?)<\/p>/i);
-    const quantityMatch = rowHtml.match(/class=["'][^"']*cart_quantity[^"']*["'][\s\S]*?<button[^>]*>(\d+)<\/button>/i);
-    const totalMatch = rowHtml.match(/class=["'][^"']*cart_total_price[^"']*["'][^>]*>([\s\S]*?)<\/p>/i);
+    const nameMatch = rowHtml.match(
+      /class=["'][^"']*cart_description[^"']*["'][\s\S]*?<h4>\s*<a[^>]*>([\s\S]*?)<\/a>/i,
+    );
+    const priceMatch = rowHtml.match(
+      /class=["'][^"']*cart_price[^"']*["'][\s\S]*?<p>([\s\S]*?)<\/p>/i,
+    );
+    const quantityMatch = rowHtml.match(
+      /class=["'][^"']*cart_quantity[^"']*["'][\s\S]*?<button[^>]*>(\d+)<\/button>/i,
+    );
+    const totalMatch = rowHtml.match(
+      /class=["'][^"']*cart_total_price[^"']*["'][^>]*>([\s\S]*?)<\/p>/i,
+    );
 
     expect(nameMatch, `Expected cart row for product ${id} to contain product name`).toBeTruthy();
     expect(priceMatch, `Expected cart row for product ${id} to contain product price`).toBeTruthy();
-    expect(quantityMatch, `Expected cart row for product ${id} to contain product quantity`).toBeTruthy();
+    expect(
+      quantityMatch,
+      `Expected cart row for product ${id} to contain product quantity`,
+    ).toBeTruthy();
     expect(totalMatch, `Expected cart row for product ${id} to contain product total`).toBeTruthy();
 
     products.push({

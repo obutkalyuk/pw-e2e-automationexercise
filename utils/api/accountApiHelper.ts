@@ -69,7 +69,7 @@ export const accountApiHelper = {
       expect(response.status()).toBe(200);
       expect(
         [200, 404],
-        `Unexpected deletion response for ${user.email}: ${body.message}`
+        `Unexpected deletion response for ${user.email}: ${body.message}`,
       ).toContain(body.responseCode);
     });
   },

@@ -10,7 +10,9 @@ export class HomePage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.siteLogo = page.locator('.logo a img[alt="Website for automation practice"], .logo a img[alt="Website for practice automation"]');
+    this.siteLogo = page.locator(
+      '.logo a img[alt="Website for automation practice"], .logo a img[alt="Website for practice automation"]',
+    );
     this.productCatalog = new ProductCatalogSection(page);
     this.productSidebar = new ProductSidebarSection(page);
   }

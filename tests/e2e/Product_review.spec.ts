@@ -28,11 +28,7 @@ test('E2E-21: Add review on product @medium', async ({ page }) => {
 
   await test.step('Submit product review', async () => {
     await productDetailsPage.verifyWriteYourReviewVisible();
-    await productDetailsPage.submitReview(
-      reviewAuthor.name,
-      reviewAuthor.email,
-      reviewAuthor.text
-    );
+    await productDetailsPage.submitReview(reviewAuthor.name, reviewAuthor.email, reviewAuthor.text);
     await productDetailsPage.verifyReviewSubmitted();
   });
 });

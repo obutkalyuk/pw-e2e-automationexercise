@@ -11,11 +11,13 @@ The emphasis is on QA thinking: why tests are structured the way they are, what 
 This repository was built from scratch against a public demo application.
 
 That naturally creates some limitations:
+
 - no access to backend logs, infrastructure, or internal monitoring tools
 - no collaboration with developers on defect triage or fixes
 - analysis is limited to externally observable behavior in the browser and API responses
 
 Within that scope, the project focuses on the QA work that can still be done well:
+
 - test architecture and maintainable automation design
 - API and web-flow behavior analysis
 - contract-aware assertions
@@ -63,6 +65,7 @@ This keeps response-shape checks centralized, lets tests focus on business inten
 The shared Playwright UI setup applies targeted mitigation for third-party ad traffic and consent overlays served by `automationexercise.com`.
 
 This is intentionally narrow:
+
 - known ad-serving hosts are blocked at the network layer
 - consent overlays are neutralized in the DOM to reduce screenshot noise and click interception
 - broad third-party blocking is avoided to preserve normal site behavior
@@ -87,11 +90,11 @@ qa_questions.md
 
 ## QA Documentation
 
-| Document | Description |
-| --- | --- |
-| [Automation Test Cases Plan](./Automation%20Test%20Cases%20Plan.md) | Test cases with priority, coverage intent, and automation mapping |
-| [API / Request Inventory](./api_request_inventory.md) | Observed requests, response behavior, and recommended assertion strategy |
-| [QA Questionnaire](./qa_questions.md) | Product, risk, and investigation questions identified during QA analysis |
+| Document                                                                        | Description                                                                |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [Automation Test Cases Plan](./Automation%20Test%20Cases%20Plan.md)             | Test cases with priority, coverage intent, and automation mapping          |
+| [API / Request Inventory](./api_request_inventory.md)                           | Observed requests, response behavior, and recommended assertion strategy   |
+| [QA Questionnaire](./qa_questions.md)                                           | Product, risk, and investigation questions identified during QA analysis   |
 | [GitHub Issues](https://github.com/obutkalyuk/pw-e2e-automationexercise/issues) | Defects and inconsistencies found during exploratory and automated testing |
 
 ## Notable Findings
@@ -149,11 +152,13 @@ npm run capture:network -- --label checkout-payment --path /view_cart
 ```
 
 Useful flags:
+
 - `--label <name>` for readable output file names
 - `--path <relative-path>` to open a specific page before recording
 - `--include-scripts` to keep first-party script requests
 - `--slowmo <ms>` to slow browser actions during investigation
 
 Output:
+
 - JSON capture: `artifacts/network-captures/*.json`
 - Markdown summary: `artifacts/network-captures/*.md`

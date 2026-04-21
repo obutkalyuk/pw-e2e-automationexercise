@@ -4,9 +4,9 @@ import { defineConfig, devices } from '@playwright/test';
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
- import dotenv from 'dotenv';
- import path from 'path';
- dotenv.config({ path: path.resolve(__dirname, '.env') });
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -27,10 +27,10 @@ export default defineConfig({
     ['list'],
     ['github'],
     ['json', { outputFile: 'test-results.json' }],
-    ['junit', { outputFile: 'results.xml' }]
+    ['junit', { outputFile: 'results.xml' }],
   ],
   timeout: 45_000,
-  expect: {timeout: 10_000,},
+  expect: { timeout: 10_000 },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
@@ -63,22 +63,19 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: [
-          /.*\.api\.spec\.ts/, 
-          /.*monitoring\.spec\.ts/
-        ], // Ignore API tests here
+      testIgnore: [/.*\.api\.spec\.ts/, /.*monitoring\.spec\.ts/], // Ignore API tests here
     },
 
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
-      testIgnore: /.*\.api\.spec\.ts/, 
+      testIgnore: /.*\.api\.spec\.ts/,
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testIgnore: /.*\.api\.spec\.ts/, 
+      testIgnore: /.*\.api\.spec\.ts/,
     },
 
     /* Test against mobile viewports. */

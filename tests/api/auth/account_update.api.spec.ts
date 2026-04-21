@@ -5,7 +5,9 @@ import { apiHelper } from '../../../utils/apiHelper';
 
 test.describe('API Account Update', () => {
   /* Known API bug (#1): server returns HTTP 200 for business-error responses. */
-  test('[API-9] PUT /updateAccount - Update user account details @medium', async ({ request }, testInfo) => {
+  test('[API-9] PUT /updateAccount - Update user account details @medium', async ({
+    request,
+  }, testInfo) => {
     const user = await apiHelper.createManagedUser(request, testInfo);
     const updatedUser = User.generateRandom();
 
@@ -42,14 +44,16 @@ test.describe('API Account Update', () => {
           state: updatedUser.state,
           city: updatedUser.city,
           zipcode: updatedUser.zipcode,
-        })
+        }),
       );
     } finally {
       await apiHelper.deleteUserIfExists(request, user);
     }
   });
 
-  test('[API-10] PUT /updateAccount - Update fails for non-existing email @low', async ({ request }) => {
+  test('[API-10] PUT /updateAccount - Update fails for non-existing email @low', async ({
+    request,
+  }) => {
     const user = User.generateRandom();
 
     const response = await request.put('/api/updateAccount', {
@@ -59,7 +63,7 @@ test.describe('API Account Update', () => {
 
     expect(
       response.status(),
-      'Known API bug (#1): server returns HTTP 200 for business-error responses.'
+      'Known API bug (#1): server returns HTTP 200 for business-error responses.',
     ).toBe(200);
     expect(body.responseCode).toBe(404);
     expect(body.message).toBe('Account not found!');

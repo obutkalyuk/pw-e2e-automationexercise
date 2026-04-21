@@ -4,7 +4,10 @@ import { apiHelper } from '../../../utils/apiHelper';
 import { extractInvoiceAmount } from '../../../utils/transportHtml';
 
 test.describe('Order State Coverage', () => {
-  test('[API-24][TR-15] Completed purchase should keep cart empty across logout and new login @high', async ({ request, managedUser }) => {
+  test('[API-24][TR-15] Completed purchase should keep cart empty across logout and new login @high', async ({
+    request,
+    managedUser,
+  }) => {
     const productId = '1';
     const expectedAmount = await apiHelper.getExpectedInvoiceAmountForProduct(request, productId);
 
@@ -21,7 +24,10 @@ test.describe('Order State Coverage', () => {
     await apiHelper.expectCartDoesNotContainProduct(request, productId);
   });
 
-  test('[API-25][TR-16] Checkout amount should match invoice amount after successful purchase @high', async ({ request, managedUser }, testInfo) => {
+  test('[API-25][TR-16] Checkout amount should match invoice amount after successful purchase @high', async ({
+    request,
+    managedUser,
+  }, testInfo) => {
     const productId = '1';
     const expectedAmount = await apiHelper.getExpectedInvoiceAmountForProduct(request, productId);
 
@@ -30,7 +36,10 @@ test.describe('Order State Coverage', () => {
     await apiHelper.expectCheckoutContainsAmount(request, expectedAmount);
 
     const paymentResult = await apiHelper.submitPaymentViaTransport(request);
-    const invoiceBody = await apiHelper.downloadInvoiceViaTransport(request, paymentResult.paymentArtifactId);
+    const invoiceBody = await apiHelper.downloadInvoiceViaTransport(
+      request,
+      paymentResult.paymentArtifactId,
+    );
     const invoiceAmount = extractInvoiceAmount(invoiceBody);
 
     expect(invoiceAmount).toBe(expectedAmount);

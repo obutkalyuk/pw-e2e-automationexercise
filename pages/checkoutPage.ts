@@ -5,15 +5,13 @@ import { BasePage } from './basePage';
 import { CartTableSection } from './sections/cartTableSection';
 import { formatCheckoutAddressLines } from '../utils/addressFormatter';
 
-export class CheckoutPage  extends BasePage {
-    
+export class CheckoutPage extends BasePage {
   readonly cartRows: Locator;
   readonly placeOrderButton: Locator;
   readonly deliveryAddress: Locator;
   readonly billingAddress: Locator;
   readonly orderComments: Locator;
   readonly cartTable: CartTableSection;
-  
 
   constructor(page: Page) {
     super(page);
@@ -25,24 +23,27 @@ export class CheckoutPage  extends BasePage {
     this.orderComments = this.page.locator('div#ordermsg textarea[name="message"]');
   }
 
-
-async getCheckoutData(): Promise<CheckoutData> {
+  async getCheckoutData(): Promise<CheckoutData> {
     const products: CartProduct[] = await this.cartTable.getProducts();
 
-    const totalAmount = await this.page.locator('#cart_info_table tbody tr').last().locator('.cart_total_price').innerText();
+    const totalAmount = await this.page
+      .locator('#cart_info_table tbody tr')
+      .last()
+      .locator('.cart_total_price')
+      .innerText();
 
     return {
-        products,
-        totalAmount: totalAmount.trim() // Rs. 1900
+      products,
+      totalAmount: totalAmount.trim(), // Rs. 1900
     };
-}
+  }
 
   async verifyCartIsOpen() {
     await expect(this.page.locator('.breadcrumb')).toContainText('Cart');
     await expect(this.cartRows.first()).toBeVisible();
-  } 
+  }
 
-  async verifyProductInCheckout(products: string[]) { 
+  async verifyProductInCheckout(products: string[]) {
     await this.cartTable.verifyProductIds(products);
   }
 
@@ -57,8 +58,6 @@ async getCheckoutData(): Promise<CheckoutData> {
 
   async placeOrder() {
     await this.placeOrderButton.click();
-    await expect(this.placeOrderButton).toBeHidden();  
-
+    await expect(this.placeOrderButton).toBeHidden();
   }
-
- }
+}

@@ -137,10 +137,7 @@ const OVERLAY_SELECTORS = [
   'div[id="ad_position_box"]',
 ];
 
-const FIRST_PARTY_HOSTS = new Set([
-  'automationexercise.com',
-  'www.automationexercise.com',
-]);
+const FIRST_PARTY_HOSTS = new Set(['automationexercise.com', 'www.automationexercise.com']);
 
 const AD_DOMAINS_PRIMARY = [
   'pagead2.googlesyndication.com',
@@ -151,10 +148,7 @@ const AD_DOMAINS_PRIMARY = [
   'ep2.adtrafficquality.google',
 ] as const;
 
-const AD_DOMAINS_SECONDARY = [
-  'cm.g.doubleclick.net',
-  's0.2mdn.net',
-] as const;
+const AD_DOMAINS_SECONDARY = ['cm.g.doubleclick.net', 's0.2mdn.net'] as const;
 
 const TARGETED_AD_BLOCK_HOSTS: ReadonlySet<string> = new Set([
   ...AD_DOMAINS_PRIMARY,
@@ -183,7 +177,10 @@ function ensureDir(dirPath: string): void {
 }
 
 function sanitizeName(value: string): string {
-  return value.replace(/[^a-z0-9-]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase();
+  return value
+    .replace(/[^a-z0-9-]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase();
 }
 
 function createStamp(date = new Date()): string {
@@ -214,7 +211,7 @@ function parseOptions(): CliOptions {
   const slowMo = Number(getArgValue('slowmo') ?? '0');
   const outputRoot = path.resolve(
     process.cwd(),
-    getArgValue('output') ?? path.join('artifacts', 'ad-traffic-spike', createStamp())
+    getArgValue('output') ?? path.join('artifacts', 'ad-traffic-spike', createStamp()),
   );
 
   if (!Number.isInteger(runs) || runs <= 0) {
@@ -230,10 +227,11 @@ function parseOptions(): CliOptions {
     headed: hasFlag('headed'),
     slowMo,
     browsers: parseCsvList(getArgValue('browsers'), ['chromium', 'firefox', 'webkit'] as const),
-    modes: parseCsvList(
-      getArgValue('modes'),
-      ['standard', 'baseline', 'targeted-ad-block'] as const
-    ),
+    modes: parseCsvList(getArgValue('modes'), [
+      'standard',
+      'baseline',
+      'targeted-ad-block',
+    ] as const),
     flows: parseCsvList(getArgValue('flows'), FLOW_NAMES),
     outputRoot,
   };
@@ -272,8 +270,22 @@ function classifyHostname(hostname: string): Classification {
     'bing',
     'newrelic',
   ];
-  const consentIndicators = ['consent', 'cookie', 'onetrust', 'trustarc', 'quantcast', 'fundingchoices'];
-  const supportIndicators = ['gstatic', 'googleapis', 'cloudflare', 'jsdelivr', 'cdnjs', 'bootstrapcdn'];
+  const consentIndicators = [
+    'consent',
+    'cookie',
+    'onetrust',
+    'trustarc',
+    'quantcast',
+    'fundingchoices',
+  ];
+  const supportIndicators = [
+    'gstatic',
+    'googleapis',
+    'cloudflare',
+    'jsdelivr',
+    'cdnjs',
+    'bootstrapcdn',
+  ];
 
   if (adIndicators.some((item) => hostname.includes(item))) {
     return 'ad';
@@ -315,13 +327,13 @@ function formatError(error: unknown): string {
 function getCorrelationWindowIds(
   eventTimestampMs: number,
   requests: RequestRecord[],
-  windowMs = 2_000
+  windowMs = 2_000,
 ): string[] {
   return requests
     .filter(
       (record) =>
         record.party === 'third-party' &&
-        Math.abs(record.timestampMs - eventTimestampMs) <= windowMs
+        Math.abs(record.timestampMs - eventTimestampMs) <= windowMs,
     )
     .map((record) => record.id);
 }
@@ -337,7 +349,7 @@ async function maybeAttachCdp(page: Page, browserName: BrowserName): Promise<CDP
 async function configureInitiatorTracking(
   page: Page,
   browserName: BrowserName,
-  bucket: CdpInitiatorRecord[]
+  bucket: CdpInitiatorRecord[],
 ): Promise<CDPSession | null> {
   const session = await maybeAttachCdp(page, browserName);
 
@@ -346,10 +358,10 @@ async function configureInitiatorTracking(
   }
 
   await session.send('Network.enable');
-  session.on('Network.requestWillBeSent', (event: any) => {
+  session.on('Network.requestWillBeSent', (event) => {
     const initiatorStack = Array.isArray(event.initiator?.stack?.callFrames)
       ? event.initiator.stack.callFrames
-          .map((frame: { url?: string; functionName?: string; lineNumber?: number }) => {
+          .map((frame) => {
             const functionName = frame.functionName || '<anonymous>';
             const url = frame.url || 'unknown';
             const lineNumber = typeof frame.lineNumber === 'number' ? frame.lineNumber + 1 : 0;
@@ -374,13 +386,13 @@ async function configureInitiatorTracking(
 function consumeInitiator(
   requestUrl: string,
   requestTimestampMs: number,
-  bucket: CdpInitiatorRecord[]
+  bucket: CdpInitiatorRecord[],
 ): Pick<RequestRecord, 'initiatorType' | 'initiatorUrl' | 'initiatorStack'> {
   const match = bucket.find(
     (item) =>
       !item.consumed &&
       item.url === requestUrl &&
-      Math.abs(item.timestampMs - requestTimestampMs) <= 2_000
+      Math.abs(item.timestampMs - requestTimestampMs) <= 2_000,
   );
 
   if (!match) {
@@ -395,7 +407,9 @@ function consumeInitiator(
   };
 }
 
-async function detectOverlay(page: Page): Promise<{ matchedSelectors: string[]; visibleCount: number }> {
+async function detectOverlay(
+  page: Page,
+): Promise<{ matchedSelectors: string[]; visibleCount: number }> {
   try {
     return await page.evaluate((selectors) => {
       const matchedSelectors: string[] = [];
@@ -436,7 +450,7 @@ async function detectOverlay(page: Page): Promise<{ matchedSelectors: string[]; 
 async function startOverlayPolling(
   page: Page,
   events: DetectionEvent[],
-  requests: RequestRecord[]
+  requests: RequestRecord[],
 ): Promise<() => Promise<void>> {
   let disposed = false;
   let lastSignature = '';
@@ -482,7 +496,7 @@ async function attachNetworkRecorder(
   page: Page,
   browserName: BrowserName,
   requests: RequestRecord[],
-  events: DetectionEvent[]
+  events: DetectionEvent[],
 ): Promise<() => Promise<void>> {
   const requestMap = new Map<Request, RequestRecord>();
   const initiatorBucket: CdpInitiatorRecord[] = [];
@@ -689,10 +703,14 @@ async function runCategoryProductsFlow(page: Page): Promise<void> {
   await homePage.handleCommonAds();
   await homePage.productSidebar.verifyCategoriesVisible();
   await homePage.productSidebar.expandCategory('Women', () => homePage.handleCommonAds());
-  await homePage.productSidebar.openSubcategory('Women', 'Saree', '7', () => homePage.handleCommonAds());
+  await homePage.productSidebar.openSubcategory('Women', 'Saree', '7', () =>
+    homePage.handleCommonAds(),
+  );
   await homePage.productSidebar.verifyCategoryResult('Women', 'Saree', '7');
   await homePage.productSidebar.expandCategory('Men', () => homePage.handleCommonAds());
-  await homePage.productSidebar.openSubcategory('Men', 'Jeans', '6', () => homePage.handleCommonAds());
+  await homePage.productSidebar.openSubcategory('Men', 'Jeans', '6', () =>
+    homePage.handleCommonAds(),
+  );
   await homePage.productSidebar.verifyCategoryResult('Men', 'Jeans', '6');
 }
 
@@ -753,14 +771,14 @@ async function executeRun(
   flow: FlowName,
   mode: RunMode,
   runIndex: number,
-  artifactRoot: string
+  artifactRoot: string,
 ): Promise<RunArtifact> {
   const runDir = path.join(
     artifactRoot,
     sanitizeName(browserName),
     sanitizeName(mode),
     sanitizeName(flow),
-    `run-${String(runIndex).padStart(2, '0')}`
+    `run-${String(runIndex).padStart(2, '0')}`,
   );
   ensureDir(runDir);
 
@@ -892,7 +910,7 @@ function buildEventCorrelationSummary(records: RunArtifact[]) {
           classification: request.classification,
           requestUrl: request.requestUrl,
         })),
-    }))
+    })),
   );
 }
 
@@ -903,7 +921,7 @@ function buildNavigationRequestSummary(records: RunArtifact[]) {
         (request) =>
           request.party === 'third-party' &&
           request.isNavigationRequest &&
-          request.resourceType === 'document'
+          request.resourceType === 'document',
       )
       .map((request) => ({
         browserName: run.browserName,
@@ -916,7 +934,7 @@ function buildNavigationRequestSummary(records: RunArtifact[]) {
         responseStatus: request.responseStatus,
         redirectLocation: request.redirectLocation,
         initiatorType: request.initiatorType,
-      }))
+      })),
   );
 }
 
@@ -947,14 +965,16 @@ function buildPassFailSummary(records: RunArtifact[]) {
 
   return [...keyToStats.values()].sort((left, right) =>
     `${left.browserName}-${left.mode}-${left.flow}`.localeCompare(
-      `${right.browserName}-${right.mode}-${right.flow}`
-    )
+      `${right.browserName}-${right.mode}-${right.flow}`,
+    ),
   );
 }
 
 function buildRecommendations(hostSummary: HostSummary[], records: RunArtifact[]) {
   const blocklistCandidates = hostSummary
-    .filter((item) => item.classifications.includes('ad') || item.classifications.includes('tracking'))
+    .filter(
+      (item) => item.classifications.includes('ad') || item.classifications.includes('tracking'),
+    )
     .slice(0, 12)
     .map((item) => item.hostname);
 
@@ -998,18 +1018,20 @@ function buildMarkdownReport(
   options: CliOptions,
   baseUrl: string,
   records: RunArtifact[],
-  outputRoot: string
+  outputRoot: string,
 ): string {
   const passFail = buildPassFailSummary(records);
   const hostSummary = buildHostSummary(records);
-  const likelyAdHosts = hostSummary.filter((item) => item.classifications.includes('ad')).slice(0, 15);
+  const likelyAdHosts = hostSummary
+    .filter((item) => item.classifications.includes('ad'))
+    .slice(0, 15);
   const navigationSummary = buildNavigationRequestSummary(records).slice(0, 30);
   const eventCorrelation = buildEventCorrelationSummary(records).slice(0, 30);
   const recommendations = buildRecommendations(hostSummary, records);
   const totalEvents = records.reduce((total, run) => total + run.events.length, 0);
   const vignetteEvents = records.reduce(
     (total, run) => total + run.events.filter((event) => event.type === 'vignette-url').length,
-    0
+    0,
   );
 
   const lines: string[] = [
@@ -1042,21 +1064,23 @@ function buildMarkdownReport(
           String(item.failed),
           passRate,
         ];
-      })
+      }),
     ),
     '',
     '## Top Third-Party Hosts',
     '',
     ...renderTable(
       ['Host', 'Requests', 'Classifications', 'Browsers', 'Flows', 'Modes'],
-      hostSummary.slice(0, 20).map((item) => [
-        item.hostname,
-        String(item.requests),
-        item.classifications.join(', '),
-        item.browsers.join(', '),
-        item.flows.join(', '),
-        item.modes.join(', '),
-      ])
+      hostSummary
+        .slice(0, 20)
+        .map((item) => [
+          item.hostname,
+          String(item.requests),
+          item.classifications.join(', '),
+          item.browsers.join(', '),
+          item.flows.join(', '),
+          item.modes.join(', '),
+        ]),
     ),
     '',
     '## Likely Ad-Related Hosts',
@@ -1068,7 +1092,7 @@ function buildMarkdownReport(
         String(item.requests),
         item.browsers.join(', '),
         item.flows.join(', '),
-      ])
+      ]),
     ),
     '',
     '## Third-Party Document/Frame Navigation Requests',
@@ -1085,7 +1109,7 @@ function buildMarkdownReport(
         String(item.responseStatus ?? ''),
         item.initiatorType ?? '',
         item.requestUrl,
-      ])
+      ]),
     ),
     '',
     '## Correlation With Vignette/Overlay Events',
@@ -1100,7 +1124,7 @@ function buildMarkdownReport(
         item.eventType,
         item.timestampIso,
         item.correlatedRequests.map((request) => request.hostname).join(', '),
-      ])
+      ]),
     ),
     '',
     '## First-Pass Candidates',
@@ -1144,7 +1168,7 @@ async function main(): Promise<void> {
         for (const flow of options.flows) {
           for (let runIndex = 1; runIndex <= options.runs; runIndex += 1) {
             console.log(
-              `[spike] browser=${browserName} mode=${mode} flow=${flow} run=${String(runIndex)}/${String(options.runs)}`
+              `[spike] browser=${browserName} mode=${mode} flow=${flow} run=${String(runIndex)}/${String(options.runs)}`,
             );
             const artifact = await executeRun(
               browser,
@@ -1153,7 +1177,7 @@ async function main(): Promise<void> {
               flow,
               mode,
               runIndex,
-              options.outputRoot
+              options.outputRoot,
             );
             allArtifacts.push(artifact);
           }

@@ -51,10 +51,10 @@ export class ProductCatalogSection {
   async getVisibleProductIds() {
     const productIds = await this.page
       .locator('.features_items .productinfo a.add-to-cart')
-      .evaluateAll(elements =>
+      .evaluateAll((elements) =>
         elements
-          .map(element => element.getAttribute('data-product-id'))
-          .filter((value): value is string => Boolean(value))
+          .map((element) => element.getAttribute('data-product-id'))
+          .filter((value): value is string => Boolean(value)),
       );
 
     return [...new Set(productIds)];
@@ -65,7 +65,7 @@ export class ProductCatalogSection {
     expect(visibleProductIds.length).toBeGreaterThan(0);
 
     for (const productId of visibleProductIds) {
-      const product = products.find(item => item.id === Number(productId));
+      const product = products.find((item) => item.id === Number(productId));
 
       expect(product, `Product with id ${productId} was not found in API response`).toBeTruthy();
       expect(product!.brand).toBe(brandName);
@@ -75,13 +75,13 @@ export class ProductCatalogSection {
   async verifyVisibleProductsMatchCategory(
     products: ProductApiModel[],
     categoryName: string,
-    subcategoryName: string
+    subcategoryName: string,
   ) {
     const visibleProductIds = await this.getVisibleProductIds();
     expect(visibleProductIds.length).toBeGreaterThan(0);
 
     for (const productId of visibleProductIds) {
-      const product = products.find(item => item.id === Number(productId));
+      const product = products.find((item) => item.id === Number(productId));
 
       expect(product, `Product with id ${productId} was not found in API response`).toBeTruthy();
       expect(product!.category.usertype.usertype).toBe(categoryName);
@@ -96,7 +96,10 @@ export class ProductCatalogSection {
 
   async addProductToCartByNumber(productNumber: number, handleCommonAds: () => Promise<void>) {
     await handleCommonAds();
-    await this.page.locator('.features_items .productinfo a.add-to-cart').nth(productNumber - 1).click();
+    await this.page
+      .locator('.features_items .productinfo a.add-to-cart')
+      .nth(productNumber - 1)
+      .click();
   }
 
   async continueShopping(handleCommonAds: () => Promise<void>) {

@@ -2,10 +2,11 @@ import { User } from '../../data/user';
 import { LoginPage } from '../../pages/loginPage';
 import { test } from '../../utils/fixtures';
 
-
 test.describe('Login tests', () => {
-  test(`E2E-2: Login User with correct email and password @smoke @critical`, 
-    async ({ page, managedUser }) => {
+  test(`E2E-2: Login User with correct email and password @smoke @critical`, async ({
+    page,
+    managedUser,
+  }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.login(managedUser);
@@ -15,7 +16,10 @@ test.describe('Login tests', () => {
     });
   });
 
-  test('E2E-3: Login User with incorrect email and password @high', async ({ page, managedUser }) => {
+  test('E2E-3: Login User with incorrect email and password @high', async ({
+    page,
+    managedUser,
+  }) => {
     const loginPage = new LoginPage(page);
     const invalidUser = Object.assign(new User(), managedUser, {
       password: 'WrongPassword123!',
@@ -27,4 +31,4 @@ test.describe('Login tests', () => {
       await loginPage.verifyLoginFailure();
     });
   });
-}); 
+});

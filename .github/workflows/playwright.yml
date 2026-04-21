@@ -2,9 +2,9 @@ name: Playwright Tests
 
 on:
   push:
-     branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-     branches: [ main, master ]
+    branches: [main, master]
   schedule:
     - cron: '0 2 * * *' # 02:00
   workflow_dispatch:
@@ -21,143 +21,147 @@ jobs:
       BASE_URL: ${{ secrets.BASE_URL }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 2
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Get Playwright version
-      run: echo "PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")" >> $GITHUB_ENV
-    - name: Cache Playwright Browsers
-      uses: actions/cache@v4
-      id: playwright-cache
-      with:
-        path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-    - name: Install Playwright Browsers
-      if: steps.playwright-cache.outputs.cache-hit != 'true'
-      run: npx playwright install --with-deps
-    - name: Install Playwright Operating System Dependencies
-      if: steps.playwright-cache.outputs.cache-hit == 'true'
-      run: npx playwright install-deps
-    - name: Get changed test files
-      id: changed
-      if: github.event_name == 'push' || github.event_name == 'pull_request'
-      run: |
-        if [ "${{ github.event_name }}" == "pull_request" ]; then
-          BASE=${{ github.event.pull_request.base.sha }}
-        else
-          BASE=HEAD~1
-        fi
-        CHANGED=$(git diff --name-only $BASE HEAD | grep 'tests/.*\.spec\.ts' | tr '\n' ' ')
-        echo "tests=$CHANGED" >> $GITHUB_OUTPUT
-    - name: Run Smoke + Changed Tests
-      if: github.event_name == 'push' || github.event_name == 'pull_request'
-      run: |
-        # Smoke api project separately, then browser e2e.
-        npx playwright test --grep @smoke --project=api
-        mv results.xml results-api.xml
-        npx playwright test --grep @smoke --project=chromium --project=firefox --project=webkit
-        mv results.xml results-e2e.xml
-        # Run changed specs when present.
-        if [ -n "${{ steps.changed.outputs.tests }}" ]; then
-          npx playwright test ${{ steps.changed.outputs.tests }}
-          mv results.xml results-changed.xml
-        fi
-    - name: Run Full Test Suite
-      if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
-      run: |
-        npm run test:full || true
-        mv results.xml results-full.xml
-    - name: Publish Test Report to Summary
-      uses: mikepenz/action-junit-report@v4
-      if: always()
-      with:
-        report_paths: 'results-*.xml'
-        detailed_summary: true
-        include_passed: true
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 7
-    - name: Parse Test Results
-      id: results
-      if: always()
-      run: |
-        if ls results-*.xml 1> /dev/null 2>&1; then
-          TOTAL=$(grep -h 'tests=' results-*.xml | grep -oP 'tests="\K[0-9]+' | awk '{s+=$1} END {print s}')
-          FAILURES=$(grep -h 'failures=' results-*.xml | grep -oP 'failures="\K[0-9]+' | awk '{s+=$1} END {print s}')
-          SKIPPED=$(grep -h 'skipped=' results-*.xml | grep -oP 'skipped="\K[0-9]+' | awk '{s+=$1} END {print s}')
-          PASSED=$((TOTAL - FAILURES - SKIPPED))
-          echo "total=$TOTAL" >> $GITHUB_OUTPUT
-          echo "failed=$FAILURES" >> $GITHUB_OUTPUT
-          echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
-          echo "passed=$PASSED" >> $GITHUB_OUTPUT
-        else
-          echo "total=0" >> $GITHUB_OUTPUT
-          echo "failed=0" >> $GITHUB_OUTPUT
-          echo "skipped=0" >> $GITHUB_OUTPUT
-          echo "passed=0" >> $GITHUB_OUTPUT
-        fi
-    - name: Determine Mail Status
-      id: mail_status
-      if: always()
-      env:
-        JOB_STATUS: ${{ job.status }}
-        TOTAL: ${{ steps.results.outputs.total }}
-        FAILED: ${{ steps.results.outputs.failed }}
-      run: |
-        if [ "$JOB_STATUS" != "success" ]; then
-          echo "subject_status=FAILED" >> $GITHUB_OUTPUT
-          echo "status_label=&#x274C; FAILED" >> $GITHUB_OUTPUT
-        elif [ "${FAILED:-0}" -gt 0 ]; then
-          echo "subject_status=FAILED" >> $GITHUB_OUTPUT
-          echo "status_label=&#x274C; FAILED" >> $GITHUB_OUTPUT
-        elif [ "${TOTAL:-0}" -eq 0 ]; then
-          echo "subject_status=NO_RESULTS" >> $GITHUB_OUTPUT
-          echo "status_label=&#x26A0;&#xFE0F; NO RESULTS" >> $GITHUB_OUTPUT
-        else
-          echo "subject_status=PASSED" >> $GITHUB_OUTPUT
-          echo "status_label=&#x2705; PASSED" >> $GITHUB_OUTPUT
-        fi
-    - name: Send Custom Mail
-      if: always()
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        username: ${{ secrets.MAIL_USERNAME }}
-        password: ${{ secrets.MAIL_PASSWORD }}
-        subject: "QA Report: ${{ github.workflow }} - ${{ steps.mail_status.outputs.subject_status }} [${{ github.ref_name }}]"
-        to: olga.butkalyuk@gmail.com
-        from: Playwright Automation
-        html_body: |
-          <h3>Test Results Summary</h3>
-          <table cellpadding="6" cellspacing="0">
-            <tr><td><b>Workflow:</b></td><td>${{ github.workflow }}</td></tr>
-            <tr><td><b>Status:</b></td><td>${{ steps.mail_status.outputs.status_label }}</td></tr>
-            <tr><td><b>Trigger:</b></td><td>${{ github.event_name }}</td></tr>
-            <tr><td><b>Branch:</b></td><td>${{ github.ref_name }}</td></tr>
-            <tr><td><b>Commit:</b></td><td><a href="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}">${{ github.sha }}</a></td></tr>
-          </table>
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Check formatting
+        run: npm run format:check
+      - name: Lint
+        run: npm run lint
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")" >> $GITHUB_ENV
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+      - name: Install Playwright Operating System Dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
+      - name: Get changed test files
+        id: changed
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BASE=${{ github.event.pull_request.base.sha }}
+          else
+            BASE=HEAD~1
+          fi
+          CHANGED=$(git diff --name-only $BASE HEAD | grep 'tests/.*\.spec\.ts' | tr '\n' ' ')
+          echo "tests=$CHANGED" >> $GITHUB_OUTPUT
+      - name: Run Smoke + Changed Tests
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
+        run: |
+          # Smoke api project separately, then browser e2e.
+          npx playwright test --grep @smoke --project=api
+          mv results.xml results-api.xml
+          npx playwright test --grep @smoke --project=chromium --project=firefox --project=webkit
+          mv results.xml results-e2e.xml
+          # Run changed specs when present.
+          if [ -n "${{ steps.changed.outputs.tests }}" ]; then
+            npx playwright test ${{ steps.changed.outputs.tests }}
+            mv results.xml results-changed.xml
+          fi
+      - name: Run Full Test Suite
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+        run: |
+          npm run test:full || true
+          mv results.xml results-full.xml
+      - name: Publish Test Report to Summary
+        uses: mikepenz/action-junit-report@v4
+        if: always()
+        with:
+          report_paths: 'results-*.xml'
+          detailed_summary: true
+          include_passed: true
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+      - name: Parse Test Results
+        id: results
+        if: always()
+        run: |
+          if ls results-*.xml 1> /dev/null 2>&1; then
+            TOTAL=$(grep -h 'tests=' results-*.xml | grep -oP 'tests="\K[0-9]+' | awk '{s+=$1} END {print s}')
+            FAILURES=$(grep -h 'failures=' results-*.xml | grep -oP 'failures="\K[0-9]+' | awk '{s+=$1} END {print s}')
+            SKIPPED=$(grep -h 'skipped=' results-*.xml | grep -oP 'skipped="\K[0-9]+' | awk '{s+=$1} END {print s}')
+            PASSED=$((TOTAL - FAILURES - SKIPPED))
+            echo "total=$TOTAL" >> $GITHUB_OUTPUT
+            echo "failed=$FAILURES" >> $GITHUB_OUTPUT
+            echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
+            echo "passed=$PASSED" >> $GITHUB_OUTPUT
+          else
+            echo "total=0" >> $GITHUB_OUTPUT
+            echo "failed=0" >> $GITHUB_OUTPUT
+            echo "skipped=0" >> $GITHUB_OUTPUT
+            echo "passed=0" >> $GITHUB_OUTPUT
+          fi
+      - name: Determine Mail Status
+        id: mail_status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+          TOTAL: ${{ steps.results.outputs.total }}
+          FAILED: ${{ steps.results.outputs.failed }}
+        run: |
+          if [ "$JOB_STATUS" != "success" ]; then
+            echo "subject_status=FAILED" >> $GITHUB_OUTPUT
+            echo "status_label=&#x274C; FAILED" >> $GITHUB_OUTPUT
+          elif [ "${FAILED:-0}" -gt 0 ]; then
+            echo "subject_status=FAILED" >> $GITHUB_OUTPUT
+            echo "status_label=&#x274C; FAILED" >> $GITHUB_OUTPUT
+          elif [ "${TOTAL:-0}" -eq 0 ]; then
+            echo "subject_status=NO_RESULTS" >> $GITHUB_OUTPUT
+            echo "status_label=&#x26A0;&#xFE0F; NO RESULTS" >> $GITHUB_OUTPUT
+          else
+            echo "subject_status=PASSED" >> $GITHUB_OUTPUT
+            echo "status_label=&#x2705; PASSED" >> $GITHUB_OUTPUT
+          fi
+      - name: Send Custom Mail
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: 'QA Report: ${{ github.workflow }} - ${{ steps.mail_status.outputs.subject_status }} [${{ github.ref_name }}]'
+          to: olga.butkalyuk@gmail.com
+          from: Playwright Automation
+          html_body: |
+            <h3>Test Results Summary</h3>
+            <table cellpadding="6" cellspacing="0">
+              <tr><td><b>Workflow:</b></td><td>${{ github.workflow }}</td></tr>
+              <tr><td><b>Status:</b></td><td>${{ steps.mail_status.outputs.status_label }}</td></tr>
+              <tr><td><b>Trigger:</b></td><td>${{ github.event_name }}</td></tr>
+              <tr><td><b>Branch:</b></td><td>${{ github.ref_name }}</td></tr>
+              <tr><td><b>Commit:</b></td><td><a href="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}">${{ github.sha }}</a></td></tr>
+            </table>
 
-          <h3>Test Statistics</h3>
-          <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse">
-            <tr style="background:#f0f0f0">
-              <th>Total</th><th>&#x2705; Passed</th><th>&#x23ED;&#xFE0F; Skipped</th><th>&#x274C; Failed</th>
-            </tr>
-            <tr style="text-align:center">
-              <td>${{ steps.results.outputs.total }}</td>
-              <td style="color:green">${{ steps.results.outputs.passed }}</td>
-              <td>${{ steps.results.outputs.skipped }}</td>
-              <td style="color:${{ steps.results.outputs.failed != '0' && 'red' || 'green' }}">${{ steps.results.outputs.failed }}</td>
-            </tr>
-          </table>
+            <h3>Test Statistics</h3>
+            <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse">
+              <tr style="background:#f0f0f0">
+                <th>Total</th><th>&#x2705; Passed</th><th>&#x23ED;&#xFE0F; Skipped</th><th>&#x274C; Failed</th>
+              </tr>
+              <tr style="text-align:center">
+                <td>${{ steps.results.outputs.total }}</td>
+                <td style="color:green">${{ steps.results.outputs.passed }}</td>
+                <td>${{ steps.results.outputs.skipped }}</td>
+                <td style="color:${{ steps.results.outputs.failed != '0' && 'red' || 'green' }}">${{ steps.results.outputs.failed }}</td>
+              </tr>
+            </table>
 
-          <p><b>Run Details:</b> <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to see detailed summary</a></p>
-          <p><i>Check GitHub Artifacts for full HTML report with screenshots. Artifacts are available for 7 days.</i></p>
+            <p><b>Run Details:</b> <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to see detailed summary</a></p>
+            <p><i>Check GitHub Artifacts for full HTML report with screenshots. Artifacts are available for 7 days.</i></p>

@@ -34,7 +34,7 @@ test('E2E-12: Add Products in Cart @high', async ({ page, request }) => {
     expect(response.status()).toBe(200);
     expect(body.responseCode).toBe(200);
 
-    const expectedProducts = productIds.map(id => {
+    const expectedProducts = productIds.map((id) => {
       const product = body.products.find((item: { id: number }) => item.id === Number(id));
       expect(product, `Product with id ${id} was not found in API response`).toBeTruthy();
 

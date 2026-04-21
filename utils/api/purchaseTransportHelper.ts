@@ -2,7 +2,11 @@ import { APIRequestContext, expect, test } from '@playwright/test';
 import { TEST_CARD } from '../../data/payment';
 import { STORE_CURRENCY_PREFIX } from '../../data/product';
 import { User } from '../../data/user';
-import { extractCsrfToken, extractPaymentArtifactIdFromLocation, parseCartProducts } from '../transportHtml';
+import {
+  extractCsrfToken,
+  extractPaymentArtifactIdFromLocation,
+  parseCartProducts,
+} from '../transportHtml';
 import {
   PaymentFormSnapshot,
   PaymentRedirectResult,
@@ -21,7 +25,7 @@ export const purchaseTransportHelper = {
       form?: Record<string, string>;
       headers?: Record<string, string>;
       maxRedirects?: number;
-    }
+    },
   ): Promise<TransportResponseSnapshot> {
     const response = await request.fetch(path, {
       method: options?.method ?? 'GET',
@@ -106,7 +110,11 @@ export const purchaseTransportHelper = {
     });
   },
 
-  async expectCartContainsProduct(request: APIRequestContext, productId: string, expectedQuantity?: number) {
+  async expectCartContainsProduct(
+    request: APIRequestContext,
+    productId: string,
+    expectedQuantity?: number,
+  ) {
     return await test.step(`Transport: Verify cart contains product ${productId}`, async () => {
       const cartHtml = await this.openCartViaTransport(request);
       const products = parseCartProducts(cartHtml);
@@ -211,7 +219,10 @@ export const purchaseTransportHelper = {
       const csrfCookie = await expectCookieValue(request, 'csrftoken');
 
       expect(paymentPage.status()).toBe(200);
-      expect(csrfCookie.length, 'csrftoken cookie should not be empty before payment submit').toBeGreaterThan(0);
+      expect(
+        csrfCookie.length,
+        'csrftoken cookie should not be empty before payment submit',
+      ).toBeGreaterThan(0);
 
       const response = await request.post('/payment', {
         form: {
@@ -243,7 +254,7 @@ export const purchaseTransportHelper = {
 
   async submitPaymentWithCsrfTokenRaw(
     request: APIRequestContext,
-    csrfToken: string
+    csrfToken: string,
   ): Promise<PaymentSubmitObservation> {
     return await test.step('Transport: Submit payment with provided CSRF token', async () => {
       const response = await request.post('/payment', {
@@ -269,12 +280,16 @@ export const purchaseTransportHelper = {
         location,
         contentType: response.headers()['content-type'] ?? '',
         body: await response.text(),
-        paymentArtifactId: /\/payment_done\/\d+/.test(location) ? extractPaymentArtifactIdFromLocation(location) : null,
+        paymentArtifactId: /\/payment_done\/\d+/.test(location)
+          ? extractPaymentArtifactIdFromLocation(location)
+          : null,
       };
     });
   },
 
-  async submitPaymentViaTransportRaw(request: APIRequestContext): Promise<TransportResponseSnapshot> {
+  async submitPaymentViaTransportRaw(
+    request: APIRequestContext,
+  ): Promise<TransportResponseSnapshot> {
     return await test.step('Transport: Submit payment without happy-path assumptions', async () => {
       const paymentPage = await request.get('/payment');
       const paymentHtml = await paymentPage.text();
@@ -330,7 +345,11 @@ export const purchaseTransportHelper = {
     });
   },
 
-  async downloadInvoiceViaTransport(request: APIRequestContext, paymentArtifactId: string, expectedAmount?: string) {
+  async downloadInvoiceViaTransport(
+    request: APIRequestContext,
+    paymentArtifactId: string,
+    expectedAmount?: string,
+  ) {
     return await test.step(`Transport: Download invoice for payment artifact ${paymentArtifactId}`, async () => {
       const response = await request.get(`/download_invoice/${paymentArtifactId}`);
       const body = await response.text();
@@ -345,7 +364,10 @@ export const purchaseTransportHelper = {
     });
   },
 
-  async getExpectedInvoiceAmountForProduct(request: APIRequestContext, productId: string): Promise<string> {
+  async getExpectedInvoiceAmountForProduct(
+    request: APIRequestContext,
+    productId: string,
+  ): Promise<string> {
     return await test.step(`API: Get expected invoice amount for product ${productId}`, async () => {
       const product = await this.getProductById(request, productId);
       return extractAmountFromPrice(product.price);

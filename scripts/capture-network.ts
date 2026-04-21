@@ -312,11 +312,7 @@ async function main(): Promise<void> {
     includeScripts,
   };
 
-  fs.writeFileSync(
-    jsonOutputPath,
-    JSON.stringify({ metadata, records }, null, 2),
-    'utf8'
-  );
+  fs.writeFileSync(jsonOutputPath, JSON.stringify({ metadata, records }, null, 2), 'utf8');
 
   fs.writeFileSync(markdownOutputPath, formatMarkdown(records, metadata), 'utf8');
 

@@ -126,9 +126,9 @@ export const test = base.extend<Fixtures>({
     await use({
       track: (user: User) => {
         userToDelete = user;
-      }
+      },
     });
 
     await apiHelper.deleteUserIfExists(request, userToDelete);
-  }
+  },
 });

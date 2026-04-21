@@ -6,7 +6,10 @@ import { apiHelper } from '../../utils/apiHelper';
 import { disposeApiContext, getApiContext } from '../../utils/apiContext';
 import { User } from '../../data/user';
 
-test('E2E-20: Search Products and Verify Cart After Login @high', async ({ page, request }, testInfo) => {
+test('E2E-20: Search Products and Verify Cart After Login @high', async ({
+  page,
+  request,
+}, testInfo) => {
   test.setTimeout(45_000);
   const productsPage = new ProductsPage(page);
   const cartPage = new CartPage(page);

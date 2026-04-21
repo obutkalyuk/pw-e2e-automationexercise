@@ -22,10 +22,8 @@ export class LoginPage extends BasePage {
     this.signupEmailInput = page.locator('input[data-qa="signup-email"]');
     this.signupButton = page.locator('button[data-qa="signup-button"]');
     this.signupErrorMessage = page.locator('form[action="/signup"] p');
-
-
   }
-  
+
   async goto() {
     await this.page.goto('/login');
     await this.handleCommonAds();
@@ -38,13 +36,11 @@ export class LoginPage extends BasePage {
 
     await this.loginEmailInput.fill(user.email);
     await this.loginPasswordInput.fill(user.password);
-    await this.loginButton.click({force: true});
-    //await expect(this.loginButton).toBeHidden();  
-
+    await this.loginButton.click({ force: true });
+    //await expect(this.loginButton).toBeHidden();
   }
 
   async signUp(user: User) {
-    
     await this.signupNameInput.waitFor({ state: 'visible', timeout: 10000 });
     await this.signupEmailInput.waitFor({ state: 'visible', timeout: 10000 });
     await this.signupButton.waitFor({ state: 'visible', timeout: 10000 });
@@ -52,31 +48,31 @@ export class LoginPage extends BasePage {
     await this.signupNameInput.fill(user.name);
     await this.signupEmailInput.fill(user.email);
     await this.signupButton.click();
-    }
+  }
 
-    async verifyLoginSuccess(user: User) {
-      const loggedInMarker = this.page.locator('.navbar-nav li:has-text("Logged in as")');
-      await expect(loggedInMarker).toBeVisible({  timeout: 20000 });
-      await expect(loggedInMarker).toContainText(user.name);
-    }
+  async verifyLoginSuccess(user: User) {
+    const loggedInMarker = this.page.locator('.navbar-nav li:has-text("Logged in as")');
+    await expect(loggedInMarker).toBeVisible({ timeout: 20000 });
+    await expect(loggedInMarker).toContainText(user.name);
+  }
 
-    async verifyLoginFailure() {
-      await expect(this.loginErrorMessage).toBeVisible({ timeout: 10000 });
-      await expect(this.loginErrorMessage).toContainText('Your email or password is incorrect!');
-      await expect(this.loggedInUserMarker).toBeHidden();
-    }
+  async verifyLoginFailure() {
+    await expect(this.loginErrorMessage).toBeVisible({ timeout: 10000 });
+    await expect(this.loginErrorMessage).toContainText('Your email or password is incorrect!');
+    await expect(this.loggedInUserMarker).toBeHidden();
+  }
 
-    async verifySignupExistingEmailError() {
-      await expect(this.signupErrorMessage).toBeVisible({ timeout: 10000 });
-      await expect(this.signupErrorMessage).toContainText('Email Address already exist!');
-    }
+  async verifySignupExistingEmailError() {
+    await expect(this.signupErrorMessage).toBeVisible({ timeout: 10000 });
+    await expect(this.signupErrorMessage).toContainText('Email Address already exist!');
+  }
 
-    async verifyLogoutSuccess() {
-      await expect(this.page).toHaveURL(/\/login/);
-      await expect(this.loginLink).toBeVisible({ timeout: 10000 });
-      await expect(this.loginEmailInput).toBeVisible({ timeout: 10000 });
-      await expect(this.loginButton).toBeVisible({ timeout: 10000 });
-      await expect(this.loggedInUserMarker).toBeHidden();
-      await expect(this.logoutLink).toBeHidden();
-    }
- }
+  async verifyLogoutSuccess() {
+    await expect(this.page).toHaveURL(/\/login/);
+    await expect(this.loginLink).toBeVisible({ timeout: 10000 });
+    await expect(this.loginEmailInput).toBeVisible({ timeout: 10000 });
+    await expect(this.loginButton).toBeVisible({ timeout: 10000 });
+    await expect(this.loggedInUserMarker).toBeHidden();
+    await expect(this.logoutLink).toBeHidden();
+  }
+}

@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test:smoke": "npx playwright test --grep @smoke",
     "test:full": "npx playwright test",
     "test:api": "npx playwright test --project=api",
@@ -18,7 +22,12 @@
     "@faker-js/faker": "^9.9.0",
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.59.0",
+    "@typescript-eslint/parser": "^8.59.0",
     "dotenv": "^17.3.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.3",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
     "zod": "^4.3.6"

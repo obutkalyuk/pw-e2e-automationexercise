@@ -8,7 +8,6 @@ export async function getApiContext(): Promise<APIRequestContext> {
   if (!apiContext) {
     apiContext = await playwrightRequest.newContext({
       baseURL: baseURL,
-    
     });
   }
   return apiContext;

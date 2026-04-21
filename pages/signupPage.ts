@@ -22,8 +22,7 @@ export class SignupPage extends BasePage {
   readonly cityInput: Locator;
   readonly zipcodeInput: Locator;
   readonly mobileNumberInput: Locator;
-  readonly createAccountButton: Locator; 
-  
+  readonly createAccountButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -47,7 +46,6 @@ export class SignupPage extends BasePage {
     this.zipcodeInput = page.locator('input[data-qa="zipcode"]');
     this.mobileNumberInput = page.locator('input[data-qa="mobile_number"]');
     this.createAccountButton = page.locator('div.login-form button[data-qa="create-account"]');
-
   }
 
   async selectTitle(title: 'Mr.' | 'Mrs.') {
@@ -103,14 +101,14 @@ export class SignupPage extends BasePage {
     await this.cityInput.fill(user.city);
     await this.zipcodeInput.fill(user.zipcode);
     await this.mobileNumberInput.fill(user.mobileNumber);
-    await this.createAccountButton.click({force: true}); 
+    await this.createAccountButton.click({ force: true });
     await this.handleCommonAds(); // Handle any ads that may appear after account creation
-  }   
+  }
 
   async verifyAccountCreation() {
     await expect(this.page).toHaveURL(/.*account_created/, { timeout: 10000 });
     const successMessage = this.page.locator('h2:has-text("Account Created!")');
-    await expect(successMessage).toBeVisible({  timeout: 10000 });
+    await expect(successMessage).toBeVisible({ timeout: 10000 });
     await this.page.locator('a[data-qa="continue-button"]').click();
-  } 
- }
+  }
+}

@@ -3,8 +3,13 @@ import { test } from '../../../utils/fixtures';
 import { apiHelper } from '../../../utils/apiHelper';
 
 test.describe('Broken Purchase Chain Coverage', () => {
-  test('[API-19][TR-10] Checkout without login should not expose an active checkout step @critical', async ({ request }) => {
-    test.fail(true, 'Known defect (#17): anonymous checkout is reachable and renders checkout content instead of gating the flow.');
+  test('[API-19][TR-10] Checkout without login should not expose an active checkout step @critical', async ({
+    request,
+  }) => {
+    test.fail(
+      true,
+      'Known defect (#17): anonymous checkout is reachable and renders checkout content instead of gating the flow.',
+    );
 
     const productId = '1';
 
@@ -22,8 +27,14 @@ test.describe('Broken Purchase Chain Coverage', () => {
     expect(checkoutResponse.body).not.toMatch(/payment_done\/\d+/);
   });
 
-  test('[API-20][TR-11] Payment without checkout should not create an order @critical', async ({ request, managedUser }) => {
-    test.fail(true, 'Known defect (#18): payment submission succeeds without a checkout transition and creates an order-completion artifact.');
+  test('[API-20][TR-11] Payment without checkout should not create an order @critical', async ({
+    request,
+    managedUser,
+  }) => {
+    test.fail(
+      true,
+      'Known defect (#18): payment submission succeeds without a checkout transition and creates an order-completion artifact.',
+    );
 
     const productId = '1';
 
@@ -42,8 +53,14 @@ test.describe('Broken Purchase Chain Coverage', () => {
     expect(paymentSubmit.location).not.toMatch(/\/payment_done\/\d+/);
   });
 
-  test('[API-21][TR-12] Checkout after logout should invalidate the previous checkout state @high', async ({ request, managedUser }) => {
-    test.fail(true, 'Known defect (#19): checkout remains directly accessible after logout and still renders checkout content.');
+  test('[API-21][TR-12] Checkout after logout should invalidate the previous checkout state @high', async ({
+    request,
+    managedUser,
+  }) => {
+    test.fail(
+      true,
+      'Known defect (#19): checkout remains directly accessible after logout and still renders checkout content.',
+    );
 
     const productId = '1';
 
@@ -64,8 +81,13 @@ test.describe('Broken Purchase Chain Coverage', () => {
     expect(paymentAfterLogout.body).not.toContain('Payment');
   });
 
-  test('[API-22][TR-13] Payment without login should not create a success artifact @critical', async ({ request }) => {
-    test.fail(true, 'Known defect (#20): anonymous payment submission creates payment_done/0 instead of blocking the transition.');
+  test('[API-22][TR-13] Payment without login should not create a success artifact @critical', async ({
+    request,
+  }) => {
+    test.fail(
+      true,
+      'Known defect (#20): anonymous payment submission creates payment_done/0 instead of blocking the transition.',
+    );
 
     const productId = '1';
 

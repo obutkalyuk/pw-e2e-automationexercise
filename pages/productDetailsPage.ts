@@ -51,7 +51,7 @@ export class ProductDetailsPage extends BasePage {
   async verifyProductDetailsContent(product: ProductApiModel) {
     await expect(this.productName).toHaveText(product.name);
     await expect(this.categoryText).toContainText(
-      `Category: ${product.category.usertype.usertype} > ${product.category.category}`
+      `Category: ${product.category.usertype.usertype} > ${product.category.category}`,
     );
     await expect(this.priceText).toHaveText(product.price);
     await expect(this.availabilityText).toContainText('In Stock');

@@ -24,13 +24,21 @@ export class User {
 
   static generateRandom(): User {
     const gender = faker.helpers.arrayElement(['Mr.', 'Mrs.']);
-    const country = faker.helpers.arrayElement(['India','United States', 'Canada', 'Australia', 'Israel','New Zealand', 'Singapore']);
+    const country = faker.helpers.arrayElement([
+      'India',
+      'United States',
+      'Canada',
+      'Australia',
+      'Israel',
+      'New Zealand',
+      'Singapore',
+    ]);
     const firstName = faker.person.firstName();
     const lastName = faker.person.lastName();
     const u = new User();
-    const timestamp = new Date().toISOString().replace(/[:.-]/g, ''); 
+    const timestamp = new Date().toISOString().replace(/[:.-]/g, '');
     u.name = `user${Math.floor(Math.random() * 10000)}`;
-    u.email = `qa_${timestamp}_${Math.floor(Math.random() * 1000)}@example.com`; 
+    u.email = `qa_${timestamp}_${Math.floor(Math.random() * 1000)}@example.com`;
     u.password = 'Test1234';
     u.title = gender;
     u.dayOfBirth = faker.number.int({ min: 1, max: 28 }).toString();
@@ -46,7 +54,7 @@ export class User {
     u.state = faker.location.state();
     u.city = faker.location.city();
     u.zipcode = faker.location.zipCode();
-    u.mobileNumber = faker.phone.number({style:"national"});
+    u.mobileNumber = faker.phone.number({ style: 'national' });
     return u;
   }
   toApiForm() {
@@ -54,7 +62,7 @@ export class User {
       name: this.name,
       email: this.email,
       password: this.password,
-      title: this.title.replace('.', ''), 
+      title: this.title.replace('.', ''),
       birth_date: this.dayOfBirth,
       birth_month: this.monthOfBirth,
       birth_year: this.yearOfBirth,
@@ -67,7 +75,7 @@ export class User {
       zipcode: this.zipcode,
       state: this.state,
       city: this.city,
-      mobile_number: this.mobileNumber
+      mobile_number: this.mobileNumber,
     };
   }
 }

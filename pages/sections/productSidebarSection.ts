@@ -44,8 +44,8 @@ export class ProductSidebarSection extends BasePage {
   private async waitForUrlOrVignette(targetUrlPattern: RegExp, timeout = 15_000) {
     try {
       await this.page.waitForURL(
-        url => targetUrlPattern.test(url.toString()) || /#google_vignette$/.test(url.toString()),
-        { timeout }
+        (url) => targetUrlPattern.test(url.toString()) || /#google_vignette$/.test(url.toString()),
+        { timeout },
       );
     } catch {
       await expect(this.page).toHaveURL(targetUrlPattern);
@@ -58,8 +58,14 @@ export class ProductSidebarSection extends BasePage {
     await this.waitForUrlOrVignette(targetUrlPattern);
   }
 
-  private async clickSubcategoryLinkAndWaitForNavigation(subcategoryLink: Locator, categoryId: string) {
-    await this.clickLinkAndWaitForNavigation(subcategoryLink, this.getCategoryUrlPattern(categoryId));
+  private async clickSubcategoryLinkAndWaitForNavigation(
+    subcategoryLink: Locator,
+    categoryId: string,
+  ) {
+    await this.clickLinkAndWaitForNavigation(
+      subcategoryLink,
+      this.getCategoryUrlPattern(categoryId),
+    );
   }
 
   private async clickBrandLinkAndWaitForNavigation(brandLink: Locator, brandName: string) {
@@ -70,7 +76,7 @@ export class ProductSidebarSection extends BasePage {
     link: Locator,
     targetUrlPattern: RegExp,
     isOnTargetUrl: () => boolean,
-    adHandler?: () => Promise<void>
+    adHandler?: () => Promise<void>,
   ) {
     if (!this.isOnGoogleVignette()) {
       return;
@@ -78,10 +84,12 @@ export class ProductSidebarSection extends BasePage {
 
     await this.handleAdsIfNeeded(adHandler);
 
-    await this.page.waitForURL(
-      url => targetUrlPattern.test(url.toString()) || !/#google_vignette$/.test(url.toString()),
-      { timeout: 5_000 }
-    ).catch(() => {});
+    await this.page
+      .waitForURL(
+        (url) => targetUrlPattern.test(url.toString()) || !/#google_vignette$/.test(url.toString()),
+        { timeout: 5_000 },
+      )
+      .catch(() => {});
 
     if (!isOnTargetUrl()) {
       await Promise.all([
@@ -108,7 +116,9 @@ export class ProductSidebarSection extends BasePage {
   }
 
   async openBrand(brandName: string, adHandler?: () => Promise<void>) {
-    const brandLink = this.leftSidebar.locator('.brands_products').getByRole('link', { name: new RegExp(brandName, 'i') });
+    const brandLink = this.leftSidebar
+      .locator('.brands_products')
+      .getByRole('link', { name: new RegExp(brandName, 'i') });
 
     await this.clickBrandLinkAndWaitForNavigation(brandLink, brandName);
     await this.handleAdsIfNeeded(adHandler);
@@ -116,7 +126,7 @@ export class ProductSidebarSection extends BasePage {
       brandLink,
       this.getBrandUrlPattern(brandName),
       () => this.isOnBrandUrl(brandName),
-      adHandler
+      adHandler,
     );
   }
 
@@ -137,7 +147,7 @@ export class ProductSidebarSection extends BasePage {
     categoryName: 'Women' | 'Men' | 'Kids',
     subcategoryName: string,
     categoryId: string,
-    adHandler?: () => Promise<void>
+    adHandler?: () => Promise<void>,
   ) {
     const categoryPanel = this.page.locator(`#${categoryName}`);
 
@@ -152,14 +162,16 @@ export class ProductSidebarSection extends BasePage {
       subcategoryLink,
       this.getCategoryUrlPattern(categoryId),
       () => this.isOnCategoryUrl(categoryId),
-      adHandler
+      adHandler,
     );
   }
 
   async verifyCategoryResult(categoryName: string, subcategoryName: string, categoryId: string) {
     await expect(this.page).toHaveURL(this.getCategoryUrlPattern(categoryId));
     await expect(this.breadcrumb).toContainText(`${categoryName} > ${subcategoryName}`);
-    await expect(this.categoryResultTitle).toHaveText(`${categoryName} - ${subcategoryName} Products`);
+    await expect(this.categoryResultTitle).toHaveText(
+      `${categoryName} - ${subcategoryName} Products`,
+    );
   }
 
   async verifyBrandResult(brandName: string) {

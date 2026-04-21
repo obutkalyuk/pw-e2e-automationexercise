@@ -30,7 +30,10 @@ export function extractAmountFromPrice(price: string): string {
   return match![1];
 }
 
-export async function expectCookieValue(request: APIRequestContext, cookieName: string): Promise<string> {
+export async function expectCookieValue(
+  request: APIRequestContext,
+  cookieName: string,
+): Promise<string> {
   const storage = await request.storageState();
   const cookie = storage.cookies.find((item) => item.name === cookieName);
 

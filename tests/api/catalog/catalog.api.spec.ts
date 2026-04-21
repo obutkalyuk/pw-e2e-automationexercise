@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { brandsListResponseSchema, productsListResponseSchema, searchProductResponseSchema } from '../../../data/apiSchemas';
+import {
+  brandsListResponseSchema,
+  productsListResponseSchema,
+  searchProductResponseSchema,
+} from '../../../data/apiSchemas';
 
 test.describe('API Catalog Endpoints', () => {
   test('[API-4] GET /productsList - Get all products list @high', async ({ request }) => {
@@ -14,7 +18,9 @@ test.describe('API Catalog Endpoints', () => {
     }
   });
 
-  test('[API-5] POST /searchProduct - Search for a product @high', async ({ request }, testInfo) => {
+  test('[API-5] POST /searchProduct - Search for a product @high', async ({
+    request,
+  }, testInfo) => {
     const searchTerm = 'dress';
 
     const response = await request.post('/api/searchProduct', {
@@ -45,7 +51,7 @@ test.describe('API Catalog Endpoints', () => {
 
       expect(
         searchableText,
-        `Product "${product.name}" does not look related to search term "${searchTerm}"`
+        `Product "${product.name}" does not look related to search term "${searchTerm}"`,
       ).toContain(searchTerm);
     }
   });
@@ -78,7 +84,9 @@ test.describe('API Catalog Endpoints', () => {
     expect(body.message).toBe('This request method is not supported.');
   });
 
-  test('[API-13] POST /searchProduct - Reject request without search_product @medium', async ({ request }) => {
+  test('[API-13] POST /searchProduct - Reject request without search_product @medium', async ({
+    request,
+  }) => {
     const response = await request.post('/api/searchProduct');
     const body = await response.json();
 

@@ -10,13 +10,15 @@ export class ProductsPage extends BasePage {
   readonly searchedProductsTitle: Locator;
   readonly productCatalog: ProductCatalogSection;
   readonly productSidebar: ProductSidebarSection;
-  
+
   constructor(page: Page) {
     super(page);
     this.searchInput = page.locator('#search_product');
     this.searchButton = page.locator('#submit_search');
     this.productsTitle = page.locator('.features_items .title.text-center').first();
-    this.searchedProductsTitle = page.locator('.features_items .title.text-center', { hasText: 'Searched Products' });
+    this.searchedProductsTitle = page.locator('.features_items .title.text-center', {
+      hasText: 'Searched Products',
+    });
     this.productCatalog = new ProductCatalogSection(page);
     this.productSidebar = new ProductSidebarSection(page);
   }
@@ -67,7 +69,7 @@ export class ProductsPage extends BasePage {
     for (const productName of productNames) {
       expect(
         productName.toLowerCase(),
-        `Product "${productName}" does not contain search term "${searchTerm}"`
+        `Product "${productName}" does not contain search term "${searchTerm}"`,
       ).toContain(searchTerm.toLowerCase());
     }
   }
@@ -91,8 +93,7 @@ export class ProductsPage extends BasePage {
 
   async addMultipleProducts(ids: string[]) {
     for (const id of ids) {
-        await this.addProductById(id);
+      await this.addProductById(id);
     }
   }
- 
- }
+}
