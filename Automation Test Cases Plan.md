@@ -141,7 +141,7 @@ _Session-based HTML/redirect/download request checks_
 | Covered    | E2E-19 | View & Cart Brand Products            | Products / Navigation | E2E                 | Check brand filter and product listing                                                              | tests\e2e\brand-products.spec.ts    |
 | Covered    | E2E-21 | Add review on product                 | Products / Reviews    | E2E                 | Verify review submission and success message; BF-001                                                | tests\e2e\product-review.spec.ts    |
 | Planned    | E2E-22 | Add to cart from Recommended items    | Products / Cart       | E2E                 | Check recommended items section                                                                     |                                     |
-| Covered    | E2E-24 | Download Invoice after purchase order | Orders / Checkout     | E2E (Hybrid)        | API prepares user/cart; UI completes checkout, downloads invoice, verifies file content and amount | tests\e2e\checkout.spec.ts          |
+| Covered    | E2E-24 | Download Invoice after purchase order | Orders / Checkout     | E2E (Hybrid)        | API prepares user/cart; UI completes checkout, downloads invoice, verifies file content and amount  | tests\e2e\checkout.spec.ts          |
 | Planned    | E2E-27 | Delete Account from UI                | User / Account        | E2E                 | Verify delete account flow from navigation menu; E2E-1 covers API-level delete, this covers UI flow |                                     |
 
 ### Low Priority
