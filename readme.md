@@ -112,10 +112,12 @@ qa_questions.md
 
 GitHub Actions is used for regular execution and feedback:
 
-- smoke tests run on push and pull request events to catch regressions early
-- changed test files are executed in regular CI runs when relevant
-- full suite execution is available through scheduled and manual runs
-- reports are published through JUnit summaries, Playwright HTML artifacts, and email notifications
+- PR validation runs three fast checks: `changed-tests`, `smoke`, and `a11y-smoke`
+- `changed-tests` executes only changed spec files when relevant
+- `smoke` covers lightweight API and browser smoke scenarios for core flows
+- `a11y-smoke` is reserved for lightweight accessibility checks without duplicating full E2E coverage
+- full regression runs in a separate `Nightly` workflow on schedule or manual dispatch
+- reports are published through GitHub job summaries, Playwright HTML artifacts, and nightly email notifications
 
 ## How to Run
 
