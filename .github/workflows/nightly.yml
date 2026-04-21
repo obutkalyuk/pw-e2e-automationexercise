@@ -51,13 +51,6 @@ jobs:
             mv results.xml results-full.xml
           fi
           exit $status
-      - name: Publish test report to summary
-        uses: mikepenz/action-junit-report@v4
-        if: always() && hashFiles('results-full.xml') != ''
-        with:
-          report_paths: results-full.xml
-          detailed_summary: true
-          include_passed: true
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
         with:
@@ -84,6 +77,22 @@ jobs:
             echo "skipped=0" >> "$GITHUB_OUTPUT"
             echo "passed=0" >> "$GITHUB_OUTPUT"
           fi
+      - name: Write nightly summary
+        if: always()
+        shell: bash
+        env:
+          TOTAL: ${{ steps.results.outputs.total }}
+          PASSED: ${{ steps.results.outputs.passed }}
+          SKIPPED: ${{ steps.results.outputs.skipped }}
+          FAILED: ${{ steps.results.outputs.failed }}
+        run: |
+          {
+            echo "## test summary"
+            echo
+            echo "| Job | Tests | Passed | Skipped | Failed | Notes |"
+            echo "| --- | ---: | ---: | ---: | ---: | --- |"
+            echo "| full-regression | $TOTAL | $PASSED | $SKIPPED | $FAILED | full suite via npm run test:full |"
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Determine mail status
         id: mail-status
         if: always()

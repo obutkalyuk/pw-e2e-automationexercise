@@ -82,13 +82,52 @@ jobs:
       - name: No changed specs detected
         if: steps.changed.outputs.has-tests != 'true'
         run: echo "No changed spec files found in this diff."
-      - name: Publish test report to summary
-        uses: mikepenz/action-junit-report@v4
-        if: always() && hashFiles('results-changed.xml') != ''
-        with:
-          report_paths: results-changed.xml
-          detailed_summary: true
-          include_passed: true
+      - name: Parse changed test results
+        id: changed-results
+        if: always()
+        shell: bash
+        run: |
+          if [ -f results-changed.xml ]; then
+            total="$(grep -oP 'tests="\K[0-9]+' results-changed.xml | awk '{s+=$1} END {print s+0}')"
+            failures="$(grep -oP 'failures="\K[0-9]+' results-changed.xml | awk '{s+=$1} END {print s+0}')"
+            skipped="$(grep -oP 'skipped="\K[0-9]+' results-changed.xml | awk '{s+=$1} END {print s+0}')"
+            passed="$((total - failures - skipped))"
+            echo "has-results=true" >> "$GITHUB_OUTPUT"
+            echo "total=$total" >> "$GITHUB_OUTPUT"
+            echo "failed=$failures" >> "$GITHUB_OUTPUT"
+            echo "skipped=$skipped" >> "$GITHUB_OUTPUT"
+            echo "passed=$passed" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-results=false" >> "$GITHUB_OUTPUT"
+            echo "total=0" >> "$GITHUB_OUTPUT"
+            echo "failed=0" >> "$GITHUB_OUTPUT"
+            echo "skipped=0" >> "$GITHUB_OUTPUT"
+            echo "passed=0" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Write changed test summary
+        if: always()
+        shell: bash
+        env:
+          HAS_CHANGED_TESTS: ${{ steps.changed.outputs.has-tests }}
+          HAS_RESULTS: ${{ steps.changed-results.outputs.has-results }}
+          TOTAL: ${{ steps.changed-results.outputs.total }}
+          PASSED: ${{ steps.changed-results.outputs.passed }}
+          SKIPPED: ${{ steps.changed-results.outputs.skipped }}
+          FAILED: ${{ steps.changed-results.outputs.failed }}
+        run: |
+          {
+            echo "## test summary"
+            echo
+            echo "| Job | Tests | Passed | Skipped | Failed | Notes |"
+            echo "| --- | ---: | ---: | ---: | ---: | --- |"
+            if [ "$HAS_CHANGED_TESTS" != "true" ]; then
+              echo "| changed-tests | 0 | 0 | 0 | 0 | no changed spec files detected |"
+            elif [ "$HAS_RESULTS" = "true" ]; then
+              echo "| changed-tests | $TOTAL | $PASSED | $SKIPPED | $FAILED | changed specs only |"
+            else
+              echo "| changed-tests | 0 | 0 | 0 | 0 | run completed without junit results |"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
         with:
@@ -156,13 +195,52 @@ jobs:
       - name: Fail smoke job when any smoke segment fails
         if: always() && (steps.smoke-api.outcome != 'success' || steps.smoke-browser.outcome != 'success')
         run: exit 1
-      - name: Publish test report to summary
-        uses: mikepenz/action-junit-report@v4
-        if: always() && hashFiles('results-smoke-*.xml') != ''
-        with:
-          report_paths: results-smoke-*.xml
-          detailed_summary: true
-          include_passed: true
+      - name: Parse smoke test results
+        id: smoke-results
+        if: always()
+        shell: bash
+        run: |
+          if ls results-smoke-*.xml >/dev/null 2>&1; then
+            total="$(grep -h -oP 'tests="\K[0-9]+' results-smoke-*.xml | awk '{s+=$1} END {print s+0}')"
+            failures="$(grep -h -oP 'failures="\K[0-9]+' results-smoke-*.xml | awk '{s+=$1} END {print s+0}')"
+            skipped="$(grep -h -oP 'skipped="\K[0-9]+' results-smoke-*.xml | awk '{s+=$1} END {print s+0}')"
+            passed="$((total - failures - skipped))"
+            echo "has-results=true" >> "$GITHUB_OUTPUT"
+            echo "total=$total" >> "$GITHUB_OUTPUT"
+            echo "failed=$failures" >> "$GITHUB_OUTPUT"
+            echo "skipped=$skipped" >> "$GITHUB_OUTPUT"
+            echo "passed=$passed" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-results=false" >> "$GITHUB_OUTPUT"
+            echo "total=0" >> "$GITHUB_OUTPUT"
+            echo "failed=0" >> "$GITHUB_OUTPUT"
+            echo "skipped=0" >> "$GITHUB_OUTPUT"
+            echo "passed=0" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Write smoke summary
+        if: always()
+        shell: bash
+        env:
+          HAS_RESULTS: ${{ steps.smoke-results.outputs.has-results }}
+          TOTAL: ${{ steps.smoke-results.outputs.total }}
+          PASSED: ${{ steps.smoke-results.outputs.passed }}
+          SKIPPED: ${{ steps.smoke-results.outputs.skipped }}
+          FAILED: ${{ steps.smoke-results.outputs.failed }}
+          API_OUTCOME: ${{ steps.smoke-api.outcome }}
+          BROWSER_OUTCOME: ${{ steps.smoke-browser.outcome }}
+        run: |
+          notes="api=$API_OUTCOME, browser=$BROWSER_OUTCOME"
+          {
+            echo "## test summary"
+            echo
+            echo "| Job | Tests | Passed | Skipped | Failed | Notes |"
+            echo "| --- | ---: | ---: | ---: | ---: | --- |"
+            if [ "$HAS_RESULTS" = "true" ]; then
+              echo "| smoke | $TOTAL | $PASSED | $SKIPPED | $FAILED | $notes |"
+            else
+              echo "| smoke | 0 | 0 | 0 | 0 | no junit results generated |"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
         with:
@@ -211,13 +289,52 @@ jobs:
       - name: Placeholder for a11y smoke tests
         if: steps.a11y.outputs.has-tests != 'true'
         run: echo "No @a11y-smoke tests tagged yet. Job reserved for lightweight accessibility checks."
-      - name: Publish test report to summary
-        uses: mikepenz/action-junit-report@v4
-        if: always() && hashFiles('results-a11y-smoke.xml') != ''
-        with:
-          report_paths: results-a11y-smoke.xml
-          detailed_summary: true
-          include_passed: true
+      - name: Parse a11y smoke results
+        id: a11y-results
+        if: always()
+        shell: bash
+        run: |
+          if [ -f results-a11y-smoke.xml ]; then
+            total="$(grep -oP 'tests="\K[0-9]+' results-a11y-smoke.xml | awk '{s+=$1} END {print s+0}')"
+            failures="$(grep -oP 'failures="\K[0-9]+' results-a11y-smoke.xml | awk '{s+=$1} END {print s+0}')"
+            skipped="$(grep -oP 'skipped="\K[0-9]+' results-a11y-smoke.xml | awk '{s+=$1} END {print s+0}')"
+            passed="$((total - failures - skipped))"
+            echo "has-results=true" >> "$GITHUB_OUTPUT"
+            echo "total=$total" >> "$GITHUB_OUTPUT"
+            echo "failed=$failures" >> "$GITHUB_OUTPUT"
+            echo "skipped=$skipped" >> "$GITHUB_OUTPUT"
+            echo "passed=$passed" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-results=false" >> "$GITHUB_OUTPUT"
+            echo "total=0" >> "$GITHUB_OUTPUT"
+            echo "failed=0" >> "$GITHUB_OUTPUT"
+            echo "skipped=0" >> "$GITHUB_OUTPUT"
+            echo "passed=0" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Write a11y smoke summary
+        if: always()
+        shell: bash
+        env:
+          HAS_A11Y_TESTS: ${{ steps.a11y.outputs.has-tests }}
+          HAS_RESULTS: ${{ steps.a11y-results.outputs.has-results }}
+          TOTAL: ${{ steps.a11y-results.outputs.total }}
+          PASSED: ${{ steps.a11y-results.outputs.passed }}
+          SKIPPED: ${{ steps.a11y-results.outputs.skipped }}
+          FAILED: ${{ steps.a11y-results.outputs.failed }}
+        run: |
+          {
+            echo "## test summary"
+            echo
+            echo "| Job | Tests | Passed | Skipped | Failed | Notes |"
+            echo "| --- | ---: | ---: | ---: | ---: | --- |"
+            if [ "$HAS_A11Y_TESTS" != "true" ]; then
+              echo "| a11y-smoke | 0 | 0 | 0 | 0 | placeholder: no @a11y-smoke tests yet |"
+            elif [ "$HAS_RESULTS" = "true" ]; then
+              echo "| a11y-smoke | $TOTAL | $PASSED | $SKIPPED | $FAILED | lightweight accessibility checks |"
+            else
+              echo "| a11y-smoke | 0 | 0 | 0 | 0 | run completed without junit results |"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
         with:
