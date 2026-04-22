@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "archive:reports": "tsx scripts/archive-playwright-reports.ts",
+    "check:report-tools": "tsx scripts/check-report-tools.ts",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "format": "prettier --write .",

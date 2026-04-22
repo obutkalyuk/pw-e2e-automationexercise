@@ -75,8 +75,20 @@ function padNumber(value: number): string {
   return String(value).padStart(2, '0');
 }
 
-void main().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(message);
-  process.exit(1);
-});
+if (isDirectExecution()) {
+  void main().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(message);
+    process.exit(1);
+  });
+}
+
+function isDirectExecution(): boolean {
+  const executedPath = process.argv[1];
+
+  if (!executedPath) {
+    return false;
+  }
+
+  return path.resolve(executedPath) === path.resolve(__filename);
+}

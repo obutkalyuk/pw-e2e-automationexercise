@@ -114,6 +114,7 @@ qa_questions.md
 GitHub Actions is used for regular execution and feedback:
 
 - PR validation runs three fast checks: `changed-tests`, `smoke`, and `a11y-smoke`
+- PR validation also includes a lightweight guard for report-helper scripts so import-time side effects are caught before merge
 - `changed-tests` executes only changed spec files when relevant
 - `smoke` covers lightweight API and browser smoke scenarios for core flows
 - `a11y-smoke` is reserved for lightweight accessibility checks without duplicating full E2E coverage
@@ -158,6 +159,7 @@ Useful commands:
 
 ```bash
 npm run archive:reports
+npm run check:report-tools
 npm run parse:failures
 npm run parse:failures:dir -- <directory>
 ```
@@ -173,6 +175,7 @@ What these commands do:
 
 - `npm run test:full:archive` runs the full suite and stores the current `results.xml` and `test-results.json` under `artifacts/history/<timestamp>/`
 - `npm run archive:reports` archives the current root-level Playwright reports without starting a new test run
+- `npm run check:report-tools` verifies that the report helper modules can be imported without accidental top-level execution
 - `npm run parse:failures` scans `artifacts/history/` recursively and builds a grouped Markdown summary
 - `npm run parse:failures:dir -- <directory>` lets you analyze a different folder, for example a local collection of CI artifacts
 

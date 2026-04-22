@@ -572,7 +572,19 @@ function formatError(error: unknown): string {
   return String(error);
 }
 
-void main().catch((error: unknown) => {
-  console.error(formatError(error));
-  process.exit(1);
-});
+if (isDirectExecution()) {
+  void main().catch((error: unknown) => {
+    console.error(formatError(error));
+    process.exit(1);
+  });
+}
+
+function isDirectExecution(): boolean {
+  const executedPath = process.argv[1];
+
+  if (!executedPath) {
+    return false;
+  }
+
+  return path.resolve(executedPath) === path.resolve(__filename);
+}

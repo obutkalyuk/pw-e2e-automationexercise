@@ -31,6 +31,8 @@ jobs:
         run: npm run format:check
       - name: Lint
         run: npm run lint
+      - name: Check report tool imports
+        run: npm run check:report-tools
       - name: Get Playwright version
         run: echo "PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_ENV"
       - name: Cache Playwright browsers
