@@ -93,9 +93,9 @@ jobs:
         shell: bash
         run: |
           if [ -f results-changed.xml ]; then
-            total="$(grep -oP 'tests="\K[0-9]+' results-changed.xml | awk '{s+=$1} END {print s+0}')"
-            failures="$(grep -oP 'failures="\K[0-9]+' results-changed.xml | awk '{s+=$1} END {print s+0}')"
-            skipped="$(grep -oP 'skipped="\K[0-9]+' results-changed.xml | awk '{s+=$1} END {print s+0}')"
+            total="$(grep -oPm1 'tests="\K[0-9]+' results-changed.xml || echo 0)"
+            failures="$(grep -oPm1 'failures="\K[0-9]+' results-changed.xml || echo 0)"
+            skipped="$(grep -oPm1 'skipped="\K[0-9]+' results-changed.xml || echo 0)"
             passed="$((total - failures - skipped))"
             echo "has-results=true" >> "$GITHUB_OUTPUT"
             echo "total=$total" >> "$GITHUB_OUTPUT"
@@ -206,9 +206,19 @@ jobs:
         shell: bash
         run: |
           if ls results-smoke-*.xml >/dev/null 2>&1; then
-            total="$(grep -h -oP 'tests="\K[0-9]+' results-smoke-*.xml | awk '{s+=$1} END {print s+0}')"
-            failures="$(grep -h -oP 'failures="\K[0-9]+' results-smoke-*.xml | awk '{s+=$1} END {print s+0}')"
-            skipped="$(grep -h -oP 'skipped="\K[0-9]+' results-smoke-*.xml | awk '{s+=$1} END {print s+0}')"
+            total=0
+            failures=0
+            skipped=0
+
+            for file in results-smoke-*.xml; do
+              file_total="$(grep -oPm1 'tests="\K[0-9]+' "$file" || echo 0)"
+              file_failures="$(grep -oPm1 'failures="\K[0-9]+' "$file" || echo 0)"
+              file_skipped="$(grep -oPm1 'skipped="\K[0-9]+' "$file" || echo 0)"
+              total=$((total + file_total))
+              failures=$((failures + file_failures))
+              skipped=$((skipped + file_skipped))
+            done
+
             passed="$((total - failures - skipped))"
             echo "has-results=true" >> "$GITHUB_OUTPUT"
             echo "total=$total" >> "$GITHUB_OUTPUT"
@@ -275,11 +285,27 @@ jobs:
         id: a11y
         shell: bash
         run: |
-          if rg -n '@a11y-smoke' tests >/dev/null; then
+          if grep -R -n '@a11y-smoke' tests >/dev/null; then
             echo "has-tests=true" >> "$GITHUB_OUTPUT"
           else
             echo "has-tests=false" >> "$GITHUB_OUTPUT"
           fi
+      - name: Get Playwright version
+        if: steps.a11y.outputs.has-tests == 'true'
+        run: echo "PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_ENV"
+      - name: Cache Playwright browsers
+        if: steps.a11y.outputs.has-tests == 'true'
+        uses: actions/cache@v4
+        id: playwright-cache-a11y
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright browsers
+        if: steps.a11y.outputs.has-tests == 'true' && steps.playwright-cache-a11y.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+      - name: Install Playwright operating system dependencies
+        if: steps.a11y.outputs.has-tests == 'true' && steps.playwright-cache-a11y.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
       - name: Run a11y smoke tests
         if: steps.a11y.outputs.has-tests == 'true'
         shell: bash
@@ -300,9 +326,9 @@ jobs:
         shell: bash
         run: |
           if [ -f results-a11y-smoke.xml ]; then
-            total="$(grep -oP 'tests="\K[0-9]+' results-a11y-smoke.xml | awk '{s+=$1} END {print s+0}')"
-            failures="$(grep -oP 'failures="\K[0-9]+' results-a11y-smoke.xml | awk '{s+=$1} END {print s+0}')"
-            skipped="$(grep -oP 'skipped="\K[0-9]+' results-a11y-smoke.xml | awk '{s+=$1} END {print s+0}')"
+            total="$(grep -oPm1 'tests="\K[0-9]+' results-a11y-smoke.xml || echo 0)"
+            failures="$(grep -oPm1 'failures="\K[0-9]+' results-a11y-smoke.xml || echo 0)"
+            skipped="$(grep -oPm1 'skipped="\K[0-9]+' results-a11y-smoke.xml || echo 0)"
             passed="$((total - failures - skipped))"
             echo "has-results=true" >> "$GITHUB_OUTPUT"
             echo "total=$total" >> "$GITHUB_OUTPUT"
