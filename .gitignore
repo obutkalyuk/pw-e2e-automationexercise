@@ -2,8 +2,7 @@
 # Playwright
 node_modules/
 /scripts/.generated/
-/artifacts/network-captures/
-/artifacts/ad-traffic-spike/
+/artifacts/
 /test-results/
 /playwright-report/
 /blob-report/
@@ -13,9 +12,7 @@ test-results.json
 .env
 results.xml
 *.log
-full-run.log
 test_log.txt
 test1_log.txt
-creation.log
 structure.txt
 tree.txt

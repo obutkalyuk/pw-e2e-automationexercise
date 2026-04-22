@@ -45,17 +45,30 @@ jobs:
         shell: bash
         run: |
           set +e
-          npm run test:full
+          npm run test:full:archive
           status=$?
           if [ -f results.xml ]; then
             mv results.xml results-full.xml
           fi
           exit $status
+      - name: Build failure summary
+        if: always()
+        run: npm run parse:failures
       - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
+        if: ${{ always() && !cancelled() && hashFiles('playwright-report/**') != '' }}
         with:
           name: playwright-report-nightly
           path: playwright-report/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && !cancelled() }}
+        with:
+          name: playwright-logs-nightly
+          path: |
+            results*.xml
+            test-results.json
+            test-results/
+            artifacts/history/
           retention-days: 7
       - name: Parse test results
         id: results
