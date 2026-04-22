@@ -2,6 +2,17 @@ import { Download, Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './base.page';
 import { CardDetails } from '../data/payment.data';
 
+export type InvoiceArtifact =
+  | {
+      kind: 'download';
+      content: string;
+      suggestedFileName: string;
+    }
+  | {
+      kind: 'inline';
+      content: string;
+    };
+
 export class PaymentPage extends BasePage {
   readonly nameOnCardInput: Locator;
   readonly cardNumberInput: Locator;
@@ -52,6 +63,39 @@ export class PaymentPage extends BasePage {
     const downloadPromise = this.page.waitForEvent('download');
     await this.downloadInvoiceButton.click();
     return await downloadPromise;
+  }
+
+  async getInvoiceArtifact(): Promise<InvoiceArtifact> {
+    const browserName = this.page.context().browser()?.browserType().name();
+
+    if (browserName === 'webkit') {
+      await this.clickAndWaitForUrl(this.downloadInvoiceButton, /\/download_invoice\/\d+/);
+      const invoiceContent = (await this.page.locator('body').textContent())?.trim() ?? '';
+
+      return {
+        kind: 'inline',
+        content: invoiceContent,
+      };
+    }
+
+    const download = await this.downloadInvoice();
+    const suggestedFileName = download.suggestedFilename();
+    const stream = await download.createReadStream();
+
+    if (!stream) {
+      throw new Error('Downloaded invoice stream is not available');
+    }
+
+    const chunks: Buffer[] = [];
+    for await (const chunk of stream) {
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+
+    return {
+      kind: 'download',
+      content: Buffer.concat(chunks).toString('utf-8'),
+      suggestedFileName,
+    };
   }
 
   async continueAfterOrderPlaced() {

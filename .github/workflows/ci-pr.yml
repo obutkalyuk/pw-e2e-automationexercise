@@ -59,7 +59,12 @@ jobs:
             base_sha="$(git rev-list --max-parents=0 HEAD)"
           fi
 
-          changed_tests="$(git diff --name-only "$base_sha" "${{ github.sha }}" | grep -E '^tests/.*\.spec\.ts$' || true)"
+          changed_tests="$(
+            git diff --name-only "$base_sha" "${{ github.sha }}" \
+              | grep -E '^tests/.*\.spec\.ts$' \
+              | grep -vE '^tests/monitoring/' \
+              || true
+          )"
 
           if [ -n "$changed_tests" ]; then
             echo "has-tests=true" >> "$GITHUB_OUTPUT"

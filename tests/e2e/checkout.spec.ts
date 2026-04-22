@@ -141,7 +141,8 @@ test.describe('Place Order tests', () => {
     page,
     request,
     managedUser,
-  }, testInfo) => {
+    browserName,
+  }) => {
     test.setTimeout(60_000);
     const loginPage = new LoginPage(page);
     const cartPage = new CartPage(page);
@@ -176,27 +177,20 @@ test.describe('Place Order tests', () => {
     });
 
     await test.step('Download invoice and verify its contents', async () => {
-      const download = await paymentPage.downloadInvoice();
-      const suggestedFileName = download.suggestedFilename();
-      const downloadPath = testInfo.outputPath(suggestedFileName);
+      const orderPlacedUrl = page.url();
+      const invoiceArtifact = await paymentPage.getInvoiceArtifact();
 
-      await download.saveAs(downloadPath);
+      if (invoiceArtifact.kind === 'download') {
+        expect(invoiceArtifact.suggestedFileName.toLowerCase()).toContain('invoice');
+      }
 
-      const invoiceContent = await download.createReadStream().then(async (stream) => {
-        if (!stream) {
-          throw new Error('Downloaded invoice stream is not available');
-        }
+      expect(invoiceArtifact.content).toContain('Your total purchase amount is');
+      expect(extractInvoiceAmount(invoiceArtifact.content)).toBe(expectedAmount);
 
-        const chunks: Buffer[] = [];
-        for await (const chunk of stream) {
-          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
-        }
-        return Buffer.concat(chunks).toString('utf-8');
-      });
-
-      expect(suggestedFileName.toLowerCase()).toContain('invoice');
-      expect(invoiceContent).toContain('Your total purchase amount is');
-      expect(extractInvoiceAmount(invoiceContent)).toBe(expectedAmount);
+      if (invoiceArtifact.kind === 'inline' && browserName === 'webkit') {
+        await page.goto(orderPlacedUrl);
+        await paymentPage.verifyOrderPlaced();
+      }
     });
 
     await test.step('Continue and delete account via UI', async () => {
