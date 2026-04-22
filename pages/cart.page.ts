@@ -6,6 +6,8 @@ import { CartTableSection } from './sections/cart-table.section';
 export class CartPage extends BasePage {
   readonly cartRows: Locator;
   readonly proceedToCheckoutButton: Locator;
+  readonly checkoutModal: Locator;
+  readonly loginFromCheckoutModalLink: Locator;
   readonly cartTable: CartTableSection;
 
   constructor(page: Page) {
@@ -13,6 +15,8 @@ export class CartPage extends BasePage {
     this.cartTable = new CartTableSection(page);
     this.cartRows = this.cartTable.rows;
     this.proceedToCheckoutButton = this.page.locator('a.btn.btn-default.check_out');
+    this.checkoutModal = this.page.locator('div#checkoutModal');
+    this.loginFromCheckoutModalLink = this.checkoutModal.locator('a[href="/login"]');
   }
 
   async getProducts(): Promise<CartProduct[]> {
@@ -24,12 +28,14 @@ export class CartPage extends BasePage {
   }
 
   async loginFromModal() {
-    await this.page.locator('div#checkoutModal a[href="/login"]').click();
-    await this.page.waitForURL('**/login');
+    await this.loginFromCheckoutModalLink.waitFor({ state: 'visible', timeout: 15000 });
+    await this.clickAndWaitForUrl(this.loginFromCheckoutModalLink, '**/login');
   }
 
   async deleteProduct(id: string) {
-    await this.page.locator(`a.cart_quantity_delete[data-product-id="${id}"]`).click();
+    const deleteProductLink = this.page.locator(`a.cart_quantity_delete[data-product-id="${id}"]`);
+
+    await this.clickWhenReady(deleteProductLink);
     await expect(this.page.locator(`tr#product-${id}`)).toBeHidden();
   }
 

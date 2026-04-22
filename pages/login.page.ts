@@ -36,8 +36,7 @@ export class LoginPage extends BasePage {
 
     await this.loginEmailInput.fill(user.email);
     await this.loginPasswordInput.fill(user.password);
-    await this.loginButton.click({ force: true });
-    //await expect(this.loginButton).toBeHidden();
+    await this.clickWhenReady(this.loginButton);
   }
 
   async signUp(user: User) {
@@ -47,7 +46,7 @@ export class LoginPage extends BasePage {
 
     await this.signupNameInput.fill(user.name);
     await this.signupEmailInput.fill(user.email);
-    await this.signupButton.click();
+    await this.clickAndWaitForUrl(this.signupButton, '**/signup');
   }
 
   async verifyLoginSuccess(user: User) {
