@@ -171,12 +171,18 @@ async function collectReportGroups(directoryPath: string): Promise<ReportGroup[]
   }
 
   if (directoryFilePaths.length > 0) {
-    const sortedFilePaths = [...directoryFilePaths].sort((left, right) => left.localeCompare(right));
+    const sortedFilePaths = [...directoryFilePaths].sort((left, right) =>
+      left.localeCompare(right),
+    );
 
     groups.push({
       directoryPath,
-      jsonFilePaths: sortedFilePaths.filter((filePath) => path.extname(filePath).toLowerCase() === '.json'),
-      xmlFilePaths: sortedFilePaths.filter((filePath) => path.extname(filePath).toLowerCase() === '.xml'),
+      jsonFilePaths: sortedFilePaths.filter(
+        (filePath) => path.extname(filePath).toLowerCase() === '.json',
+      ),
+      xmlFilePaths: sortedFilePaths.filter(
+        (filePath) => path.extname(filePath).toLowerCase() === '.xml',
+      ),
     });
   }
 
@@ -356,10 +362,7 @@ async function parseJUnitXmlFile(filePath: string): Promise<ParsedFailuresResult
 }
 
 function extractJUnitFailures(document: JUnitDocument): FailureRecord[] {
-  const rootSuites = [
-    ...toArray(document.testsuites?.testsuite),
-    ...toArray(document.testsuite),
-  ];
+  const rootSuites = [...toArray(document.testsuites?.testsuite), ...toArray(document.testsuite)];
   const failures: FailureRecord[] = [];
 
   for (const rootSuite of rootSuites) {
