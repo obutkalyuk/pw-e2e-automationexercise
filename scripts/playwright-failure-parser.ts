@@ -459,9 +459,9 @@ function normalizeRawErrorMessage(message: string | undefined): string {
 
 function simplifyError(message: string): string {
   return message
-    .replace(/\u001b\[[0-9;]*m/g, '')
+    .replace(new RegExp(String.raw`\u001b\[[0-9;]*m`, 'g'), '')
     .replace(/\d+ms/g, '<ms>')
-    .replace(/\/[\w/.:\-]+/g, '')
+    .replace(/\/[\w/.:-]+/g, '')
     .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, '')
     .replace(/\b\d+\b/g, '<n>')
     .replace(/\s+/g, ' ')
