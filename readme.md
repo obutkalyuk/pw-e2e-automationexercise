@@ -32,6 +32,7 @@ Within that scope, the project focuses on the QA work that can still be done wel
 - **Handling imperfect systems**: tests account for non-standard behavior such as business failures returned with HTTP 200
 - **QA analysis, not only automation**: repository includes a test plan, QA questionnaire, API/request inventory, and documented defects
 - **Investigation tooling**: custom network capture utility for checkout and payment flow research
+- **Failure analysis tooling**: archived Playwright report workflow and grouped failure parser for spotting recurring browser-specific and flaky failure patterns across runs
 - **Framework design from scratch**: the project shows how test structure, helpers, and coverage strategy can be shaped in an independent codebase
 
 ## Architecture Decisions
@@ -81,8 +82,8 @@ tests/e2e/             Browser E2E scenarios
 tests/monitoring/      Monitoring, throttling, and concurrency experiments
 utils/                 API helpers, fixtures, and utility functions
 data/                  Test data models and constants
-scripts/               Supporting scripts, including network capture
-artifacts/             Generated outputs such as network capture files
+scripts/               Supporting scripts, including network capture and report-analysis helpers
+artifacts/             Generated outputs such as network captures and archived Playwright reports
 Automation Test Cases Plan.md
 api_request_inventory.md
 qa_questions.md
@@ -118,6 +119,11 @@ GitHub Actions is used for regular execution and feedback:
 - `a11y-smoke` is reserved for lightweight accessibility checks without duplicating full E2E coverage
 - full regression runs in a separate `Nightly` workflow on schedule or manual dispatch
 - reports are published through GitHub job summaries, Playwright HTML artifacts, and nightly email notifications
+- the nightly workflow also uploads structured Playwright logs for later failure analysis:
+  - `results*.xml`
+  - `test-results.json`
+  - `test-results/`
+  - `artifacts/history/`
 
 ## How to Run
 
@@ -133,6 +139,7 @@ Run the main suites:
 npm run test:full
 npm run test:api
 npm run test:smoke
+npm run test:full:archive
 npm run test:report
 ```
 
@@ -142,6 +149,40 @@ Run Playwright directly:
 npx playwright test
 npx playwright test --ui
 ```
+
+## Archived Reports And Failure Analysis
+
+The repository includes small helper scripts for preserving Playwright reports across runs and building a grouped failure summary.
+
+Useful commands:
+
+```bash
+npm run archive:reports
+npm run parse:failures
+npm run parse:failures:dir -- <directory>
+```
+
+Recommended local workflow for repeated debugging:
+
+```bash
+npm run test:full:archive
+npm run parse:failures
+```
+
+What these commands do:
+
+- `npm run test:full:archive` runs the full suite and stores the current `results.xml` and `test-results.json` under `artifacts/history/<timestamp>/`
+- `npm run archive:reports` archives the current root-level Playwright reports without starting a new test run
+- `npm run parse:failures` scans `artifacts/history/` recursively and builds a grouped Markdown summary
+- `npm run parse:failures:dir -- <directory>` lets you analyze a different folder, for example a local collection of CI artifacts
+
+Generated outputs:
+
+- archived reports: `artifacts/history/<timestamp>/results.xml`
+- archived Playwright JSON: `artifacts/history/<timestamp>/test-results.json`
+- grouped failure summary: `artifacts/history/playwright-failure-summary.md`
+
+The failure parser groups repeated issues by test name, browser, and simplified error signature so that recurring flaky patterns are easier to spot across many runs.
 
 ## Network Capture Utility
 
