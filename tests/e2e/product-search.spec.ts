@@ -11,7 +11,6 @@ test('E2E-9: Search Product @high', async ({ page }, testInfo) => {
   });
 
   await page.goto('/products');
-  await productsPage.handleCommonAds();
 
   await test.step('Open products page', async () => {
     await productsPage.verifyProductsPageOpen();

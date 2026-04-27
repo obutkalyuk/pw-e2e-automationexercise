@@ -10,7 +10,6 @@ test('E2E-12: Add Products in Cart @high', async ({ page, request }) => {
   const productIds = ['1', '2'];
 
   await page.goto('/products');
-  await productsPage.handleCommonAds();
 
   await test.step('Navigate to products page', async () => {
     await productsPage.verifyProductsPageOpen();

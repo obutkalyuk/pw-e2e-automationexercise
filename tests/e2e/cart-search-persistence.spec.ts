@@ -25,7 +25,6 @@ test('E2E-20: Search Products and Verify Cart After Login @high', async ({
     });
 
     await page.goto('/products');
-    await productsPage.handleCommonAds();
 
     await test.step('Open products page and search for products', async () => {
       await productsPage.verifyProductsPageOpen();

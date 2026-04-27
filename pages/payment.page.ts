@@ -51,7 +51,6 @@ export class PaymentPage extends BasePage {
 
   async clickPayAndConfirm() {
     await this.payButton.click();
-    await this.handleCommonAds(); // Handle any ads that may appear after payment
   }
 
   async verifyOrderPlaced() {

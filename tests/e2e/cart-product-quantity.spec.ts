@@ -10,7 +10,6 @@ test('E2E-13: Verify Product quantity in Cart @high', async ({ page, request }) 
   const quantity = 4;
 
   await page.goto(`/product_details/${productId}`);
-  await productDetailsPage.handleCommonAds();
 
   await test.step('Open product details page', async () => {
     await productDetailsPage.verifyProductDetailsPageOpen();

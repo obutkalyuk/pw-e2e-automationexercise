@@ -23,34 +23,6 @@ export class BasePage {
     this.loggedInUserMarker = this.menuContainer.locator('li').filter({ hasText: 'Logged in as' });
   }
 
-  private async clickIfPresent(locator: Locator, timeout = 3000) {
-    try {
-      if (await locator.isVisible({ timeout })) {
-        await locator.click();
-      }
-    } catch (e) {
-      if (this.page.isClosed()) {
-        return;
-      }
-      if (e instanceof Error && /timeout|timed out/i.test(e.message)) {
-        return;
-      }
-      throw e;
-    }
-  }
-
-  async handleCommonAds() {
-    // Third-party ad traffic is now blocked at the network layer in the shared fixture.
-    // Keep this method as a no-op for now so existing page-object calls stay intact
-    // while we validate that the old click-based ad handling is no longer needed.
-  }
-
-  protected async handleAdsIfNeeded(adHandler?: () => Promise<void>) {
-    if (adHandler) {
-      await adHandler();
-    }
-  }
-
   protected async clickWhenReady(locator: Locator) {
     await locator.scrollIntoViewIfNeeded();
     await locator.click({ trial: true });
@@ -71,9 +43,7 @@ export class BasePage {
   }
 
   private async navigateFromMenu(link: Locator) {
-    await this.handleCommonAds();
     await link.click();
-    await this.handleCommonAds();
   }
 
   async goToLogin() {
@@ -92,7 +62,6 @@ export class BasePage {
   async logout() {
     await this.logoutLink.waitFor({ state: 'visible', timeout: 10000 });
     await this.clickAndWaitForUrl(this.logoutLink, '**/login');
-    await this.handleCommonAds();
   }
   async deleteAccount() {
     await this.clickAndWaitForUrl(this.deleteAccountLink, '**/delete_account');

@@ -14,7 +14,6 @@ test('E2E-21: Add review on product @medium', async ({ page }) => {
   const productDetailsPage = new ProductDetailsPage(page);
 
   await page.goto('/');
-  await productsPage.handleCommonAds();
 
   await test.step('Navigate to all products page', async () => {
     await productsPage.goToProducts();

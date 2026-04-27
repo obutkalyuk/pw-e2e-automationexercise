@@ -24,19 +24,19 @@ export class HomePage extends BasePage {
   }
 
   async openProductDetails(productNumber: number) {
-    await this.productCatalog.openProductDetails(productNumber, () => this.handleCommonAds());
+    await this.productCatalog.openProductDetails(productNumber);
   }
 
   async addProductToCart(productNumber: number) {
-    await this.productCatalog.addProductToCartByNumber(productNumber, () => this.handleCommonAds());
+    await this.productCatalog.addProductToCartByNumber(productNumber);
   }
 
   async addProductByNumber(productNumber: number) {
     await this.addProductToCart(productNumber);
-    await this.productCatalog.continueShopping(() => this.handleCommonAds());
+    await this.productCatalog.continueShopping();
   }
 
   async viewCartFromModal() {
-    await this.productCatalog.viewCartFromModal(() => this.handleCommonAds());
+    await this.productCatalog.viewCartFromModal();
   }
 }
