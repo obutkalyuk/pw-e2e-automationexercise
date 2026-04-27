@@ -76,13 +76,10 @@ export class ProductSidebarSection extends BasePage {
     link: Locator,
     targetUrlPattern: RegExp,
     isOnTargetUrl: () => boolean,
-    adHandler?: () => Promise<void>,
   ) {
     if (!this.isOnGoogleVignette()) {
       return;
     }
-
-    await this.handleAdsIfNeeded(adHandler);
 
     await this.page
       .waitForURL(
@@ -115,22 +112,18 @@ export class ProductSidebarSection extends BasePage {
     await expect(this.leftSidebar.locator('.brands_products a').first()).toBeVisible();
   }
 
-  async openBrand(brandName: string, adHandler?: () => Promise<void>) {
+  async openBrand(brandName: string) {
     const brandLink = this.leftSidebar
       .locator('.brands_products')
       .getByRole('link', { name: new RegExp(brandName, 'i') });
 
     await this.clickBrandLinkAndWaitForNavigation(brandLink, brandName);
-    await this.handleAdsIfNeeded(adHandler);
-    await this.recoverNavigationFromVignette(
-      brandLink,
-      this.getBrandUrlPattern(brandName),
-      () => this.isOnBrandUrl(brandName),
-      adHandler,
+    await this.recoverNavigationFromVignette(brandLink, this.getBrandUrlPattern(brandName), () =>
+      this.isOnBrandUrl(brandName),
     );
   }
 
-  async expandCategory(categoryName: 'Women' | 'Men' | 'Kids', adHandler?: () => Promise<void>) {
+  async expandCategory(categoryName: 'Women' | 'Men' | 'Kids') {
     const categoryToggle = this.categoryAccordion.locator(`a[href="#${categoryName}"]`);
     const categoryToggleText = categoryToggle.getByText(categoryName, { exact: true });
     const categoryPanel = this.page.locator(`#${categoryName}`);
@@ -138,7 +131,6 @@ export class ProductSidebarSection extends BasePage {
 
     await categoryToggle.scrollIntoViewIfNeeded();
     await categoryToggleText.click();
-    await this.handleAdsIfNeeded(adHandler);
 
     await expect(firstSubcategoryLink).toBeVisible();
   }
@@ -147,22 +139,19 @@ export class ProductSidebarSection extends BasePage {
     categoryName: 'Women' | 'Men' | 'Kids',
     subcategoryName: string,
     categoryId: string,
-    adHandler?: () => Promise<void>,
   ) {
     const categoryPanel = this.page.locator(`#${categoryName}`);
 
     if (!(await categoryPanel.getAttribute('class'))?.includes('in')) {
-      await this.expandCategory(categoryName, adHandler);
+      await this.expandCategory(categoryName);
     }
 
     const subcategoryLink = categoryPanel.getByRole('link', { name: subcategoryName, exact: true });
     await this.clickSubcategoryLinkAndWaitForNavigation(subcategoryLink, categoryId);
-    await this.handleAdsIfNeeded(adHandler);
     await this.recoverNavigationFromVignette(
       subcategoryLink,
       this.getCategoryUrlPattern(categoryId),
       () => this.isOnCategoryUrl(categoryId),
-      adHandler,
     );
   }
 

@@ -104,7 +104,6 @@ export class SignupPage extends BasePage {
     await this.zipcodeInput.fill(user.zipcode);
     await this.mobileNumberInput.fill(user.mobileNumber);
     await this.clickWhenReady(this.createAccountButton);
-    await this.handleCommonAds(); // Handle any ads that may appear after account creation
   }
 
   async verifyAccountCreation() {

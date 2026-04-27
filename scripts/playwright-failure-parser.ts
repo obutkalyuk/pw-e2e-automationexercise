@@ -1,7 +1,7 @@
 /// <reference types="node" />
 
 import { existsSync } from 'node:fs';
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { XMLParser } from 'fast-xml-parser';
@@ -99,8 +99,8 @@ async function main(): Promise<void> {
   const resolvedDirectoryPath = path.resolve(directoryPath);
 
   if (!existsSync(resolvedDirectoryPath)) {
-    console.error(`Directory does not exist: ${resolvedDirectoryPath}`);
-    process.exit(1);
+    console.warn(`Directory does not exist: ${resolvedDirectoryPath}`);
+    await mkdir(resolvedDirectoryPath, { recursive: true });
   }
 
   const directoryExists = await readDirectorySafely(resolvedDirectoryPath);

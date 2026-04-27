@@ -31,7 +31,6 @@ test('E2E-14: Register while Checkout preserves cart @high', async ({
 
   await test.step(`Add products to cart and proceed to checkout`, async () => {
     await page.goto('/products');
-    await productPage.handleCommonAds(); // Handle any ads that may appear on the products page
     await productPage.addMultipleProducts(products);
     await productPage.goToCart();
     await cartPage.proceedToCheckout();
@@ -126,7 +125,6 @@ test.describe('Place Order tests', () => {
       await apiHelper.addProductToCart(request, productId, cookieHeader);
 
       await page.goto('/view_cart');
-      await cartPage.handleCommonAds();
       await cartPage.verifyCartIsOpen();
       await cartPage.proceedToCheckout();
       await checkoutPage.verifyProductInCheckout([productId]);
@@ -206,7 +204,6 @@ test('BUG-4: Payment field is blocked by overlay on large screens', async ({ pag
 
   await page.setViewportSize({ width: 980, height: 900 });
   await page.goto('/payment');
-  await paymentPage.handleCommonAds();
   const clickError = await paymentPage.nameOnCardInput
     .click({ timeout: 3000 })
     .catch((error) => error);

@@ -39,7 +39,7 @@ export class User {
     const timestamp = new Date().toISOString().replace(/[:.-]/g, '');
     u.name = `user${Math.floor(Math.random() * 10000)}`;
     u.email = `qa_${timestamp}_${Math.floor(Math.random() * 1000)}@example.com`;
-    u.password = 'Test1234';
+    u.password = faker.internet.password({ length: 12 });
     u.title = gender;
     u.dayOfBirth = faker.number.int({ min: 1, max: 28 }).toString();
     u.monthOfBirth = faker.number.int({ min: 1, max: 12 }).toString();

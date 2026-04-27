@@ -90,7 +90,6 @@ export class ProductDetailsPage extends BasePage {
 
   async viewCartFromModal() {
     await this.viewCartLink.click();
-    await this.handleCommonAds();
   }
 
   async getCurrentProductId() {

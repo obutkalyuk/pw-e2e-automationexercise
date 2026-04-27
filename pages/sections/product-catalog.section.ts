@@ -26,13 +26,11 @@ export class ProductCatalogSection {
     await expect(this.viewProductLinks.first()).toBeVisible();
   }
 
-  async openProductDetails(productNumber: number, handleCommonAds: () => Promise<void>) {
+  async openProductDetails(productNumber: number) {
     await this.viewProductLinks.nth(productNumber - 1).click();
-    await handleCommonAds();
 
     if (!this.page.url().includes('/product_details/')) {
       await this.viewProductLinks.nth(productNumber - 1).click();
-      await handleCommonAds();
     }
   }
 
@@ -91,8 +89,7 @@ export class ProductCatalogSection {
     }
   }
 
-  async addProductToCartById(productId: string, handleCommonAds: () => Promise<void>) {
-    await handleCommonAds();
+  async addProductToCartById(productId: string) {
     const addToCartButton = this.page.locator(`.productinfo a[data-product-id="${productId}"]`);
 
     await addToCartButton.scrollIntoViewIfNeeded();
@@ -100,8 +97,7 @@ export class ProductCatalogSection {
     await addToCartButton.click();
   }
 
-  async addProductToCartByNumber(productNumber: number, handleCommonAds: () => Promise<void>) {
-    await handleCommonAds();
+  async addProductToCartByNumber(productNumber: number) {
     const addToCartButton = this.page
       .locator('.features_items .productinfo a.add-to-cart')
       .nth(productNumber - 1);
@@ -111,20 +107,18 @@ export class ProductCatalogSection {
     await addToCartButton.click();
   }
 
-  async continueShopping(handleCommonAds: () => Promise<void>) {
+  async continueShopping() {
     await expect(this.cartModal).toBeVisible();
     await expect(this.continueShoppingButton).toBeVisible();
     await this.continueShoppingButton.click({ trial: true });
     await this.continueShoppingButton.click();
     await expect(this.cartModal).toBeHidden();
-    await handleCommonAds();
   }
 
-  async viewCartFromModal(handleCommonAds: () => Promise<void>) {
+  async viewCartFromModal() {
     await expect(this.cartModal).toBeVisible();
     await expect(this.viewCartLink).toBeVisible();
     await this.viewCartLink.click({ trial: true });
     await this.viewCartLink.click();
-    await handleCommonAds();
   }
 }

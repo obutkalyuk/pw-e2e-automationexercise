@@ -12,7 +12,6 @@ test('E2E-8: Verify All Products and product detail page @high', async ({ page, 
   let productId = '';
 
   await page.goto('/');
-  await productsPage.handleCommonAds();
 
   await test.step('Verify home page is visible', async () => {
     await homePage.verifyHomePageOpen();

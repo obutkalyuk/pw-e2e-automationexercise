@@ -34,7 +34,7 @@ export class ProductsPage extends BasePage {
   }
 
   async openProductDetails(productNumber: number) {
-    await this.productCatalog.openProductDetails(productNumber, () => this.handleCommonAds());
+    await this.productCatalog.openProductDetails(productNumber);
   }
 
   async getProductDetailsId(productNumber: number) {
@@ -49,8 +49,6 @@ export class ProductsPage extends BasePage {
     const currentUrl = new URL(this.page.url());
     expect(currentUrl.pathname).toBe('/products');
     expect(currentUrl.searchParams.get('search')).toBe(searchTerm);
-
-    await this.handleCommonAds();
   }
 
   async verifySearchResults(searchTerm: string) {
@@ -79,16 +77,16 @@ export class ProductsPage extends BasePage {
   }
 
   async addProductToCart(productId: string) {
-    await this.productCatalog.addProductToCartById(productId, () => this.handleCommonAds());
+    await this.productCatalog.addProductToCartById(productId);
   }
 
   async addProductById(productId: string) {
     await this.addProductToCart(productId);
-    await this.productCatalog.continueShopping(() => this.handleCommonAds());
+    await this.productCatalog.continueShopping();
   }
 
   async viewCartFromModal() {
-    await this.productCatalog.viewCartFromModal(() => this.handleCommonAds());
+    await this.productCatalog.viewCartFromModal();
   }
 
   async addMultipleProducts(ids: string[]) {

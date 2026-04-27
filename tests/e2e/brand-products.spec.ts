@@ -18,14 +18,14 @@ test('E2E-19: View & Cart Brand Products @medium', async ({ page, request }) => 
   });
 
   await test.step(`Open ${firstBrand} brand page`, async () => {
-    await productsPage.productSidebar.openBrand(firstBrand, () => productsPage.handleCommonAds());
+    await productsPage.productSidebar.openBrand(firstBrand);
     await productsPage.productSidebar.verifyBrandResult(firstBrand);
     await productsPage.verifyProductsListVisible();
     await productsPage.productCatalog.verifyVisibleProductsMatchBrand(products, firstBrand);
   });
 
   await test.step(`Open ${secondBrand} brand page`, async () => {
-    await productsPage.productSidebar.openBrand(secondBrand, () => productsPage.handleCommonAds());
+    await productsPage.productSidebar.openBrand(secondBrand);
     await productsPage.productSidebar.verifyBrandResult(secondBrand);
     await productsPage.verifyProductsListVisible();
     await productsPage.productCatalog.verifyVisibleProductsMatchBrand(products, secondBrand);

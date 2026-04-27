@@ -26,7 +26,6 @@ export class LoginPage extends BasePage {
 
   async goto() {
     await this.page.goto('/login');
-    await this.handleCommonAds();
   }
 
   async login(user: User) {

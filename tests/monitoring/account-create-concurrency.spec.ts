@@ -3,41 +3,40 @@ import { User } from '../../data/user.data';
 import { LoginPage } from '../../pages/login.page';
 import { SignupPage } from '../../pages/signup.page';
 import { applyAdAndConsentMitigation } from '../../utils/fixtures';
+import { accountApiHelper } from '../../utils/api/account.api.helper';
 
-test('C-1: Concurrency Probe - User registration under parallel load @low', async ({
-  browser,
-  browserName,
-}) => {
-  test.fail(
-    browserName === 'chromium' || browserName === 'firefox',
-    'Known defect #5: Create Account button intermittently fails to submit signup form on /signup under parallel load.',
-  );
-  const taskCount = 10;
+test.describe('Account Creation Concurrency', () => {
+  test('C-1: Concurrency Probe - User registration under parallel load @low', async ({
+    browser,
+  }) => {
+    const taskCount = 10;
 
-  const tasks = Array.from({ length: taskCount }).map(async () => {
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    await applyAdAndConsentMitigation(context);
-    const user = User.generateRandom();
+    const tasks = Array.from({ length: taskCount }).map(async () => {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      await applyAdAndConsentMitigation(context);
+      const user = User.generateRandom();
 
-    try {
-      const loginPage = new LoginPage(page);
-      const signupPage = new SignupPage(page);
+      try {
+        const loginPage = new LoginPage(page);
+        const signupPage = new SignupPage(page);
 
-      await loginPage.goto();
-      await loginPage.signUp(user);
-      await signupPage.fillForm(user);
+        await loginPage.goto();
+        await loginPage.signUp(user);
+        await signupPage.fillForm(user);
 
-      await expect(page).toHaveURL(/.*account_created/, { timeout: 10_000 });
-    } finally {
-      await context.close();
+        await expect(page).toHaveURL(/.*account_created/, { timeout: 10_000 });
+      } finally {
+        await accountApiHelper.deleteUserIfExists(context.request, user);
+        await context.close();
+      }
+    });
+
+    const results = await Promise.allSettled(tasks);
+    const failed = results.filter((result) => result.status === 'rejected');
+
+    if (failed.length > 0) {
+      throw new Error(`${failed.length} users failed to register under parallel load.`);
     }
   });
-
-  const results = await Promise.allSettled(tasks);
-  const failed = results.filter((result) => result.status === 'rejected');
-
-  if (failed.length > 0) {
-    throw new Error(`${failed.length} users failed to register under parallel load.`);
-  }
 });
