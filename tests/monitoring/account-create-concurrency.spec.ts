@@ -7,9 +7,8 @@ import { accountApiHelper } from '../../utils/api/account.api.helper';
 
 test.describe('Account Creation Concurrency', () => {
   test('C-1: Concurrency Probe - User registration under parallel load @low', async ({
-    browser
+    browser,
   }) => {
-    
     const taskCount = 10;
 
     const tasks = Array.from({ length: taskCount }).map(async () => {

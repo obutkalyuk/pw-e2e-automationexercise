@@ -118,10 +118,8 @@ export class ProductSidebarSection extends BasePage {
       .getByRole('link', { name: new RegExp(brandName, 'i') });
 
     await this.clickBrandLinkAndWaitForNavigation(brandLink, brandName);
-    await this.recoverNavigationFromVignette(
-      brandLink,
-      this.getBrandUrlPattern(brandName),
-      () => this.isOnBrandUrl(brandName),
+    await this.recoverNavigationFromVignette(brandLink, this.getBrandUrlPattern(brandName), () =>
+      this.isOnBrandUrl(brandName),
     );
   }
 
