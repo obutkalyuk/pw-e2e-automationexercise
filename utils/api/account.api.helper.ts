@@ -64,6 +64,16 @@ export const accountApiHelper = {
           password: user.password,
         },
       });
+
+      const contentType = response.headers()['content-type'] ?? '';
+      if (!contentType.includes('application/json')) {
+        const text = await response.text();
+
+        throw new Error(
+          `deleteUserIfExists: expected JSON but got ${response.status()} ${contentType}. Body: ${text.slice(0, 200)}`,
+        );
+      }
+
       const body = await response.json();
 
       expect(response.status()).toBe(200);
