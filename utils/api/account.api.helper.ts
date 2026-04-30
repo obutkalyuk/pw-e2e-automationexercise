@@ -1,6 +1,22 @@
 import { APIRequestContext, expect, test, TestInfo } from '@playwright/test';
 import { User } from '../../data/user.data';
 
+type AccountApiResponse = {
+  responseCode: number;
+  message: string;
+};
+
+function isAccountApiResponse(value: unknown): value is AccountApiResponse {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'responseCode' in value &&
+    typeof value.responseCode === 'number' &&
+    'message' in value &&
+    typeof value.message === 'string'
+  );
+}
+
 export const accountApiHelper = {
   async createUser(request: APIRequestContext, user: User) {
     return await test.step(`API: Create user ${user.email}`, async () => {
@@ -64,7 +80,24 @@ export const accountApiHelper = {
           password: user.password,
         },
       });
-      const body = await response.json();
+
+      const contentType = response.headers()['content-type'] ?? 'unknown content-type';
+      const text = await response.text();
+      let body: unknown;
+
+      try {
+        body = JSON.parse(text);
+      } catch {
+        throw new Error(
+          `deleteUserIfExists: expected JSON but got ${response.status()} ${contentType}. Body: ${text.slice(0, 200)}`,
+        );
+      }
+
+      if (!isAccountApiResponse(body)) {
+        throw new Error(
+          `deleteUserIfExists: expected account API response but got ${response.status()} ${contentType}. Body: ${text.slice(0, 200)}`,
+        );
+      }
 
       expect(response.status()).toBe(200);
       expect(
