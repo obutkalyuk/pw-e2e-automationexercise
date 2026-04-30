@@ -30,7 +30,7 @@ async function createContactMessage(testInfo: TestInfo) {
   return contactMessage;
 }
 
-test('E2E-6: Contact Us Form @low', async ({ page }, testInfo) => {
+test('E2E-6: Contact Us Form @medium', async ({ page }, testInfo) => {
   const homePage = new HomePage(page);
   const contactPage = new ContactPage(page);
   const contactMessage = await createContactMessage(testInfo);
