@@ -6,6 +6,7 @@ export class BasePage {
   readonly productsLink: Locator;
   readonly cartLink: Locator;
   readonly loginLink: Locator;
+  readonly contactLink: Locator;
   readonly logoutLink: Locator;
   readonly deleteAccountLink: Locator;
   readonly menuContainer: Locator;
@@ -18,6 +19,7 @@ export class BasePage {
     this.productsLink = this.menuContainer.getByRole('link', { name: 'Products' });
     this.cartLink = this.menuContainer.getByRole('link', { name: 'Cart' });
     this.loginLink = this.menuContainer.getByRole('link', { name: 'Signup / Login' });
+    this.contactLink = this.menuContainer.getByRole('link', { name: 'Contact us' });
     this.logoutLink = this.menuContainer.getByRole('link', { name: 'Logout' });
     this.deleteAccountLink = this.menuContainer.getByRole('link', { name: 'Delete Account' });
     this.loggedInUserMarker = this.menuContainer.locator('li').filter({ hasText: 'Logged in as' });
@@ -54,6 +56,9 @@ export class BasePage {
   }
   async goToCart() {
     await this.navigateFromMenu(this.cartLink);
+  }
+  async goToContact() {
+    await this.clickAndWaitForUrl(this.contactLink, /\/contact_us/);
   }
   async getCookieHeader() {
     const cookies = await this.page.context().cookies();
