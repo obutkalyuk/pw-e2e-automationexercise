@@ -2,12 +2,14 @@ import { expect, Locator, Page } from '@playwright/test';
 import { BasePage } from './base.page';
 import { ProductCatalogSection } from './sections/product-catalog.section';
 import { ProductSidebarSection } from './sections/product-sidebar.section';
+import { RecommendedItemsSection } from './sections/recommended-items.section';
 import { SubscriptionSection } from './sections/subscription.section';
 
 export class HomePage extends BasePage {
   readonly siteLogo: Locator;
   readonly productCatalog: ProductCatalogSection;
   readonly productSidebar: ProductSidebarSection;
+  readonly recommendedItems: RecommendedItemsSection;
   readonly subscription: SubscriptionSection;
 
   constructor(page: Page) {
@@ -17,6 +19,7 @@ export class HomePage extends BasePage {
     );
     this.productCatalog = new ProductCatalogSection(page);
     this.productSidebar = new ProductSidebarSection(page);
+    this.recommendedItems = new RecommendedItemsSection(page);
     this.subscription = new SubscriptionSection(page);
   }
 
@@ -41,5 +44,17 @@ export class HomePage extends BasePage {
 
   async viewCartFromModal() {
     await this.productCatalog.viewCartFromModal();
+  }
+
+  async verifyRecommendedItemsVisible() {
+    await this.recommendedItems.verifyRecommendedItemsVisible();
+  }
+
+  async addRecommendedProductToCart(productNumber: number) {
+    return await this.recommendedItems.addProductToCartByNumber(productNumber);
+  }
+
+  async viewCartFromRecommendedModal() {
+    await this.recommendedItems.viewCartFromModal();
   }
 }
