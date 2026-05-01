@@ -41,7 +41,7 @@ test('E2E-11: Verify Subscription in Cart Page @medium', async ({ page }, testIn
   });
 });
 
-test('[BUG-002] Home page subscription should send email data to the server @low', async ({
+test('E2E-10-neg [BUG-43]: Home page subscription should send email data to the server @low', async ({
   page,
 }, testInfo) => {
   test.fail(
@@ -70,7 +70,7 @@ test('[BUG-002] Home page subscription should send email data to the server @low
   await subscriptionRequest;
 });
 
-test('[BUG-002] Cart page subscription should send email data to the server @low', async ({
+test('E2E-11-neg [BUG-43]: Cart page subscription should send email data to the server @low', async ({
   page,
 }, testInfo) => {
   test.fail(
