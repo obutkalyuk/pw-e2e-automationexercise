@@ -23,7 +23,7 @@ test('E2E-12: Add Products in Cart @high', async ({ page, request }) => {
   await test.step('Add second product and open cart', async () => {
     await productsPage.addProductToCart(productIds[1]);
     await productsPage.viewCartFromModal();
-    await cartPage.verifyCartIsOpen();
+    await cartPage.verifyCartHasProducts();
   });
 
   await test.step('Verify cart rows, prices, quantities and totals', async () => {

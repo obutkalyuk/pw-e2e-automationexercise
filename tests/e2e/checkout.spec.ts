@@ -125,7 +125,7 @@ test.describe('Place Order tests', () => {
       await apiHelper.addProductToCart(request, productId, cookieHeader);
 
       await page.goto('/view_cart');
-      await cartPage.verifyCartIsOpen();
+      await cartPage.verifyCartHasProducts();
       await cartPage.proceedToCheckout();
       await checkoutPage.verifyProductInCheckout([productId]);
     });
@@ -161,7 +161,7 @@ test.describe('Place Order tests', () => {
       await apiHelper.addProductToCart(request, productId, cookieHeader);
 
       await page.goto('/view_cart');
-      await cartPage.verifyCartIsOpen();
+      await cartPage.verifyCartHasProducts();
       await cartPage.verifyProductInCart([productId]);
     });
 

@@ -19,7 +19,7 @@ test('E2E-13: Verify Product quantity in Cart @high', async ({ page, request }) 
     await productDetailsPage.setQuantity(quantity);
     await productDetailsPage.addToCart();
     await productDetailsPage.viewCartFromModal();
-    await cartPage.verifyCartIsOpen();
+    await cartPage.verifyCartHasProducts();
   });
 
   await test.step('Verify product quantity in cart', async () => {
