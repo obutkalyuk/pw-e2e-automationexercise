@@ -131,18 +131,18 @@ _Session-based HTML/redirect/download request checks_
 
 ### Medium Priority
 
-| **Status** | **#**  | **Test Case**                         | **Category**          | **Automation Type** | **Notes**                                                                                           | **File Name**                         |
-| ---------- | ------ | ------------------------------------- | --------------------- | ------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| Covered    | E2E-5  | Register User with existing email     | User / Account        | E2E                 | Negative scenario for duplicate email                                                               | tests\e2e\account-create.spec.ts      |
-| Covered    | E2E-6  | Contact Us Form                       | Contact / Pages       | E2E                 | Includes file upload selection and success message verification                                     | tests\e2e\contact-us.spec.ts          |
-| Covered    | E2E-10 | Verify Subscription in Home Page      | Pages / Subscription  | E2E                 | Footer subscription UI check; known defect `BUG-43` / BF-002                                        | tests\e2e\subscription-footer.spec.ts |
-| Covered    | E2E-11 | Verify Subscription in Cart Page      | Pages / Subscription  | E2E                 | Footer subscription UI check on cart page; known defect `BUG-43` / BF-002                           | tests\e2e\subscription-footer.spec.ts |
-| Covered    | E2E-18 | View Category Products                | Products / Navigation | E2E                 | Check categories and subcategories                                                                  | tests\e2e\category-products.spec.ts   |
-| Covered    | E2E-19 | View & Cart Brand Products            | Products / Navigation | E2E                 | Check brand filter and product listing                                                              | tests\e2e\brand-products.spec.ts      |
-| Covered    | E2E-21 | Add review on product                 | Products / Reviews    | E2E                 | Verify review submission and success message; BF-001                                                | tests\e2e\product-review.spec.ts      |
+| **Status** | **#**  | **Test Case**                         | **Category**          | **Automation Type** | **Notes**                                                                                           | **File Name**                            |
+| ---------- | ------ | ------------------------------------- | --------------------- | ------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Covered    | E2E-5  | Register User with existing email     | User / Account        | E2E                 | Negative scenario for duplicate email                                                               | tests\e2e\account-create.spec.ts         |
+| Covered    | E2E-6  | Contact Us Form                       | Contact / Pages       | E2E                 | Includes file upload selection and success message verification                                     | tests\e2e\contact-us.spec.ts             |
+| Covered    | E2E-10 | Verify Subscription in Home Page      | Pages / Subscription  | E2E                 | Footer subscription UI check; known defect `BUG-43` / BF-002                                        | tests\e2e\subscription-footer.spec.ts    |
+| Covered    | E2E-11 | Verify Subscription in Cart Page      | Pages / Subscription  | E2E                 | Footer subscription UI check on cart page; known defect `BUG-43` / BF-002                           | tests\e2e\subscription-footer.spec.ts    |
+| Covered    | E2E-18 | View Category Products                | Products / Navigation | E2E                 | Check categories and subcategories                                                                  | tests\e2e\category-products.spec.ts      |
+| Covered    | E2E-19 | View & Cart Brand Products            | Products / Navigation | E2E                 | Check brand filter and product listing                                                              | tests\e2e\brand-products.spec.ts         |
+| Covered    | E2E-21 | Add review on product                 | Products / Reviews    | E2E                 | Verify review submission and success message; BF-001                                                | tests\e2e\product-review.spec.ts         |
 | Covered    | E2E-22 | Add to cart from Recommended items    | Products / Cart       | E2E                 | Check recommended items section                                                                     | tests\e2e\cart-recommended-items.spec.ts |
-| Covered    | E2E-24 | Download Invoice after purchase order | Orders / Checkout     | E2E (Hybrid)        | API prepares user/cart; UI completes checkout, downloads invoice, verifies file content and amount  | tests\e2e\checkout.spec.ts            |
-| Planned    | E2E-27 | Delete Account from UI                | User / Account        | E2E                 | Verify delete account flow from navigation menu; E2E-1 covers API-level delete, this covers UI flow |                                       |
+| Covered    | E2E-24 | Download Invoice after purchase order | Orders / Checkout     | E2E (Hybrid)        | API prepares user/cart; UI completes checkout, downloads invoice, verifies file content and amount  | tests\e2e\checkout.spec.ts               |
+| Planned    | E2E-27 | Delete Account from UI                | User / Account        | E2E                 | Verify delete account flow from navigation menu; E2E-1 covers API-level delete, this covers UI flow |                                          |
 
 ### Low Priority
 
