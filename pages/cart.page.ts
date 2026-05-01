@@ -2,6 +2,7 @@ import { Page, Locator, expect } from '@playwright/test';
 import { CartProduct } from '../data/product.data';
 import { BasePage } from './base.page';
 import { CartTableSection } from './sections/cart-table.section';
+import { SubscriptionSection } from './sections/subscription.section';
 
 export class CartPage extends BasePage {
   readonly cartRows: Locator;
@@ -9,10 +10,12 @@ export class CartPage extends BasePage {
   readonly checkoutModal: Locator;
   readonly loginFromCheckoutModalLink: Locator;
   readonly cartTable: CartTableSection;
+  readonly subscription: SubscriptionSection;
 
   constructor(page: Page) {
     super(page);
     this.cartTable = new CartTableSection(page);
+    this.subscription = new SubscriptionSection(page);
     this.cartRows = this.cartTable.rows;
     this.proceedToCheckoutButton = this.page.locator('a.btn.btn-default.check_out');
     this.checkoutModal = this.page.locator('div#checkoutModal');
@@ -39,9 +42,14 @@ export class CartPage extends BasePage {
     await expect(this.page.locator(`tr#product-${id}`)).toBeHidden();
   }
 
-  async verifyCartIsOpen() {
-    await expect(this.page.locator('.breadcrumb')).toContainText('Cart');
+  async verifyCartHasProducts() {
+    await this.verifyCartPageOpen();
     await expect(this.cartRows.first()).toBeVisible();
+  }
+
+  async verifyCartPageOpen() {
+    await expect(this.page).toHaveURL(/\/view_cart/);
+    await expect(this.page.locator('.breadcrumb')).toContainText('Cart');
   }
 
   async verifyProductInCart(products: string[]) {

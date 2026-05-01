@@ -38,7 +38,7 @@ test('E2E-20: Search Products and Verify Cart After Login @high', async ({
       productIds = await productsPage.getVisibleProductIds();
       await productsPage.addMultipleProducts(productIds);
       await productsPage.goToCart();
-      await cartPage.verifyCartIsOpen();
+      await cartPage.verifyCartHasProducts();
       await cartPage.verifyProductInCart(productIds);
     });
 
@@ -47,7 +47,7 @@ test('E2E-20: Search Products and Verify Cart After Login @high', async ({
       await loginPage.login(user);
       await loginPage.verifyLoginSuccess(user);
       await loginPage.goToCart();
-      await cartPage.verifyCartIsOpen();
+      await cartPage.verifyCartHasProducts();
       await cartPage.verifyProductInCart(productIds);
     });
   } finally {

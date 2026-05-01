@@ -2,11 +2,13 @@ import { expect, Locator, Page } from '@playwright/test';
 import { BasePage } from './base.page';
 import { ProductCatalogSection } from './sections/product-catalog.section';
 import { ProductSidebarSection } from './sections/product-sidebar.section';
+import { SubscriptionSection } from './sections/subscription.section';
 
 export class HomePage extends BasePage {
   readonly siteLogo: Locator;
   readonly productCatalog: ProductCatalogSection;
   readonly productSidebar: ProductSidebarSection;
+  readonly subscription: SubscriptionSection;
 
   constructor(page: Page) {
     super(page);
@@ -15,6 +17,7 @@ export class HomePage extends BasePage {
     );
     this.productCatalog = new ProductCatalogSection(page);
     this.productSidebar = new ProductSidebarSection(page);
+    this.subscription = new SubscriptionSection(page);
   }
 
   async verifyHomePageOpen() {

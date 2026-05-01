@@ -52,10 +52,10 @@ It is a technical working document for QA research and automation design.
 
 ## Broken Or Non-Submitting UI Flows
 
-| Status   | ID     | Flow                | URL / Action            | UI behavior                                     | Network activity | Recommended test type   | Priority | Covered by                                                                     | Notes                                                                            |
-| -------- | ------ | ------------------- | ----------------------- | ----------------------------------------------- | ---------------- | ----------------------- | -------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| Indirect | BF-001 | Product details     | Review submission       | Success message is shown and fields are cleared | None observed    | `UI-only / broken flow` | Medium   | `E2E-21`, `Low-21` (planned)                                                   | Functional bug. UI confirms successful submission without sending any request.   |
-| Planned  | BF-002 | Footer subscription | Newsletter subscription | Success message is shown                        | None observed    | `UI-only / broken flow` | Medium   | `E2E-10` (planned), `E2E-11` (planned), `Low-10` (planned), `Low-11` (planned) | Functional bug. UI confirms successful subscription without sending any request. |
+| Status   | ID     | Flow                | URL / Action            | UI behavior                                     | Network activity | Recommended test type   | Priority | Covered by                                     | Notes                                                                          |
+| -------- | ------ | ------------------- | ----------------------- | ----------------------------------------------- | ---------------- | ----------------------- | -------- | ---------------------------------------------- | ------------------------------------------------------------------------------ |
+| Indirect | BF-001 | Product details     | Review submission       | Success message is shown and fields are cleared | None observed    | `UI-only / broken flow` | Medium   | `E2E-21`, `Low-21` (planned)                   | Functional bug. UI confirms successful submission without sending any request. |
+| Covered  | BF-002 | Footer subscription | Newsletter subscription | Success message is shown                        | None observed    | `UI-only / broken flow` | Medium   | `E2E-10`, `E2E-11`, `E2E-10-neg`, `E2E-11-neg` | No subscription endpoint/request observed; covered by xfail tests.             |
 
 ## Open Questions
 

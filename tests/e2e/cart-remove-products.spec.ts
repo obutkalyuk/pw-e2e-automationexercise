@@ -13,7 +13,7 @@ test('E2E-17: Remove Products From Cart @high', async ({ page }) => {
   await test.step('Add product to cart and open cart', async () => {
     await homePage.addProductToCart(productNumber);
     await homePage.viewCartFromModal();
-    await cartPage.verifyCartIsOpen();
+    await cartPage.verifyCartHasProducts();
     await cartPage.verifyProductInCart([productId]);
   });
 
