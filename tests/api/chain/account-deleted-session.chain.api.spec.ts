@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+import { TEST_CARD } from '../../../data/payment.data';
 import { test } from '../../../utils/fixtures';
 import { apiHelper } from '../../../utils/api-helper';
 
@@ -31,11 +32,11 @@ test.describe('Deleted Account Session Coverage', () => {
         method: 'POST',
         form: {
           csrfmiddlewaretoken: 'stale-deleted-account-session',
-          name_on_card: 'Test User',
-          card_number: '4111111111111111',
-          cvc: '123',
-          expiry_month: '12',
-          expiry_year: '2030',
+          name_on_card: TEST_CARD.holder,
+          card_number: TEST_CARD.number,
+          cvc: TEST_CARD.cvc,
+          expiry_month: TEST_CARD.expiryMonth,
+          expiry_year: TEST_CARD.expiryYear,
         },
         headers: {
           Origin: process.env.BASE_URL!,
