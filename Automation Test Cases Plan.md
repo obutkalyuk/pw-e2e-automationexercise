@@ -74,9 +74,11 @@ _Negative cases and additional methods_
 | Covered    | API-11 | `/productsList`  | POST       | Reject unsupported method for product list            | Medium       | Negative: method not supported; RQ-013     | tests\api\catalog\catalog.api.spec.ts     |
 | Covered    | API-12 | `/brandsList`    | PUT        | Reject unsupported method for brand list              | Medium       | Negative: method not supported; RQ-015     | tests\api\catalog\catalog.api.spec.ts     |
 | Covered    | API-13 | `/searchProduct` | POST       | Reject search without required parameter              | Medium       | Negative: missing `search_product`; RQ-017 | tests\api\catalog\catalog.api.spec.ts     |
+| Covered (Known defect) | API-28 | `/searchProduct` | POST       | Reject empty search_product value                     | Medium       | Known defect: empty `search_product` returns the full products list instead of a validation error; RQ-016, RQ-017 | tests\api\catalog\catalog.api.spec.ts     |
 | Covered    | API-14 | `/verifyLogin`   | POST       | Reject verify login without required parameter        | Medium       | Negative: missing email/password; RQ-002   | tests\api\auth\account-flow.api.spec.ts   |
 | Covered    | API-15 | `/verifyLogin`   | DELETE     | Reject unsupported method for verify login            | Medium       | Negative: method not supported; RQ-003     | tests\api\auth\account-flow.api.spec.ts   |
 | Covered    | API-16 | `/createAccount` | POST       | Reject create account with invalid or incomplete data | Low          | Negative validation scenario; RQ-007       | tests\api\auth\account-flow.api.spec.ts   |
+| Covered (Known defect) | API-27 | `/createAccount` | POST       | Reject impossible or malformed date of birth values   | Medium       | Known defect `#51`: invalid DOB fields are accepted, persisted, and returned by user detail lookup; RQ-007, RQ-010 | tests\api\auth\account-flow.api.spec.ts   |
 | Covered    | API-17 | `/deleteAccount` | DELETE     | Reject delete account with invalid credentials        | Low          | Negative cleanup scenario; RQ-008          | tests\api\auth\account-flow.api.spec.ts   |
 
 ### Transport Request Coverage
@@ -145,6 +147,7 @@ _Session-based HTML/redirect/download request checks_
 | Covered    | E2E-21 | Add review on product                 | Products / Reviews    | E2E                 | Verify review submission and success message; BF-001                                                | tests\e2e\product-review.spec.ts         |
 | Covered    | E2E-22 | Add to cart from Recommended items    | Products / Cart       | E2E                 | Check recommended items section                                                                     | tests\e2e\cart-recommended-items.spec.ts |
 | Covered    | E2E-24 | Download Invoice after purchase order | Orders / Checkout     | E2E (Hybrid)        | API prepares user/cart; UI completes checkout, downloads invoice, verifies file content and amount  | tests\e2e\checkout.spec.ts               |
+| Covered (Known defect) | E2E-29 | Account signup normalizes profile fields | User / Account | E2E | Known defect `#52`: raw punctuation is accepted during UI signup and reflected in checkout address details. Educational black-box evidence; replace with unit/component validation coverage when available. | tests\e2e\account-profile-normalization.spec.ts |
 | Planned    | E2E-27 | Delete Account from UI                | User / Account        | E2E                 | Verify delete account flow from navigation menu; E2E-1 covers API-level delete, this covers UI flow |                                          |
 
 ### Low Priority
