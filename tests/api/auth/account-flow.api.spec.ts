@@ -1,6 +1,7 @@
 import { test, expect, type APIRequestContext } from '@playwright/test';
 import { userDetailResponseSchema } from '../../../data/api-schemas.data';
 import { User } from '../../../data/user.data';
+import { accountApiHelper } from '../../../utils/api/account.api.helper';
 
 async function createAccount(request: APIRequestContext, testUser: User) {
   const response = await request.post('/api/createAccount', {
@@ -204,6 +205,80 @@ test.describe('API Account Management Flow', () => {
     expect(response.status()).toBe(200);
     expect(body.responseCode).toBe(400);
     expect(body.message).toBe('Bad request, firstname parameter is missing in POST request.');
+  });
+
+  test('[API-27] POST /createAccount - Reject impossible date of birth @medium', async ({
+    request,
+  }, testInfo) => {
+    test.fail(
+      true,
+      'Known defect (#51): POST /createAccount accepts and persists impossible date-of-birth values.',
+    );
+
+    const testUser = User.generateRandom();
+
+    testUser.title = 'Mr.';
+    testUser.name = ' Test1 User';
+    testUser.dayOfBirth = ' 99,';
+    testUser.monthOfBirth = ' 99,';
+    testUser.yearOfBirth = '-1990,';
+    testUser.firstName = "'John',";
+    testUser.lastName = "'Doe',";
+    testUser.company = "'QA Inc',";
+    testUser.address = "'Main Street 1',";
+    testUser.state = "'California',";
+    testUser.city = "'Los Angeles',";
+    testUser.zipcode = "'90001',";
+
+    testInfo.annotations.push({
+      type: 'Test Data',
+      description: `Email: ${testUser.email} | DOB: ${testUser.dayOfBirth}/${testUser.monthOfBirth}/${testUser.yearOfBirth}`,
+    });
+
+    try {
+      const response = await request.post('/api/createAccount', {
+        form: testUser.toApiForm(),
+      });
+      const body = await response.json();
+
+      testInfo.annotations.push({
+        type: 'Finding',
+        description: `createAccount=http:${response.status()},responseCode:${body.responseCode},message:${body.message}`,
+      });
+
+      const detailResponse = await request.get('/api/getUserDetailByEmail', {
+        params: { email: testUser.email },
+      });
+      const detailBody = await detailResponse.json();
+      const persistedUser =
+        typeof detailBody.user === 'object' && detailBody.user !== null
+          ? (detailBody.user as Record<string, unknown>)
+          : null;
+
+      testInfo.annotations.push({
+        type: 'Finding',
+        description: [
+          `getUserDetail=http:${detailResponse.status()},responseCode:${detailBody.responseCode}`,
+          `message:${detailBody.message ?? '<missing>'}`,
+          `birth_day:${persistedUser?.birth_day ?? '<missing>'}`,
+          `birth_month:${persistedUser?.birth_month ?? '<missing>'}`,
+          `birth_year:${persistedUser?.birth_year ?? '<missing>'}`,
+          `first_name:${persistedUser?.first_name ?? '<missing>'}`,
+          `last_name:${persistedUser?.last_name ?? '<missing>'}`,
+        ].join(' | '),
+      });
+
+      expect(response.status()).toBe(200);
+      expect(body.responseCode).toBe(400);
+      expect(body.message).toContain('birth');
+      expect(detailResponse.status()).toBe(200);
+      expect(
+        detailBody.responseCode,
+        'Account with invalid date of birth should not be persisted',
+      ).toBe(404);
+    } finally {
+      await accountApiHelper.deleteUserIfExists(request, testUser);
+    }
   });
 
   test('[API-17] DELETE /deleteAccount - Reject delete with invalid credentials @low', async ({
