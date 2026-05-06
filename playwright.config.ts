@@ -61,21 +61,26 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] }, // Chrome only
     },
     {
+      name: 'a11y',
+      testMatch: '**/*.a11y.spec.ts',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: [/.*\.api\.spec\.ts/, /.*monitoring\.spec\.ts/], // Ignore API tests here
+      testIgnore: [/.*\.api\.spec\.ts/, /.*monitoring\.spec\.ts/, /.*\.a11y\.spec\.ts/], // Ignore API tests here
     },
 
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
-      testIgnore: /.*\.api\.spec\.ts/,
+      testIgnore: [/.*\.api\.spec\.ts/, /.*\.a11y\.spec\.ts/],
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testIgnore: /.*\.api\.spec\.ts/,
+      testIgnore: [/.*\.api\.spec\.ts/, /.*\.a11y\.spec\.ts/],
     },
 
     /* Test against mobile viewports. */
