@@ -46,7 +46,7 @@ test('E2E-10-neg [BUG-43]: Home page subscription should send email data to the 
 }, testInfo) => {
   test.fail(
     true,
-    'Known defect (BF-002): Footer subscription shows a success message without sending a network request.',
+    'Known defect #43: Footer subscription shows a success message without sending a network request.',
   );
 
   const homePage = new HomePage(page);
@@ -75,7 +75,7 @@ test('E2E-11-neg [BUG-43]: Cart page subscription should send email data to the 
 }, testInfo) => {
   test.fail(
     true,
-    'Known defect (BF-002): Footer subscription shows a success message without sending a network request.',
+    'Known defect #43: Footer subscription shows a success message without sending a network request.',
   );
 
   const homePage = new HomePage(page);
