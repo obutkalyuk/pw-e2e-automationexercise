@@ -104,7 +104,7 @@ jobs:
             echo
             echo "| Job | Tests | Passed | Skipped | Failed | Notes |"
             echo "| --- | ---: | ---: | ---: | ---: | --- |"
-            echo "| full-regression | $TOTAL | $PASSED | $SKIPPED | $FAILED | full suite via npm run test:full |"
+            echo "| full-regression | $TOTAL | $PASSED | $SKIPPED | $FAILED | non-a11y regression via npm run test:full:archive |"
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Determine mail status
         id: mail-status
@@ -164,3 +164,97 @@ jobs:
 
             <p><b>Run Details:</b> <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to see detailed summary</a></p>
             <p><i>Check GitHub Artifacts for full HTML report with screenshots. Artifacts are available for 7 days.</i></p>
+
+  a11y:
+    name: a11y
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Get Playwright version
+        run: echo "PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_ENV"
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+      - name: Install Playwright operating system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
+      - name: Run a11y tests
+        shell: bash
+        run: |
+          set +e
+          npx playwright test --project=a11y
+          status=$?
+          if [ -f results.xml ]; then
+            mv results.xml results-a11y.xml
+          fi
+          exit $status
+      - name: Parse a11y failures
+        if: always()
+        run: npx tsx scripts/playwright-failure-parser.ts .
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && !cancelled() && hashFiles('playwright-report/**') != '' }}
+        with:
+          name: playwright-report-a11y
+          path: playwright-report/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && !cancelled() }}
+        with:
+          name: playwright-logs-a11y
+          path: |
+            results-a11y.xml
+            test-results.json
+            test-results/
+            playwright-failure-summary.md
+          retention-days: 7
+      - name: Parse a11y results
+        id: results
+        if: always()
+        shell: bash
+        run: |
+          if [ -f results-a11y.xml ]; then
+            total="$(grep -oPm1 'tests="\K[0-9]+' results-a11y.xml || echo 0)"
+            failures="$(grep -oPm1 'failures="\K[0-9]+' results-a11y.xml || echo 0)"
+            skipped="$(grep -oPm1 'skipped="\K[0-9]+' results-a11y.xml || echo 0)"
+            passed="$((total - failures - skipped))"
+            echo "total=$total" >> "$GITHUB_OUTPUT"
+            echo "failed=$failures" >> "$GITHUB_OUTPUT"
+            echo "skipped=$skipped" >> "$GITHUB_OUTPUT"
+            echo "passed=$passed" >> "$GITHUB_OUTPUT"
+          else
+            echo "total=0" >> "$GITHUB_OUTPUT"
+            echo "failed=0" >> "$GITHUB_OUTPUT"
+            echo "skipped=0" >> "$GITHUB_OUTPUT"
+            echo "passed=0" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Write a11y summary
+        if: always()
+        shell: bash
+        env:
+          TOTAL: ${{ steps.results.outputs.total }}
+          PASSED: ${{ steps.results.outputs.passed }}
+          SKIPPED: ${{ steps.results.outputs.skipped }}
+          FAILED: ${{ steps.results.outputs.failed }}
+        run: |
+          {
+            echo "## a11y summary"
+            echo
+            echo "| Job | Tests | Passed | Skipped | Failed | Notes |"
+            echo "| --- | ---: | ---: | ---: | ---: | --- |"
+            echo "| a11y | $TOTAL | $PASSED | $SKIPPED | $FAILED | npx playwright test --project=a11y |"
+          } >> "$GITHUB_STEP_SUMMARY"

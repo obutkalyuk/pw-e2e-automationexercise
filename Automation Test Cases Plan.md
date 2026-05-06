@@ -20,6 +20,7 @@
 | `API`               | Pure REST API test (JSON request/response)                                         |
 | `Hybrid`            | Multi-layer chain: API + transport + state verification, no UI                     |
 | `Transport`         | Session-based HTTP request (HTML redirect, download, cookie-driven)                |
+| `A11Y`              | Accessibility scan or keyboard-only journey validation                             |
 | `UI`                | Navigation/visual check only, no state mutation                                    |
 | `UI / Stress Probe` | Browser-level concurrency or performance probe                                     |
 
@@ -104,6 +105,32 @@ _Session-based HTML/redirect/download request checks_
 | Covered                | TR-15 | `/view_cart`, `/logout`, `/login`                    | GET/POST   | Preserve empty cart state after completed purchase across logout/login boundary             | High         | Transport-first post-purchase state probe; verifies cart reset remains stable after session invalidation and re-authentication                 | tests\api\chain\order-state.chain.api.spec.ts             |
 | Covered                | TR-16 | `/checkout`, `/payment`, `/download_invoice/{value}` | GET/POST   | Preserve amount consistency between checkout and invoice artifact after successful purchase | High         | Transport-first amount invariant probe; documents checkout-to-invoice total mismatch behavior when observed                                    | tests\api\chain\order-state.chain.api.spec.ts             |
 | Covered (Known defect) | TR-17 | `/checkout`, `/payment`                              | GET/POST   | Reject checkout/payment access after the authenticated user account is deleted via API      | Critical     | Known defect `#46`: stale deleted-account session can render checkout/payment and continue toward payment completion                           | tests\api\chain\account-deleted-session.chain.api.spec.ts |
+
+---
+
+## Accessibility Tests
+
+_Accessibility coverage is split between static WCAG scans and keyboard-only journeys. Static checks focus on critical and serious Axe violations. Keyboard journeys validate whether core purchase actions are reachable and operable without pointer input._
+
+### Static Accessibility Smoke
+
+| **Status**             | **#**  | **Scope**           | **Automation Type** | **Description**                                                           | **Priority** | **Notes**                                                                             | **File Name**                        |
+| ---------------------- | ------ | ------------------- | ------------------- | ------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------- | ------------------------------------ |
+| Covered (Known defect) | A11Y-1 | Home page           | A11Y                | Check home page for critical or serious static accessibility issues       | High         | Known a11y defects `#54`, `#55`, `#57`; tagged `@a11y-smoke`                          | tests\a11y\static-pages.a11y.spec.ts |
+| Covered (Known defect) | A11Y-2 | Login page          | A11Y                | Check login page for critical or serious static accessibility issues      | High         | Known a11y defects `#54`, `#55`; tagged `@a11y-smoke`                                 | tests\a11y\static-pages.a11y.spec.ts |
+| Covered (Known defect) | A11Y-3 | Signup form         | A11Y                | Check signup form for critical or serious static accessibility issues     | High         | Known a11y defects `#54`, `#55`, `#56`, `#58`; tagged `@a11y-smoke`                   | tests\a11y\static-pages.a11y.spec.ts |
+| Covered (Known defect) | A11Y-4 | Products list page  | A11Y                | Check products page for critical or serious static accessibility issues   | High         | Known a11y defects `#54`, `#55`; tagged `@a11y-smoke`                                 | tests\a11y\static-pages.a11y.spec.ts |
+| Covered (Known defect) | A11Y-5 | Product detail page | A11Y                | Check product details for critical or serious static accessibility issues | High         | Known a11y defects `#54`, `#55`, `#56`; tagged `@a11y-smoke`                          | tests\a11y\static-pages.a11y.spec.ts |
+| Covered (Known defect) | A11Y-6 | Contact Us page     | A11Y                | Check contact page for critical or serious static accessibility issues    | High         | Known a11y defects `#54`, `#55`, `#56`; tagged `@a11y-smoke`                          | tests\a11y\static-pages.a11y.spec.ts |
+| Covered (Known defect) | A11Y-7 | Cart page           | A11Y                | Check cart page for logged-in user static accessibility issues            | High         | Known a11y defects `#54`, `#55`; tagged `@a11y-smoke`; uses managed user setup        | tests\a11y\auth-pages.a11y.spec.ts   |
+| Covered (Known defect) | A11Y-8 | Checkout page       | A11Y                | Check checkout page for logged-in user static accessibility issues        | High         | Known a11y defects `#54`, `#55`, `#56`; tagged `@a11y-smoke`; uses managed user setup | tests\a11y\auth-pages.a11y.spec.ts   |
+
+### Keyboard Accessibility Journeys
+
+| **Status**             | **#**   | **Scope**              | **Automation Type** | **Description**                                              | **Priority** | **Notes**                                                                                                                   | **File Name**                            |
+| ---------------------- | ------- | ---------------------- | ------------------- | ------------------------------------------------------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Covered                | A11Y-9  | Products -> cart       | A11Y                | Add a product to cart using keyboard-only navigation         | Critical     | Tagged `@a11y-keyboard`; validates product details navigation, add-to-cart modal, focus movement, and cart contents         | tests\a11y\keyboard-journey.a11y.spec.ts |
+| Covered (Known defect) | A11Y-10 | Cart -> checkout order | A11Y                | Complete purchase using keyboard-only navigation after setup | Critical     | Known defect `#60`: `Proceed To Checkout` is not keyboard focusable; setup uses managed user and transport cart preparation | tests\a11y\keyboard-journey.a11y.spec.ts |
 
 ---
 
