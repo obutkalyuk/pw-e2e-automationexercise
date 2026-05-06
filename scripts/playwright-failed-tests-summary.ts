@@ -52,9 +52,11 @@ const DEFAULT_HTML_OUTPUT_FILE = 'failed-tests-summary.html';
 const MAX_ERROR_LENGTH = 140;
 
 async function main(): Promise<void> {
-  const { jsonFilePath, outputDirectoryPath } = parseArguments(process.argv.slice(2));
-  const report = await readPlaywrightReport(jsonFilePath);
-  const failedTests = collectFailedTests(report.suites);
+  const { jsonFilePaths, outputDirectoryPath } = parseArguments(process.argv.slice(2));
+  const reports = await Promise.all(
+    jsonFilePaths.map((jsonFilePath) => readPlaywrightReport(jsonFilePath)),
+  );
+  const failedTests = collectFailedTests(reports.flatMap((report) => report.suites));
   const markdown = buildMarkdown(failedTests);
   const html = buildHtml(failedTests);
 
@@ -70,17 +72,18 @@ async function main(): Promise<void> {
   console.log(`Found ${failedTests.length} failed test(s).`);
 }
 
-function parseArguments(args: string[]): { jsonFilePath: string; outputDirectoryPath: string } {
-  const jsonFilePath = args[0];
+function parseArguments(args: string[]): { jsonFilePaths: string[]; outputDirectoryPath: string } {
+  const outputDirectoryIndex = args.indexOf('--output-dir');
+  const jsonFilePaths =
+    outputDirectoryIndex >= 0 ? args.slice(0, outputDirectoryIndex) : args.slice(0);
 
-  if (!jsonFilePath) {
+  if (jsonFilePaths.length === 0) {
     console.error(
-      'Usage: npx tsx scripts/playwright-failed-tests-summary.ts <test-results.json> [--output-dir <directory>]',
+      'Usage: npx tsx scripts/playwright-failed-tests-summary.ts <test-results.json...> [--output-dir <directory>]',
     );
     process.exit(1);
   }
 
-  const outputDirectoryIndex = args.indexOf('--output-dir');
   const outputDirectoryPath =
     outputDirectoryIndex >= 0 ? args[outputDirectoryIndex + 1] : process.cwd();
 
@@ -90,7 +93,7 @@ function parseArguments(args: string[]): { jsonFilePath: string; outputDirectory
   }
 
   return {
-    jsonFilePath: path.resolve(jsonFilePath),
+    jsonFilePaths: jsonFilePaths.map((jsonFilePath) => path.resolve(jsonFilePath)),
     outputDirectoryPath: path.resolve(outputDirectoryPath),
   };
 }
