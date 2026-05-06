@@ -86,6 +86,19 @@ jobs:
             mv results.xml results-changed.xml
           fi
           exit $status
+      - name: Build changed failed tests list
+        if: always()
+        shell: bash
+        run: |
+          if [ -f test-results.json ]; then
+            npm run parse:failed-tests -- test-results.json --output-dir .
+          else
+            {
+              echo "### Failed tests"
+              echo
+              echo "No Playwright JSON report was found."
+            } > failed-tests-summary.md
+          fi
       - name: No changed specs detected
         if: steps.changed.outputs.has-tests != 'true'
         run: echo "No changed spec files found in this diff."
@@ -134,12 +147,24 @@ jobs:
             else
               echo "| changed-tests | 0 | 0 | 0 | 0 | run completed without junit results |"
             fi
+            echo
+            cat failed-tests-summary.md
           } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
         with:
           name: playwright-report-changed-tests
           path: playwright-report/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && !cancelled() }}
+        with:
+          name: playwright-logs-changed-tests
+          path: |
+            results-changed.xml
+            test-results.json
+            failed-tests-summary.*
+            test-results/
           retention-days: 7
 
   smoke:
@@ -186,6 +211,9 @@ jobs:
           if [ -f results.xml ]; then
             mv results.xml results-smoke-api.xml
           fi
+          if [ -f test-results.json ]; then
+            mv test-results.json test-results-smoke-api.json
+          fi
           exit $status
       - name: Run browser smoke tests
         id: smoke-browser
@@ -198,10 +226,26 @@ jobs:
           if [ -f results.xml ]; then
             mv results.xml results-smoke-browser.xml
           fi
+          if [ -f test-results.json ]; then
+            mv test-results.json test-results-smoke-browser.json
+          fi
           exit $status
       - name: Fail smoke job when any smoke segment fails
         if: always() && (steps.smoke-api.outcome != 'success' || steps.smoke-browser.outcome != 'success')
         run: exit 1
+      - name: Build smoke failed tests list
+        if: always()
+        shell: bash
+        run: |
+          if ls test-results-smoke-*.json >/dev/null 2>&1; then
+            npm run parse:failed-tests -- test-results-smoke-*.json --output-dir .
+          else
+            {
+              echo "### Failed tests"
+              echo
+              echo "No Playwright JSON report was found."
+            } > failed-tests-summary.md
+          fi
       - name: Parse smoke test results
         id: smoke-results
         if: always()
@@ -257,12 +301,24 @@ jobs:
             else
               echo "| smoke | 0 | 0 | 0 | 0 | no junit results generated |"
             fi
+            echo
+            cat failed-tests-summary.md
           } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
         with:
           name: playwright-report-smoke
           path: playwright-report/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && !cancelled() }}
+        with:
+          name: playwright-logs-smoke
+          path: |
+            results-smoke-*.xml
+            test-results-smoke-*.json
+            failed-tests-summary.*
+            test-results/
           retention-days: 7
 
   a11y-smoke:
@@ -319,6 +375,19 @@ jobs:
             mv results.xml results-a11y-smoke.xml
           fi
           exit $status
+      - name: Build a11y smoke failed tests list
+        if: always()
+        shell: bash
+        run: |
+          if [ -f test-results.json ]; then
+            npm run parse:failed-tests -- test-results.json --output-dir .
+          else
+            {
+              echo "### Failed tests"
+              echo
+              echo "No Playwright JSON report was found."
+            } > failed-tests-summary.md
+          fi
       - name: Placeholder for a11y smoke tests
         if: steps.a11y.outputs.has-tests != 'true'
         run: echo "No @a11y-smoke tests tagged yet. Job reserved for lightweight accessibility checks."
@@ -367,10 +436,22 @@ jobs:
             else
               echo "| a11y-smoke | 0 | 0 | 0 | 0 | run completed without junit results |"
             fi
+            echo
+            cat failed-tests-summary.md
           } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && hashFiles('playwright-report/**') != '' }}
         with:
           name: playwright-report-a11y-smoke
           path: playwright-report/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && !cancelled() }}
+        with:
+          name: playwright-logs-a11y-smoke
+          path: |
+            results-a11y-smoke.xml
+            test-results.json
+            failed-tests-summary.*
+            test-results/
           retention-days: 7
