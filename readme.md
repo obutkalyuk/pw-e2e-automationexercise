@@ -2,7 +2,7 @@
 
 Independent QA automation project for the demo store [AutomationExercise](https://automationexercise.com), built with Playwright and TypeScript using an approach informed by commercial Playwright work.
 
-The project covers UI, API, hybrid, transport-level, and monitoring scenarios, with supporting QA documentation for test planning, risk analysis, and bug tracking.
+The project covers UI, API, hybrid, transport-level, accessibility, and monitoring scenarios, with supporting QA documentation for test planning, risk analysis, and bug tracking.
 
 The emphasis is on QA thinking: why tests are structured the way they are, what the application actually does under the hood, and where it breaks.
 
@@ -26,7 +26,7 @@ Within that scope, the project focuses on the QA work that can still be done wel
 
 ## What This Project Shows
 
-- **Coverage beyond basic UI paths**: separate API, E2E, hybrid, transport, chain, and monitoring coverage
+- **Coverage beyond basic UI paths**: separate API, E2E, hybrid, transport, chain, accessibility, and monitoring coverage
 - **Contract-aware testing**: API and web requests are analyzed by response type, not treated as one generic layer
 - **Schema contract validation with Zod**: structured JSON endpoints are validated against reusable schemas, while tests keep only business-specific assertions
 - **Handling imperfect systems**: tests account for non-standard behavior such as business failures returned with HTTP 200
@@ -44,6 +44,15 @@ UI flows use Page Object Model to keep selectors and page-specific behavior isol
 ### Hybrid setup where it improves signal
 
 Some flows use API or transport setup before UI validation. This keeps preconditions faster and less brittle while preserving meaningful feature coverage in the browser.
+
+### Accessibility coverage as a first-class layer
+
+Accessibility tests are split into two groups:
+
+- static WCAG scans for high-risk public, auth, cart, and checkout pages
+- keyboard journey tests for core purchase actions that must work without a mouse
+
+The static checks use Axe for critical and serious violations. Keyboard journeys use Playwright keyboard actions and deliberately keep setup shortcuts at the API or transport layer when the behavior under test is the browser navigation itself.
 
 ### Transport-level checks for web flows
 
@@ -78,6 +87,7 @@ This keeps the suite focused on product behavior rather than external advertisin
 ```text
 pages/                 Page Object classes
 tests/api/             API, chain, and transport-level scenarios
+tests/a11y/            Accessibility scans and keyboard journey scenarios
 tests/e2e/             Browser E2E scenarios
 tests/monitoring/      Monitoring, throttling, and concurrency experiments
 utils/                 API helpers, fixtures, and utility functions
@@ -96,6 +106,7 @@ qa_questions.md
 | [Automation Test Cases Plan](./Automation%20Test%20Cases%20Plan.md)             | Test cases with priority, coverage intent, and automation mapping          |
 | [API / Request Inventory](./api_request_inventory.md)                           | Observed requests, response behavior, and recommended assertion strategy   |
 | [QA Questionnaire](./qa_questions.md)                                           | Product, risk, and investigation questions identified during QA analysis   |
+| [Bug Report Template](./bug_report_template.md)                                 | Defect report structure used before transferring issues to GitHub          |
 | [GitHub Issues](https://github.com/obutkalyuk/pw-e2e-automationexercise/issues) | Defects and inconsistencies found during exploratory and automated testing |
 
 ## Notable Findings
@@ -104,6 +115,7 @@ qa_questions.md
 - **Broken UI confirmations**: some UI flows show success messages without sending any network request
 - **Transport-specific risks**: checkout and payment flows depend on redirects, cookies, and CSRF token handling
 - **Broken purchase guardrails**: anonymous checkout/payment access and stale purchase state after logout are covered as known-defect transport checks
+- **Keyboard accessibility blocker**: known defect `#60` shows cart checkout cannot be reached with keyboard-only navigation
 - **Weak purchase artifacts**: known defect `#24` shows `/payment_done/{value}` can render a generic success page for arbitrary integer values
 - **Third-party interference**: external ad and consent layers can affect browser automation and require dedicated mitigation
 - **Security/configuration exposure**: known defect `#25` shows public Django debug pages exposing internal route patterns
@@ -117,8 +129,9 @@ GitHub Actions is used for regular execution and feedback:
 - PR validation also includes a lightweight guard for report-helper scripts so import-time side effects are caught before merge
 - `changed-tests` executes only changed spec files when relevant
 - `smoke` covers lightweight API and browser smoke scenarios for core flows
-- `a11y-smoke` is reserved for lightweight accessibility checks without duplicating full E2E coverage
+- `a11y-smoke` is reserved for lightweight static accessibility checks without duplicating full E2E coverage
 - full regression runs in a separate `Nightly` workflow on schedule or manual dispatch
+- nightly also runs the complete `a11y` Playwright project, including static scans and keyboard journeys, as a separate job with its own report artifact
 - reports are published through GitHub job summaries, Playwright HTML artifacts, and nightly email notifications
 - the nightly workflow also uploads structured Playwright logs for later failure analysis:
   - `results*.xml`
@@ -139,15 +152,21 @@ Run the main suites:
 ```bash
 npm run test:full
 npm run test:api
+npx playwright test --project=a11y
 npm run test:smoke
 npm run test:full:archive
 npm run test:report
 ```
 
+`npm run test:full` intentionally excludes the `a11y` project. Accessibility coverage runs as its own suite locally and as a separate nightly job so its failures have a dedicated report and summary.
+
 Run Playwright directly:
 
 ```bash
 npx playwright test
+npx playwright test --project=a11y
+npx playwright test --project=a11y --grep @a11y-smoke
+npx playwright test --project=a11y --grep @a11y-keyboard
 npx playwright test --ui
 ```
 
@@ -173,7 +192,7 @@ npm run parse:failures
 
 What these commands do:
 
-- `npm run test:full:archive` runs the full suite and stores the current `results.xml` and `test-results.json` under `artifacts/history/<timestamp>/`
+- `npm run test:full:archive` runs the non-a11y regression suite and stores the current `results.xml` and `test-results.json` under `artifacts/history/<timestamp>/`
 - `npm run archive:reports` archives the current root-level Playwright reports without starting a new test run
 - `npm run check:report-tools` verifies that the report helper modules can be imported without accidental top-level execution
 - `npm run parse:failures` scans `artifacts/history/` recursively and builds a grouped Markdown summary
