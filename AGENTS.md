@@ -7,4 +7,4 @@
 - When renaming files, always update imports, documentation references, scripts, and CI-visible paths in the same change.
 - Use `kebab-case` for file names unless `NAMING_CONVENTIONS.md` explicitly defines a different pattern for a specific layer.
 - Treat `NAMING_CONVENTIONS.md` as the source of truth for naming decisions in this repository.
-- Use `bug_report_template.md` when documenting defects.
+- Use `docs/bug-report-template.md` when documenting defects.

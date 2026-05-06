@@ -94,20 +94,21 @@ utils/                 API helpers, fixtures, and utility functions
 data/                  Test data models and constants
 scripts/               Supporting scripts, including network capture and report-analysis helpers
 artifacts/             Generated outputs such as network captures and archived Playwright reports
-Automation Test Cases Plan.md
-api_request_inventory.md
-qa_questions.md
+docs/                  QA reports, test planning, inventories, and review documents
 ```
 
 ## QA Documentation
 
-| Document                                                                        | Description                                                                |
-| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [Automation Test Cases Plan](./Automation%20Test%20Cases%20Plan.md)             | Test cases with priority, coverage intent, and automation mapping          |
-| [API / Request Inventory](./api_request_inventory.md)                           | Observed requests, response behavior, and recommended assertion strategy   |
-| [QA Questionnaire](./qa_questions.md)                                           | Product, risk, and investigation questions identified during QA analysis   |
-| [Bug Report Template](./bug_report_template.md)                                 | Defect report structure used before transferring issues to GitHub          |
-| [GitHub Issues](https://github.com/obutkalyuk/pw-e2e-automationexercise/issues) | Defects and inconsistencies found during exploratory and automated testing |
+| Document                                                                        | Description                                                                 |
+| ------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| [Test Report](./docs/test-report.md)                                            | Final QA summary of product risks, coverage, and documented defects         |
+| [Automation Review](./docs/automation-review.md)                                | Portfolio review of automation scope, architecture, CI, and lessons learned |
+| [Automation Test Cases Plan](./docs/test-cases-plan.md)                         | Test cases with priority, coverage intent, and automation mapping           |
+| [API / Request Inventory](./docs/api-request-inventory.md)                      | Observed requests, response behavior, and recommended assertion strategy    |
+| [QA Questionnaire](./docs/qa-questions.md)                                      | Product, risk, and investigation questions identified during QA analysis    |
+| [A11Y Violations Summary](./docs/a11y-violations-summary.md)                    | Accessibility findings grouped by page and severity                         |
+| [Bug Report Template](./docs/bug-report-template.md)                            | Defect report structure used before transferring issues to GitHub           |
+| [GitHub Issues](https://github.com/obutkalyuk/pw-e2e-automationexercise/issues) | Defects and inconsistencies found during exploratory and automated testing  |
 
 ## Notable Findings
 
