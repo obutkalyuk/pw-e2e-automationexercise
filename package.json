@@ -9,6 +9,7 @@
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "parse:failed-tests": "tsx scripts/playwright-failed-tests-summary.ts",
     "parse:failures": "tsx scripts/playwright-failure-parser.ts artifacts/history",
     "parse:failures:dir": "tsx scripts/playwright-failure-parser.ts",
     "test:smoke": "npx playwright test --grep @smoke",

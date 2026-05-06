@@ -54,6 +54,33 @@ jobs:
       - name: Build failure summary
         if: always()
         run: npm run parse:failures
+      - name: Build failed tests list
+        id: failed-tests
+        if: always()
+        shell: bash
+        run: |
+          if [ -f test-results.json ]; then
+            npm run parse:failed-tests -- test-results.json --output-dir .
+          else
+            {
+              echo "### Failed tests"
+              echo
+              echo "No Playwright JSON report was found."
+            } > failed-tests-summary.md
+            {
+              echo "<h3>Failed Tests</h3>"
+              echo "<p>No Playwright JSON report was found.</p>"
+            } > failed-tests-summary.html
+            {
+              echo "count=0"
+              echo "markdown<<EOF"
+              cat failed-tests-summary.md
+              echo "EOF"
+              echo "html<<EOF"
+              cat failed-tests-summary.html
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/upload-artifact@v4
         if: ${{ always() && !cancelled() && hashFiles('playwright-report/**') != '' }}
         with:
@@ -67,6 +94,7 @@ jobs:
           path: |
             results*.xml
             test-results.json
+            failed-tests-summary.*
             test-results/
             artifacts/history/
           retention-days: 7
@@ -105,6 +133,8 @@ jobs:
             echo "| Job | Tests | Passed | Skipped | Failed | Notes |"
             echo "| --- | ---: | ---: | ---: | ---: | --- |"
             echo "| full-regression | $TOTAL | $PASSED | $SKIPPED | $FAILED | non-a11y regression via npm run test:full:archive |"
+            echo
+            cat failed-tests-summary.md
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Determine mail status
         id: mail-status
@@ -162,6 +192,8 @@ jobs:
               </tr>
             </table>
 
+            ${{ steps.failed-tests.outputs.html }}
+
             <p><b>Run Details:</b> <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">Click here to see detailed summary</a></p>
             <p><i>Check GitHub Artifacts for full HTML report with screenshots. Artifacts are available for 7 days.</i></p>
 
@@ -206,6 +238,19 @@ jobs:
       - name: Parse a11y failures
         if: always()
         run: npx tsx scripts/playwright-failure-parser.ts .
+      - name: Build a11y failed tests list
+        if: always()
+        shell: bash
+        run: |
+          if [ -f test-results.json ]; then
+            npm run parse:failed-tests -- test-results.json --output-dir .
+          else
+            {
+              echo "### Failed tests"
+              echo
+              echo "No Playwright JSON report was found."
+            } > failed-tests-summary.md
+          fi
       - uses: actions/upload-artifact@v4
         if: ${{ always() && !cancelled() && hashFiles('playwright-report/**') != '' }}
         with:
@@ -219,6 +264,7 @@ jobs:
           path: |
             results-a11y.xml
             test-results.json
+            failed-tests-summary.*
             test-results/
             playwright-failure-summary.md
           retention-days: 7
@@ -257,4 +303,6 @@ jobs:
             echo "| Job | Tests | Passed | Skipped | Failed | Notes |"
             echo "| --- | ---: | ---: | ---: | ---: | --- |"
             echo "| a11y | $TOTAL | $PASSED | $SKIPPED | $FAILED | npx playwright test --project=a11y |"
+            echo
+            cat failed-tests-summary.md
           } >> "$GITHUB_STEP_SUMMARY"
