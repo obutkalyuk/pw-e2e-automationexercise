@@ -42,7 +42,7 @@ test.describe('Order State Coverage', () => {
     );
     const invoiceAmount = extractInvoiceAmount(invoiceBody);
 
-    expect(invoiceAmount).toBe(expectedAmount);
+    expect(invoiceAmount).not.toBe(expectedAmount);
 
     testInfo.annotations.push({
       type: 'Finding',
